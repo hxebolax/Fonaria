@@ -53,4 +53,24 @@ class ProcesadorTest {
 		salida += p2.procesar(silencio(80), f * 80 / 1000)
 		assertTrue("Solo salió ${salida.size} de ${antes}", salida.count { it.toInt() != 0 } >= antes * 9 / 10)
 	}
+
+	@Test
+	fun picosPorEncimaDelMaximoNoDanLaVuelta() {
+		// El modelo a veces pasa de 1,0: con Sonic de por medio no debe salir con el signo cambiado
+		val fuerte = FloatArray(f * 400 / 1000) { 1.4f }
+		val p = Procesador(f, 1.5f, 1f, 1f, recortar = false)
+		val salida = procesar(p, fuerte)
+		assertTrue("Salieron muestras negativas", salida.drop(f / 20).dropLast(f / 20).all { it >= 0 })
+	}
+
+	@Test
+	fun elArranqueDelDecodificadorNoSeOye() {
+		// Un golpe justo al empezar la frase (lo primero que suelta el decodificador) se silencia
+		val golpe = FloatArray(f * 10 / 1000) { 0.9f }
+		val p = Procesador(f, 1f, 1f, 1f, recortar = false)
+		val salida = procesar(p, golpe, silencio(10), voz(200))
+		assertTrue(salida.take(f / 50).all { it.toInt() == 0 })
+		// Y la voz empieza con un fundido, no de golpe
+		assertTrue(kotlin.math.abs(salida[f / 50].toInt()) < 2000)
+	}
 }

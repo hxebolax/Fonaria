@@ -137,12 +137,17 @@ object Motor {
 		var muestras = 0L
 		var primero = 0L
 		var ultimo = 0L
+		// Lo que el receptor tarda en aceptar el audio (cuando va muy por delante) no es del motor
+		var esperando = 0L
 		val medidor = Nativo.Receptor { pcm, n ->
 			val ahora = SystemClock.elapsedRealtime()
 			if (primero == 0L) primero = ahora
-			ultimo = ahora
 			muestras += n
-			receptor.audio(pcm, n)
+			val sigue = receptor.audio(pcm, n)
+			val despues = SystemClock.elapsedRealtime()
+			esperando += despues - ahora
+			ultimo = despues
+			sigue
 		}
 		val ok = Nativo.hablar(
 			manejador, p.texto, p.voz, p.idioma, p.temperatura, p.semilla, p.ritmo, p.guia,
@@ -150,8 +155,9 @@ object Motor {
 		)
 		// Se mide desde el primer audio (sin la preparación de la voz) y solo en frases de más de un segundo
 		val segundos = muestras.toFloat() / frecuencia
-		if (ok && segundos > 1f && ultimo > primero) {
-			val medida = (segundos / ((ultimo - primero) / 1000f)).coerceIn(0.2f, 50f)
+		val trabajo = ultimo - primero - esperando
+		if (ok && segundos > 1f && trabajo > 0) {
+			val medida = (segundos / (trabajo / 1000f)).coerceIn(0.2f, 50f)
 			velocidadGeneracion = velocidadGeneracion * 0.7f + medida * 0.3f
 		}
 		if (!ok) {

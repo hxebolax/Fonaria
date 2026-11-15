@@ -33,6 +33,18 @@ class Procesador(
 	 */
 	private val maxSilencio = frecuencia / 2
 
+	/** Muestras recibidas del modelo hasta ahora en esta frase. */
+	private var recibidas = 0L
+	/**
+	 * Lo primero que sale del decodificador al empezar cada frase (20 ms) se pone a cero: puede
+	 * traer un chasquido de arranque, que se oiría como un golpecito antes de cada frase.
+	 */
+	private val ceros = frecuencia / 50
+	/** Fundido de entrada al empezar la voz (5 ms): empezar de golpe a media onda suena a clic. */
+	private val largoFundido = frecuencia / 200
+	/** Dónde empieza el fundido (en muestras desde el principio de la frase), o -1 si aún no se sabe. */
+	private var inicioFundido = if (recortar) -1L else ceros.toLong()
+
 	init {
 		val v = velocidad.coerceIn(0.2f, 8f)
 		val t = tono.coerceIn(0.25f, 4f)
@@ -49,13 +61,18 @@ class Procesador(
 
 	/** Procesa un trozo del modelo y devuelve el PCM listo (puede estar vacío). */
 	fun procesar(muestras: FloatArray, n: Int): ShortArray {
+		val base = recibidas
+		recibidas += n
+		limpiar(muestras, n, base)
 		var desde = 0
 		if (!empezado) {
 			while (desde < n && abs(muestras[desde]) < umbral) desde++
 			if (desde == n) return VACIO
 			empezado = true
 			desde = (desde - margen).coerceAtLeast(0)
+			inicioFundido = maxOf(base + desde, ceros.toLong())
 		}
+		fundir(muestras, n, base)
 		val util = if (recortar) recortarFinal(muestras, desde, n) else muestras.copyOfRange(desde, n)
 		return convertir(util)
 	}
@@ -104,6 +121,37 @@ class Procesador(
 		}
 		silencio.anadir(m, i, n)
 		return salida.tomar(salida.tamano)
+	}
+
+	/**
+	 * Deja las muestras dentro de [-1, 1] (y sin valores no numéricos) antes de Sonic. Sonic pasa
+	 * los flotantes a 16 bits sin recortarlos: un pico del modelo por encima del máximo daba la
+	 * vuelta al signo y sonaba como un chasquido o un microcorte, sobre todo en voces fuertes y en
+	 * textos largos, donde hay más ocasiones. Además pone a cero el arranque del decodificador.
+	 */
+	private fun limpiar(m: FloatArray, n: Int, base: Long) {
+		for (i in 0 until n) {
+			val v = m[i]
+			m[i] = when {
+				base + i < ceros -> 0f
+				v.isNaN() -> 0f
+				v > 1f -> 1f
+				v < -1f -> -1f
+				else -> v
+			}
+		}
+	}
+
+	/** Aplica el fundido de entrada en la parte que cae en este trozo. */
+	private fun fundir(m: FloatArray, n: Int, base: Long) {
+		if (inicioFundido < 0) return
+		val desde = inicioFundido - base
+		val hasta = desde + largoFundido
+		if (hasta <= 0 || desde >= n) return
+		for (i in maxOf(0L, desde).toInt() until minOf(n.toLong(), hasta).toInt()) {
+			val t = (i - desde + 1).toFloat() / largoFundido
+			m[i] *= t * t * (3f - 2f * t)
+		}
 	}
 
 	private fun convertir(m: FloatArray): ShortArray {

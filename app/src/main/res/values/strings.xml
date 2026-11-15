@@ -419,4 +419,6 @@
 		<item quantity="many">Descargando %1$d voces</item>
 		<item quantity="other">Descargando %1$d voces</item>
 	</plurals>
+	<string name="canal_motor">Avisos del motor de voz</string>
+	<string name="aviso_motor">Fonaria está hablando</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.xebolax.fonaria.motor
 
 import android.media.AudioFormat
+import android.os.PowerManager
 import android.speech.tts.SynthesisCallback
 import android.speech.tts.SynthesisRequest
 import android.speech.tts.TextToSpeech
@@ -25,8 +26,19 @@ class ServicioVoz : TextToSpeechService() {
 	@Volatile
 	private var parar = false
 
+	/**
+	 * Mantiene despierto el procesador solo mientras se genera voz: con la pantalla apagada el
+	 * móvil podría dormirse entre un trozo de audio y el siguiente, y la voz se entrecortaría.
+	 */
+	private val despierto by lazy {
+		(getSystemService(POWER_SERVICE) as PowerManager)
+			.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "fonaria:voz")
+			.apply { setReferenceCounted(false) }
+	}
+
 	override fun onCreate() {
 		super.onCreate()
+		PrimerPlano.mantener(this)
 		// El modelo se carga ya, en segundo plano: la primera frase no tiene que esperarlo entero
 		Thread({
 			try {
@@ -76,6 +88,15 @@ class ServicioVoz : TextToSpeechService() {
 	override fun onSynthesizeText(request: SynthesisRequest?, callback: SynthesisCallback?) {
 		if (request == null || callback == null) return
 		parar = false
+		despierto.acquire(DESPIERTO_MAXIMO_MS)
+		try {
+			sintetizar(request, callback)
+		} finally {
+			if (despierto.isHeld) despierto.release()
+		}
+	}
+
+	private fun sintetizar(request: SynthesisRequest, callback: SynthesisCallback) {
 		val idioma = Idiomas.codigo(request.language)
 		if (idioma == null) {
 			callback.error(TextToSpeech.ERROR_INVALID_REQUEST)
@@ -109,6 +130,8 @@ class ServicioVoz : TextToSpeechService() {
 			return
 		}
 		salida.frecuencia = Motor.frecuencia
+		PrimerPlano.mantener(this)
+		Hilos.subir()
 		val p = ajustes.parametros(voz.id)
 		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
 		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
@@ -123,43 +146,50 @@ class ServicioVoz : TextToSpeechService() {
 		val semilla = if (ajustes.semillaFija) SEMILLA else Random.nextLong()
 		val normalizar = if (ajustes.normalizar) idioma else "none"
 
-		for (t in trozos) {
-			if (parar) break
-			when (t) {
-				// El silencio también se acelera con la velocidad
-				is Trozo.Pausa -> salida.silencio((t.ms / pedida.coerceAtLeast(0.25f)).toInt())
-				is Trozo.Habla -> {
-					// Si el móvil genera más despacio de lo que se oye a esta velocidad, se guarda
-					// audio antes de soltarlo, para que la frase suene seguida y no a trompicones.
-					salida.retenerPara(t.texto.length / porModelo, velocidad, Motor.velocidadGeneracion)
-					val proc = Procesador(Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios)
-					val peticion = Motor.Peticion(
-						texto = t.texto,
-						voz = voz.id,
-						idioma = normalizar,
-						temperatura = p.variacion / 100f,
-						semilla = semilla,
-						ritmo = ritmo,
-						guia = ajustes.guia / 10f,
-						tokensTrozo = ajustes.tokensTrozo,
-						igualarVolumen = ajustes.igualarVolumen,
-					)
-					// El motor genera en su hilo y este hilo procesa y entrega (Android lo bloquea
-					// cuando lleva medio segundo por delante; así el motor no se para por ello)
-					val generador = Generador(this, peticion) { parar }
-					generador.empezar()
-					val ok = generador.recibir { muestras ->
-						!parar && salida.escribir(proc.procesar(muestras, muestras.size))
+		// Todas las frases se piden ya: el motor las genera seguidas, por delante de lo que suena
+		val peticiones = trozos.filterIsInstance<Trozo.Habla>().map { t ->
+			Motor.Peticion(
+				texto = t.texto,
+				voz = voz.id,
+				idioma = normalizar,
+				temperatura = p.variacion / 100f,
+				semilla = semilla,
+				ritmo = ritmo,
+				guia = ajustes.guia / 10f,
+				tokensTrozo = ajustes.tokensTrozo,
+				igualarVolumen = ajustes.igualarVolumen,
+			)
+		}
+		// El motor genera en su hilo y este hilo procesa y entrega (Android lo bloquea cuando lleva
+		// medio segundo por delante; así el motor no se para por ello)
+		val generador = Generador(this, peticiones) { parar }
+		generador.empezar()
+		try {
+			for (t in trozos) {
+				if (parar) break
+				when (t) {
+					// El silencio también se acelera con la velocidad
+					is Trozo.Pausa -> salida.silencio((t.ms / pedida.coerceAtLeast(0.25f)).toInt())
+					is Trozo.Habla -> {
+						// Si el móvil genera más despacio de lo que se oye a esta velocidad, se guarda
+						// audio antes de soltarlo, para que la frase suene seguida y no a trompicones.
+						salida.retenerPara(t.texto.length / porModelo, velocidad, Motor.velocidadGeneracion)
+						val proc = Procesador(Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios)
+						val resultado = generador.recibir { muestras ->
+							!parar && salida.escribir(proc.procesar(muestras, muestras.size))
+						}
+						if (parar || resultado == Generador.Resultado.CORTADA) break
+						if (resultado == Generador.Resultado.FALLO) {
+							salida.fallo()
+							return
+						}
+						if (!salida.escribir(proc.terminar())) break
+						if (!salida.soltar()) break
 					}
-					if (parar) break
-					if (!ok) {
-						salida.fallo()
-						return
-					}
-					if (!salida.escribir(proc.terminar())) break
-					if (!salida.soltar()) break
 				}
 			}
+		} finally {
+			generador.cerrar()
 		}
 		salida.terminar()
 		Log.i(
@@ -177,6 +207,8 @@ class ServicioVoz : TextToSpeechService() {
 		const val SEMILLA = 4242424242424242L
 		/** Parámetro de speak() con el id de la voz que debe sonar (lo usan las pantallas de la app). */
 		const val PARAM_VOZ = "com.xebolax.fonaria.VOZ"
+		/** Tope de seguridad del bloqueo de suspensión (se suelta al acabar cada lectura). */
+		private const val DESPIERTO_MAXIMO_MS = 10 * 60 * 1000L
 	}
 }
 

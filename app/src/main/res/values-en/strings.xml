@@ -391,4 +391,6 @@
 		<item quantity="one">Downloading %1$d voice</item>
 		<item quantity="other">Downloading %1$d voices</item>
 	</plurals>
+	<string name="canal_motor">Speech engine notices</string>
+	<string name="aviso_motor">Fonaria is speaking</string>
 </resources>

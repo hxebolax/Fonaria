@@ -3,6 +3,13 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.4
+- Fuera los chasquidos y microcortes: cuando la voz tenía un pico por encima del máximo, al acelerarla daba la vuelta y sonaba como un pequeño golpe o un corte. Ahora se limita antes de acelerarla. También se silencia el arranque del decodificador al empezar cada frase y la voz entra con un fundido muy corto, sin clic.
+- Más fluida con la pantalla apagada o dentro de otras apps: mientras habla, Fonaria pasa a primer plano y mantiene despierto el procesador. Sin esto, Android la dejaba en los núcleos lentos y generaba la voz más despacio de lo que sonaba. Se para sola a los dos minutos sin hablar. En Android 12 y anteriores se ve un aviso discreto, «Fonaria está hablando», mientras se usa.
+- Los hilos que hacen y reproducen la voz tienen prioridad sobre el resto de la app que se está leyendo.
+- Textos largos de verdad seguidos: el motor genera las frases una tras otra sin esperar a que suene la anterior, con hasta 20 segundos de voz por delante (antes, 3). Así no se oye el instante en que empieza cada frase nueva.
+- La medida de lo rápido que va tu móvil ya no cuenta el tiempo que el motor espera porque va sobrado, así que retiene menos audio sin necesidad.
+
 == 1.0.3
 - Sin microcortes al leer textos largos: el motor genera ahora en su propio hilo, con hasta tres segundos de voz por delante, y Android ya no lo frena mientras reproduce. Al empezar un texto largo se reúne un pequeño colchón para que las pausas internas del motor no se oigan. Mandar callar sigue siendo inmediato.
 - El final de las palabras ya no se corta antes de una pausa: el que acelera la voz se quedaba con el último pedacito de cada palabra y lo soltaba después de la pausa.

@@ -6,6 +6,11 @@
 	<uses-permission android:name="android.permission.INTERNET" />
 	<!-- Instalar las actualizaciones descargadas (Android pide confirmación cada vez) -->
 	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+	<!-- Mientras habla, el motor pasa a primer plano y mantiene despierto el procesador: si no,
+	     con la pantalla apagada Android lo deja en los núcleos lentos y la voz se entrecorta -->
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
 
 	<application
 		android:name=".FonariaApp"
@@ -35,6 +40,12 @@
 				android:name="android.speech.tts"
 				android:resource="@xml/tts_engine" />
 		</service>
+
+		<service
+			android:name=".motor.PrimerPlano"
+			android:directBootAware="true"
+			android:exported="false"
+			android:foregroundServiceType="mediaPlayback" />
 
 		<activity
 			android:name=".motor.ComprobarDatosActivity"
