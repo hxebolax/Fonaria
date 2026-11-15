@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fonaria manual</title>
+<style>
+	:root { color-scheme: light dark; }
+	body { font-family: sans-serif; line-height: 1.55; margin: 0 1rem 2rem; font-size: 1.05rem; }
+	h1 { font-size: 1.6rem; } h2 { font-size: 1.35rem; margin-top: 2rem; } h3 { font-size: 1.15rem; }
+	code { font-family: monospace; }
+	a { color: #3949ab; } @media (prefers-color-scheme: dark) { a { color: #b9c3ff; } }
+</style>
+</head>
+<body>
+<h1>Fonaria manual</h1>
+<p>Fonaria is a text-to-speech engine for Android with very natural neural voices that work <strong>offline</strong>. Once you choose it as the system engine, every app that speaks (TalkBack, book readers, browsers, navigation…) uses its voices. It is designed to be used entirely with TalkBack.</p>
+<p>This manual is organised by headings: with TalkBack, choose «Headings» in the reading controls and swipe up or down.</p>
+
+<h2>1. Getting started</h2>
+<p>Fonaria includes the Phonon voice model and <strong>all 25 Spanish voices</strong> (13 from Spain and 12 from Mexico). <strong>Voices for any other language must be downloaded</strong> from Voices, Download: British and American English, English character voices, French, German and Brazilian Portuguese. Each voice is about 250 KB. Until you download them, text in those languages is read by a Spanish voice.</p>
+<p>Requirements: Android 5.0 or later, 64-bit (arm64) or 32-bit (armv7) processor, about 220 MB of free space.</p>
+
+<h2>2. Choosing Fonaria as the system engine</h2>
+<ol>
+	<li>On Home, tap <strong>Choose Fonaria as the speech engine</strong>. Android's text-to-speech settings open.</li>
+	<li>Under <strong>Preferred engine</strong>, choose <strong>Fonaria</strong>.</li>
+	<li>Back in Fonaria, Status says «Fonaria is the system speech engine».</li>
+</ol>
+<p>If you use TalkBack, first check that Fonaria speaks with the Listen button on Home. If anything goes wrong, choose your previous engine again on the same screen.</p>
+
+<h2>3. Main screen and drawer</h2>
+<p>The drawer has the sections (Home, Voices, Dictionary, Read text) and, after a divider, the actions (Settings, Manual, Check for updates, About). When it opens with TalkBack, focus goes to the current section. In lists, each row is read at once; double tap does the main action and every action is in TalkBack's actions menu and on long press.</p>
+
+<h2>4. Voices</h2>
+<ul>
+	<li><strong>Installed</strong>: Listen, Use for its language (it becomes the voice TalkBack and other apps hear), voice settings, and Delete for downloaded voices.</li>
+	<li><strong>Download</strong>: double tap a voice to download it, or <strong>Download a whole language</strong>. Every file is checked with its SHA-256 and downloads resume after interruptions.</li>
+	<li><strong>Imported</strong>: import voices designed or cloned in Gradium Studio («Download for Phonon», a <code>.safetensors</code> file). Fonaria checks the file works with the model, then you name it and choose its language.</li>
+</ul>
+
+<h2>5. Dictionary</h2>
+<p>Fix words the voice says wrong. Each entry has what is written, how it should sound, the type (whole word, anywhere, or regular expression with <code>$1</code> groups), case sensitivity, language, active and a comment. From the «More options» menu you can import NVDA speech dictionaries (<code>.dic</code>), Fonaria copies (<code>.json</code>) and simple tab-separated lists, and export for NVDA or as a Fonaria copy.</p>
+
+<h2>6. Read text and save audio</h2>
+<p>Type or paste text, choose a voice and tap <strong>Read aloud</strong>. <strong>Save as audio (WAV)</strong> generates the whole text and lets you save the file anywhere.</p>
+
+<h2>7. Settings</h2>
+<ul>
+	<li><strong>Voices</strong>: the voice for each language and region; speak even if a language voice is missing; use the voice each app asks for.</li>
+	<li><strong>Sound</strong>: rate (25–400 %, multiplied by the system or TalkBack rate), pitch, volume, natural pace (changed by the model itself), intonation variation, same reading every time, volume levelling, voice fidelity, silence trimming and pauses between sentences and paragraphs. Each voice can have its own sound settings.</li>
+	<li><strong>Text</strong>: read numbers, dates and symbols properly; punctuation level; emoji by name; dictionary; spelling single letters (with higher pitch for capitals); sentence-by-sentence speech and fast response.</li>
+	<li><strong>Engine</strong>: model (built-in q8, light q4k for older phones, highest-quality f32 — the last two are downloaded), measure engine speed, and advanced options (threads, decoding steps, end of sentence, chunk size, audio buffered ahead, accelerated decoder).</li>
+	<li><strong>Updates</strong>: where the app updates from (Fonaria server, GitHub, both or a custom address) and where voices are downloaded from.</li>
+	<li><strong>General</strong>: app language, theme, export and import settings (with the dictionary), reset settings.</li>
+</ul>
+
+<h2>8. Tips for TalkBack</h2>
+<p>Keep «Spell single letters», «Trim silence» and «Speak sentence by sentence» on. Set the speech rate in TalkBack and use Fonaria's rate only to fine-tune each voice. If it lags when moving quickly, lower «Audio buffered ahead» or use the light model. Fonaria also works on the lock screen right after a restart.</p>
+
+<h2>9. Older phones</h2>
+<p>Fonaria carries two 64-bit engine builds and picks the fastest one your processor supports; 32-bit phones get a compatible build. On slow phones choose the Light model, keep voice fidelity off and decoding steps at 1, and use «Measure engine speed» to compare.</p>
+
+<h2>10. Updates and privacy</h2>
+<p>Updates are checked on start (at most every six hours) or from the drawer. The downloaded APK is verified (size, SHA-256, package, version and signature) before Android's installer opens. Everything Fonaria reads is generated on your phone; text never leaves the device. The internet is only used for downloads and update checks. No ads, no analytics.</p>
+
+<h2>11. Licences</h2>
+<p>Fonaria is free software under the GNU GPL version 3 or later. Author: Héctor J. Benítez Corredera. The Phonon 40m multilingual model is by <strong>Gradium</strong> under <strong>CC BY-NC 4.0</strong> (non-commercial use, with attribution); the Gradium voice catalogue is Apache 2.0; the <code>ptts</code> runtime (MIT or Apache 2.0) builds on Kyutai's Pocket TTS and Mimi. Fonaria is not an official Gradium product. All licence texts are in About, Licences and credits.</p>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ajustes, pestaña Actualizaciones: de dónde se actualiza la app y se bajan las voces. -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory app:title="@string/cat_app" app:iconSpaceReserved="false">
+		<SwitchPreferenceCompat app:key="buscar_actualizaciones" app:title="@string/buscar_al_abrir" app:summary="@string/buscar_al_abrir_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<ListPreference app:key="fuente_actualizaciones" app:title="@string/fuente_actualizaciones" app:entries="@array/fuente_nombres" app:entryValues="@array/fuente_valores" android:defaultValue="ambos" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+		<EditTextPreference app:key="url_actualizaciones" app:title="@string/url_servidor" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+		<EditTextPreference app:key="url_personalizada" app:title="@string/url_personalizada" app:summary="@string/url_personalizada_resumen" app:iconSpaceReserved="false" />
+		<Preference app:key="buscar_ahora" app:title="@string/buscar_actualizaciones" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_descargas" app:iconSpaceReserved="false">
+		<ListPreference app:key="origen_voces" app:title="@string/origen_voces" app:entries="@array/origen_nombres" app:entryValues="@array/origen_valores" android:defaultValue="ambos" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+</PreferenceScreen>

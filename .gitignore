@@ -1,0 +1,44 @@
+# --- Entorno de compilación portátil (lo descarga compilar.bat) ---
+entorno/
+
+# --- Resultados de Gradle, Cargo y del IDE ---
+.gradle/
+.kotlin/
+build/
+app/build/
+nativo/target/
+local.properties
+*.iml
+.idea/
+.vscode/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# --- Bibliotecas nativas compiladas (las genera herramientas\compilar_nativo.ps1) ---
+app/src/main/jniLibs/
+
+# --- Modelo y voces (unos 100 MB; los prepara herramientas\preparar_modelo.ps1) ---
+modelo/*
+!modelo/LEEME.md
+
+# --- APK compilados y versiones publicadas (se regeneran) ---
+*.apk
+*.aab
+dist/
+
+# --- Firma de la app: NUNCA se sube a ningún sitio (guarda una copia segura aparte) ---
+firma/
+*.jks
+*.keystore
+
+# --- Material de referencia de terceros ---
+adjuntos/
+
+# --- Archivos del sistema y temporales ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.tmp
+*.bak

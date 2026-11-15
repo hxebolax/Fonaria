@@ -1,0 +1,31 @@
+[package]
+name = "fonaria-nativo"
+version = "1.0.0"
+edition = "2024"
+publish = false
+license = "GPL-3.0-or-later"
+description = "Puente JNI entre Fonaria (Android) y el motor de voz Phonon (ptts)"
+repository = "https://github.com/hxebolax/Fonaria"
+
+[lib]
+name = "fonaria"
+# Biblioteca compartida que Android carga con System.loadLibrary("fonaria").
+crate-type = ["cdylib", "rlib"]
+path = "src/lib.rs"
+
+[dependencies]
+# Motor Phonon de Gradium (MIT OR Apache-2.0). La versión exacta: el modelo y las
+# voces se han probado con ella.
+ptts = { version = "=0.7.1", default-features = false, features = ["hf"] }
+xn = "0.2.14"
+serde_json = "1"
+jni = { version = "0.21.1", default-features = false }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+# catch_unwind convierte un pánico en un error de Java en vez de cerrar la app.
+panic = "unwind"
+strip = "symbols"
+debug = false

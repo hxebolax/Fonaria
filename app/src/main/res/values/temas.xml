@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tema Material 3 claro/oscuro. Colores con contraste de al menos 4,5:1 sobre su fondo. -->
+<resources>
+	<color name="primario">#283593</color>
+	<color name="sobre_primario">#FFFFFF</color>
+	<color name="contenedor_primario">#DDE1FF</color>
+	<color name="sobre_contenedor_primario">#00105C</color>
+	<color name="secundario">#5A5D72</color>
+	<color name="contenedor_secundario">#DFE1F9</color>
+	<color name="sobre_contenedor_secundario">#171B2C</color>
+
+	<style name="Tema.Fonaria" parent="Theme.Material3.DayNight.NoActionBar">
+		<item name="colorPrimary">@color/primario</item>
+		<item name="colorOnPrimary">@color/sobre_primario</item>
+		<item name="colorPrimaryContainer">@color/contenedor_primario</item>
+		<item name="colorOnPrimaryContainer">@color/sobre_contenedor_primario</item>
+		<item name="colorSecondary">@color/secundario</item>
+		<item name="colorSecondaryContainer">@color/contenedor_secundario</item>
+		<item name="colorOnSecondaryContainer">@color/sobre_contenedor_secundario</item>
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+	</style>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 5 a 7: el icono como capas (fondo y ondas). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/ic_launcher_fondo" />
+	<item android:drawable="@drawable/ic_launcher_primer_plano" />
+</layer-list>

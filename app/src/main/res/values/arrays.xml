@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Listas de opciones de Ajustes. Los «valores» no se traducen nunca; los «nombres», sí. -->
+<resources>
+	<string-array name="puntuacion_nombres">
+		<item>Ninguna (la voz hace las pausas)</item>
+		<item>Alguna: símbolos como # @ % &amp;</item>
+		<item>La mayoría: también paréntesis, comillas y guiones</item>
+		<item>Toda: también puntos y comas</item>
+	</string-array>
+	<string-array name="puntuacion_valores" translatable="false">
+		<item>ninguna</item>
+		<item>alguna</item>
+		<item>mayoria</item>
+		<item>toda</item>
+	</string-array>
+
+	<string-array name="modelo_nombres">
+		<item>Integrado (q8): equilibrio entre calidad y velocidad</item>
+		<item>Ligero (q4k): más rápido, para móviles antiguos. Se descarga, 77 MB</item>
+		<item>Máxima calidad (f32): el más fiel y el más lento. Se descarga, 116 MB</item>
+	</string-array>
+	<string-array name="modelo_valores" translatable="false">
+		<item>q8</item>
+		<item>q4k</item>
+		<item>f32</item>
+	</string-array>
+
+	<string-array name="fuente_nombres">
+		<item>El servidor de Fonaria</item>
+		<item>GitHub</item>
+		<item>Los dos (la versión más nueva)</item>
+		<item>Una dirección personalizada</item>
+	</string-array>
+	<string-array name="fuente_valores" translatable="false">
+		<item>servidor</item>
+		<item>github</item>
+		<item>ambos</item>
+		<item>personalizada</item>
+	</string-array>
+
+	<string-array name="origen_nombres">
+		<item>El servidor de Fonaria</item>
+		<item>Hugging Face (catálogo de Gradium)</item>
+		<item>El servidor y, si falla, Hugging Face</item>
+	</string-array>
+	<string-array name="origen_valores" translatable="false">
+		<item>servidor</item>
+		<item>huggingface</item>
+		<item>ambos</item>
+	</string-array>
+
+	<string-array name="idioma_app_nombres">
+		<item>El del sistema</item>
+		<item>Español</item>
+		<item>English</item>
+	</string-array>
+	<string-array name="idioma_app_valores" translatable="false">
+		<item>sistema</item>
+		<item>es</item>
+		<item>en</item>
+	</string-array>
+
+	<string-array name="tema_nombres">
+		<item>El del sistema</item>
+		<item>Claro</item>
+		<item>Oscuro</item>
+	</string-array>
+	<string-array name="tema_valores" translatable="false">
+		<item>sistema</item>
+		<item>claro</item>
+		<item>oscuro</item>
+	</string-array>
+</resources>

@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"modelos": [
+		{
+			"id": "q8",
+			"archivo": "model.q8.gguf",
+			"tamano": 95164192,
+			"sha256": "f5b769a942dab2a36c174522241e232d1421e6c9b0cb805d11094f5d9c888286",
+			"incluido": true
+		},
+		{
+			"id": "q4k",
+			"archivo": "model.q4k.gguf",
+			"tamano": 81008416,
+			"sha256": "8ea0f4dbda34d18bac1b98516d537a09672516f32741332d8667dfa2360d4401",
+			"incluido": false
+		},
+		{
+			"id": "f32",
+			"archivo": "model.safetensors",
+			"tamano": 121713288,
+			"sha256": "79ae43d94821bc372ca00c3c81178881a0781c0af098b7be7d89af0130615701",
+			"incluido": false
+		}
+	]
+}

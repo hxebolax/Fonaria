@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fila de lista de una sola parada: título y detalle se leen juntos. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="?attr/selectableItemBackground"
+	android:clickable="true"
+	android:focusable="true"
+	android:minHeight="64dp"
+	android:orientation="vertical"
+	android:paddingHorizontal="16dp"
+	android:paddingVertical="10dp">
+
+	<TextView
+		android:id="@+id/titulo"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:importantForAccessibility="no"
+		android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+	<TextView
+		android:id="@+id/detalle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:importantForAccessibility="no"
+		android:textAppearance="?attr/textAppearanceBodyMedium"
+		android:textColor="?attr/colorOnSurfaceVariant" />
+</LinearLayout>

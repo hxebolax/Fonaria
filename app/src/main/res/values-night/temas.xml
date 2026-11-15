@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Colores del tema oscuro (mismo estilo Tema.Fonaria de values/temas.xml). -->
+<resources>
+	<color name="primario">#B9C3FF</color>
+	<color name="sobre_primario">#08218A</color>
+	<color name="contenedor_primario">#2A3A9B</color>
+	<color name="sobre_contenedor_primario">#DDE1FF</color>
+	<color name="secundario">#C3C5DD</color>
+	<color name="contenedor_secundario">#434659</color>
+	<color name="sobre_contenedor_secundario">#DFE1F9</color>
+</resources>

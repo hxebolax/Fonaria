@@ -1,0 +1,16 @@
+Novedades de Fonaria (una sección por versión: "== versión").
+El texto de la versión que se publica se muestra en la app al ofrecer la actualización.
+Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
+añade aquí su sección y usa la opción 8 de compilar.bat.
+
+== 1.0.0
+- Primera versión de Fonaria: motor de voz para Android con las voces neuronales Phonon de Gradium, que funcionan sin conexión. Se elige como motor del sistema y la usan TalkBack y todas las apps que hablan.
+- Trae las 25 voces en español, de España y de México. Las de inglés (Reino Unido, Estados Unidos y voces de personaje), francés, alemán y portugués de Brasil se descargan en Voces, una a una o un idioma completo. También se pueden importar voces propias de Gradium Studio.
+- Cada voz con su velocidad, tono, volumen, ritmo natural y variación de la entonación, además de los ajustes generales.
+- Diccionario de pronunciación compatible con los diccionarios de voz de NVDA (importar y exportar .dic).
+- Deletreo de letras sueltas en cada idioma, emojis por su nombre, lectura de la puntuación por niveles y lectura correcta de números, fechas, horas, monedas, correos y direcciones web.
+- Leer cualquier texto y guardarlo como audio WAV.
+- Tres modelos: integrado, ligero para móviles antiguos y de máxima calidad. Medir la velocidad del motor en tu móvil.
+- Funciona en Android 5.0 o posterior, en procesadores de 64 y de 32 bits, y en la pantalla de bloqueo nada más reiniciar.
+- Totalmente accesible con TalkBack, con manual completo dentro de la app. En español y en inglés.
+- Se actualiza sola desde el servidor de Fonaria o desde GitHub.

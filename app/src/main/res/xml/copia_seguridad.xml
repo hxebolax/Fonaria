@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copia de seguridad de Android (hasta Android 11): los ajustes, el diccionario y las voces
+     importadas sí; el modelo y las voces del catálogo no (vuelven del APK o se descargan). -->
+<full-backup-content>
+	<include domain="device_sharedpref" path="ajustes.xml" />
+	<include domain="device_file" path="fonaria/diccionario.json" />
+	<include domain="device_file" path="fonaria/importadas/" />
+</full-backup-content>

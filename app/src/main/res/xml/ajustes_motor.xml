@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ajustes, pestaña Motor: modelo y opciones avanzadas del motor neuronal. -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory app:title="@string/cat_modelo" app:iconSpaceReserved="false">
+		<ListPreference app:key="modelo" app:title="@string/modelo" app:entries="@array/modelo_nombres" app:entryValues="@array/modelo_valores" android:defaultValue="q8" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+		<Preference app:key="borrar_modelos" app:title="@string/borrar_modelos" app:summary="@string/borrar_modelos_resumen" app:iconSpaceReserved="false" />
+		<Preference app:key="medir" app:title="@string/medir_motor" app:summary="@string/medir_motor_resumen" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_avanzado" app:iconSpaceReserved="false">
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="hilos" app:title="@string/hilos" app:summary="@string/hilos_resumen" app:min="0" android:max="8" app:seekBarIncrement="1" app:showSeekBarValue="true" android:defaultValue="0" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="pasos" app:title="@string/pasos" app:summary="@string/pasos_resumen" app:min="1" android:max="4" app:seekBarIncrement="1" app:showSeekBarValue="true" android:defaultValue="1" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="umbral_fin" app:title="@string/umbral_fin" app:summary="@string/umbral_fin_resumen" app:min="0" android:max="80" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="0" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="tokens_trozo" app:title="@string/tokens_trozo" app:summary="@string/tokens_trozo_resumen" app:min="0" android:max="200" app:seekBarIncrement="10" app:showSeekBarValue="true" android:defaultValue="0" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="adelanto" app:title="@string/adelanto" app:summary="@string/adelanto_resumen" app:min="100" android:max="3000" app:seekBarIncrement="100" app:showSeekBarValue="true" android:defaultValue="400" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="mimi_q8" app:title="@string/mimi_q8" app:summary="@string/mimi_q8_resumen" android:defaultValue="false" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+</PreferenceScreen>

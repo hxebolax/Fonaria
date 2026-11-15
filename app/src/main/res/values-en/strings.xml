@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fonaria in English. Translated from values/strings.xml (Spanish is the default language). -->
+<resources>
+	<!-- Sections and drawer -->
+	<string name="inicio">Home</string>
+	<string name="voces">Voices</string>
+	<string name="diccionario">Dictionary</string>
+	<string name="leer_texto">Read text</string>
+	<string name="ajustes">Settings</string>
+	<string name="manual">Manual</string>
+	<string name="buscar_actualizaciones">Check for updates</string>
+	<string name="acerca_de">About</string>
+
+	<!-- First run -->
+	<string name="bienvenida_titulo">Welcome to Fonaria</string>
+	<string name="bienvenida_texto">Fonaria is a text-to-speech engine for Android with very natural neural voices that work offline. It includes every Spanish voice from Spain and Mexico; voices for other languages are downloaded from Voices.\n\nTo make TalkBack and other apps speak with Fonaria, choose it as the preferred engine in Android\'s text-to-speech settings.</string>
+	<string name="elegir_motor_sistema">Choose Fonaria as the speech engine</string>
+	<string name="ahora_no">Not now</string>
+	<string name="aviso_idioma_titulo">%1$s voices</string>
+	<string name="aviso_idioma_texto">Fonaria only includes Spanish voices. To hear %1$s with its own voice, download the voices for that language. Until then, %1$s text is read by a Spanish voice.</string>
+	<string name="descargar_voces">Download voices</string>
+
+	<!-- Home -->
+	<string name="estado">Status</string>
+	<string name="estado_es_motor">Fonaria is the system speech engine.</string>
+	<string name="estado_no_es_motor">Fonaria is not the system speech engine. TalkBack and other apps use another one.</string>
+	<string name="estado_sin_modelo">The voice model is not ready yet. Wait a few seconds.</string>
+	<string name="estado_error_motor">Engine problem: %1$s</string>
+	<string name="ajustes_voz_sistema">Android text-to-speech settings</string>
+	<string name="ajustes_voz_sistema_resumen">Choose the preferred engine, system speech rate and pitch</string>
+	<string name="probar">Try it</string>
+	<string name="voz_de_prueba">Voice: %1$s, %2$s. Change</string>
+	<string name="texto_prueba">Test text</string>
+	<string name="escuchar">Listen</string>
+	<string name="detener">Stop</string>
+	<string name="accesos">More</string>
+	<string name="descargar_mas_voces">Download voices for other languages</string>
+	<string name="abrir_manual">Open the manual</string>
+	<string name="elegir_voz">Choose voice</string>
+
+	<!-- Voices -->
+	<string name="pestana_instaladas">Installed</string>
+	<string name="pestana_descargar">Download</string>
+	<string name="pestana_importadas">Imported</string>
+	<string name="sin_voces">No voices installed</string>
+	<string name="sin_importadas">No imported voices. You can import voices designed or cloned in Gradium Studio (.safetensors files).</string>
+	<string name="todas_descargadas">All voices are downloaded.</string>
+	<string name="voz_preferida">Preferred voice for its language</string>
+	<string name="idioma_personajes">English, character voices</string>
+	<string name="filtrar_idioma_todos">Language: all. Filter</string>
+	<string name="filtrar_idioma_uno">Language: %1$s. Filter</string>
+	<string name="filtrar_por_idioma">Filter by language</string>
+	<string name="todos_los_idiomas">All languages</string>
+	<string name="escuchar_x">Listen to %1$s</string>
+	<string name="usar_para">Use for %1$s</string>
+	<string name="ajustes_de_x">%1$s settings</string>
+	<string name="renombrar_x">Rename %1$s</string>
+	<string name="cambiar_idioma_x">Change the language of %1$s</string>
+	<string name="borrar_x">Delete %1$s</string>
+	<string name="borrar">Delete</string>
+	<string name="descargar">Download</string>
+	<string name="descargar_x">Download %1$s</string>
+	<string name="descargar_todas_idioma">Download all %1$s voices</string>
+	<string name="descargar_idioma_completo">Download a whole language</string>
+	<string name="idioma_con_voces">%1$s: %2$d voices, %3$s</string>
+	<string name="presentacion_voz">Hello, I am %1$s.</string>
+	<string name="voz_elegida">%1$s is now the voice for %2$s</string>
+	<string name="confirmar_borrar_voz">Delete the voice %1$s? It can be downloaded again.</string>
+	<string name="voz_borrada">%1$s deleted</string>
+	<string name="descargando_voz">%1$s, %2$d of %3$d. %4$d percent</string>
+	<string name="descarga_con_fallos">%1$d voices downloaded. These could not be downloaded: %2$s. Reason: %3$s</string>
+	<string name="elegir_voz_para">Which voice do you want for %1$s?</string>
+	<string name="importar_voz">Import a voice</string>
+	<string name="nombre_de_la_voz">Voice name</string>
+	<string name="nombre">Name</string>
+	<string name="idioma_de_la_voz">Language the voice speaks</string>
+	<string name="comprobando_voz">Checking that the voice works with this model…</string>
+	<string name="voz_demasiado_grande">The file is too large to be a voice (4 MB maximum).</string>
+	<string name="voz_no_valida">This file is not a valid Phonon voice for this model (%1$s).</string>
+	<string name="voz_importada">Voice %1$s imported</string>
+	<string name="todas_las_acciones">Show all actions</string>
+
+	<!-- Voice profile -->
+	<string name="perfil_personaje">Character voice</string>
+	<string name="perfil_mujer">Woman</string>
+	<string name="perfil_hombre">Man</string>
+	<string name="perfil_mujer_joven">Young woman</string>
+	<string name="perfil_hombre_joven">Young man</string>
+	<string name="perfil_mujer_joven_adulta">Young adult woman</string>
+	<string name="perfil_hombre_joven_adulto">Young adult man</string>
+	<string name="perfil_mujer_adulta">Adult woman</string>
+	<string name="perfil_hombre_adulto">Adult man</string>
+	<string name="perfil_mujer_mediana">Middle-aged woman</string>
+	<string name="perfil_hombre_mediana">Middle-aged man</string>
+	<string name="perfil_mujer_mayor">Older woman</string>
+	<string name="perfil_hombre_mayor">Older man</string>
+
+	<!-- Voice settings -->
+	<string name="cat_sonido_de_voz">Sound of this voice</string>
+	<string name="cat_sonido_de_voz_resumen">Anything you do not change here follows the general Sound settings.</string>
+	<string name="valor_propio">This voice\'s own setting</string>
+	<string name="valor_general">Same as the general setting</string>
+	<string name="volver_a_generales">Back to the general settings</string>
+	<string name="volver_a_generales_resumen">Removes all of this voice\'s own settings</string>
+	<string name="ajustes_quitados">Own settings removed</string>
+
+	<!-- Settings tabs -->
+	<string name="pestana_voces">Voices</string>
+	<string name="pestana_sonido">Sound</string>
+	<string name="pestana_texto">Text</string>
+	<string name="pestana_motor">Engine</string>
+	<string name="pestana_actualizaciones">Updates</string>
+	<string name="pestana_general">General</string>
+
+	<!-- Settings: Voices -->
+	<string name="cat_voz_por_idioma">Voice for each language</string>
+	<string name="voz_para">Voice for %1$s</string>
+	<string name="voz_automatica">Automatic (the first one of that language)</string>
+	<string name="sin_voces_idioma">No voices for this language. Download them in Voices.</string>
+	<string name="cat_comportamiento">Behaviour</string>
+	<string name="voz_reserva">Speak even if the language voice is missing</string>
+	<string name="voz_reserva_resumen">If an app asks for a language with no voice installed, a Spanish voice reads it instead of staying silent</string>
+	<string name="respetar_voz_pedida">Use the voice each app asks for</string>
+	<string name="respetar_voz_pedida_resumen">If an app chooses a specific Fonaria voice, that one is used. Off, the voice chosen here for the language always speaks (best with TalkBack)</string>
+	<string name="gestionar_voces">Download, import and delete voices</string>
+	<string name="gestionar_voces_resumen">Opens the Voices section</string>
+
+	<!-- Settings: Sound -->
+	<string name="cat_voz_general">Voice (for every voice)</string>
+	<string name="velocidad">Speech rate</string>
+	<string name="velocidad_resumen">Added to the rate you choose in TalkBack or Android</string>
+	<string name="tono">Pitch</string>
+	<string name="tono_resumen">Lower or higher</string>
+	<string name="volumen">Volume</string>
+	<string name="volumen_resumen">Over 100 percent may distort</string>
+	<string name="ritmo">Natural pace</string>
+	<string name="ritmo_resumen">Changed by the model itself: negative speaks lighter, positive more relaxed. Sounds more natural than the rate, but changes less</string>
+	<string name="variacion">Intonation variation</string>
+	<string name="variacion_resumen">0 is always the same and flat; higher is more expressive and varied</string>
+	<string name="cat_sistema">System</string>
+	<string name="velocidad_sistema">Use the system speech rate</string>
+	<string name="velocidad_sistema_resumen">The rate sent by TalkBack or the app that speaks</string>
+	<string name="tono_sistema">Use the system pitch</string>
+	<string name="tono_sistema_resumen">The pitch sent by TalkBack or the app that speaks</string>
+	<string name="cat_entonacion">Intonation and quality</string>
+	<string name="semilla_fija">The same sentence always sounds the same</string>
+	<string name="semilla_fija_resumen">Off, every reading is a different take, like a person</string>
+	<string name="igualar_volumen">Level the volume</string>
+	<string name="igualar_volumen_resumen">Compresses the audio so every voice and sentence sounds about as loud</string>
+	<string name="guia">Voice fidelity</string>
+	<string name="guia_resumen">Higher sounds closer to the original voice but takes twice as long. Off is the fastest</string>
+	<string name="cat_pausas">Pauses and silence</string>
+	<string name="recortar_silencios">Trim silence</string>
+	<string name="recortar_silencios_resumen">Removes silence at the start and end of each sentence: responds sooner</string>
+	<string name="pausa_frases">Pause between sentences</string>
+	<string name="pausa_frases_resumen">Silence between one sentence and the next</string>
+	<string name="pausa_parrafos">Pause between paragraphs</string>
+	<string name="pausa_parrafos_resumen">Silence at every line break</string>
+
+	<!-- Settings: Text -->
+	<string name="cat_lectura">Reading</string>
+	<string name="normalizar">Read numbers, dates and symbols properly</string>
+	<string name="normalizar_resumen">The engine turns figures, times, currencies, emails and web addresses into words of each language</string>
+	<string name="puntuacion">Read punctuation</string>
+	<string name="emojis">Read emoji</string>
+	<string name="emojis_resumen">By name: smiling face, thumbs up…</string>
+	<string name="usar_diccionario">Use the dictionary</string>
+	<string name="usar_diccionario_resumen">The pronunciations in the Dictionary section</string>
+	<string name="cat_deletreo">Spelling</string>
+	<string name="deletrear">Spell single letters</string>
+	<string name="deletrear_resumen">A letter or symbol on its own is said by its name: bee, double you, number sign</string>
+	<string name="tono_mayusculas">Raise pitch for capitals</string>
+	<string name="tono_mayusculas_resumen">When spelling. At 0, «capital» is said first</string>
+	<string name="cat_respuesta">Responsiveness</string>
+	<string name="dividir_frases">Speak sentence by sentence</string>
+	<string name="dividir_frases_resumen">Starts sounding sooner and stops at once when asked</string>
+	<string name="respuesta_rapida">Fast response</string>
+	<string name="respuesta_rapida_resumen">Also splits a long first sentence at its first comma, to start speaking sooner</string>
+
+	<!-- Settings: Engine -->
+	<string name="cat_modelo">Model</string>
+	<string name="modelo">Voice model</string>
+	<string name="borrar_modelos">Delete downloaded models</string>
+	<string name="borrar_modelos_resumen">Frees space; the built-in model always stays</string>
+	<string name="sin_modelos_descargados">No downloaded models.</string>
+	<string name="confirmar_borrar_modelos">Delete the downloaded models? The built-in one will be used.</string>
+	<string name="modelos_borrados">Models deleted</string>
+	<string name="descargar_modelo_pregunta">The model «%1$s» is not on the phone. Download it? It takes %2$s.</string>
+	<string name="descargando_modelo">Downloading the model</string>
+	<string name="modelo_descargado">Model downloaded and selected</string>
+	<string name="medir_motor">Measure engine speed</string>
+	<string name="medir_motor_resumen">How much audio your phone generates per second with the current settings</string>
+	<string name="midiendo">Measuring…</string>
+	<string name="resultado_medida">Generates %1$.1f seconds of speech per second of computing (over 1 is faster than real time).\nFirst sound: %2$d milliseconds.\nModel load: %3$d milliseconds.\n\n%4$s</string>
+	<string name="cat_avanzado">Advanced</string>
+	<string name="hilos">Computing threads</string>
+	<string name="hilos_resumen">Processor cores the engine uses. Applied after restarting the phone or force-stopping Fonaria</string>
+	<string name="pasos">Decoding steps</string>
+	<string name="pasos_resumen">More steps, a bit more quality and slower. 1 is recommended</string>
+	<string name="umbral_fin">End of sentence</string>
+	<string name="umbral_fin_resumen">Lower lets the voice go on longer before the sentence is considered finished. Raise it if endings drag on</string>
+	<string name="tokens_trozo">Chunk size</string>
+	<string name="tokens_trozo_resumen">How much text is generated at once. Automatic works almost always</string>
+	<string name="adelanto">Audio buffered ahead</string>
+	<string name="adelanto_resumen">How much is generated before it plays. More is smoother on slow phones; less stops sooner</string>
+	<string name="mimi_q8">Accelerated decoder (experimental)</string>
+	<string name="mimi_q8_resumen">Faster on some processors, with slightly less quality</string>
+	<string name="automatico">Automatic</string>
+	<string name="del_modelo">The model\'s own</string>
+	<string name="desactivada">Off</string>
+	<plurals name="hilos">
+		<item quantity="one">%1$d thread</item>
+		<item quantity="other">%1$d threads</item>
+	</plurals>
+	<plurals name="pasos">
+		<item quantity="one">%1$d step</item>
+		<item quantity="other">%1$d steps</item>
+	</plurals>
+
+	<!-- Settings: Updates -->
+	<string name="cat_app">App</string>
+	<string name="buscar_al_abrir">Check for updates on start</string>
+	<string name="buscar_al_abrir_resumen">At most every six hours</string>
+	<string name="fuente_actualizaciones">Update from</string>
+	<string name="url_servidor">Server address</string>
+	<string name="url_personalizada">Custom address</string>
+	<string name="url_personalizada_resumen">Another server with version.json, or a GitHub repository</string>
+	<string name="cat_descargas">Voice downloads</string>
+	<string name="origen_voces">Download voices from</string>
+
+	<!-- Settings: General -->
+	<string name="cat_aspecto">Language and appearance</string>
+	<string name="idioma_app">App language</string>
+	<string name="tema">Theme</string>
+	<string name="cat_copias">Backup and reset</string>
+	<string name="exportar_config">Export settings</string>
+	<string name="exportar_config_resumen">All settings and the dictionary in one file</string>
+	<string name="importar_config">Import settings</string>
+	<string name="importar_config_resumen">From a file exported before, also from another phone</string>
+	<string name="restablecer">Reset settings</string>
+	<string name="restablecer_resumen">Everything back to defaults. The dictionary and voices stay</string>
+	<string name="confirmar_restablecer">Go back to the default settings?</string>
+	<string name="config_exportada">Settings exported</string>
+	<string name="config_importada">%1$d settings and the dictionary were loaded.</string>
+	<string name="config_no_valida">That file is not a Fonaria settings file.</string>
+
+	<!-- Dictionary -->
+	<string name="anadir_entrada">Add a word</string>
+	<string name="editar_entrada">Change the word</string>
+	<string name="diccionario_vacio">The dictionary is empty. Add words the voice says wrong and how they should sound.</string>
+	<string name="se_dice">Said as: %1$s</string>
+	<string name="nada">nothing (silent)</string>
+	<string name="tipo_palabra">Whole word only</string>
+	<string name="tipo_texto">Anywhere, also inside other words</string>
+	<string name="tipo_regex">Regular expression</string>
+	<string name="distingue_mayusculas">Case sensitive</string>
+	<string name="distinguir_mayusculas">Match upper and lower case</string>
+	<string name="entrada_activa">Active</string>
+	<string name="patron">What is written</string>
+	<string name="reemplazo">How it should sound</string>
+	<string name="comentario">Comment (optional)</string>
+	<string name="idioma">Language</string>
+	<string name="idioma_x">Language: %1$s. Change</string>
+	<string name="escuchar_reemplazo">Listen to how it sounds</string>
+	<string name="error_patron_vacio">Type the word or text to change</string>
+	<string name="error_regex">The regular expression is not valid</string>
+	<string name="guardar">Save</string>
+	<string name="entrada_guardada">«%1$s» saved</string>
+	<string name="entrada_borrada">«%1$s» deleted</string>
+	<string name="editar_x">Change %1$s</string>
+	<string name="activar">Turn on</string>
+	<string name="desactivar">Turn off</string>
+	<string name="importar_diccionario">Import a dictionary</string>
+	<string name="exportar_nvda">Export for NVDA (.dic)</string>
+	<string name="exportar_fonaria">Export Fonaria copy (.json)</string>
+	<string name="borrar_todo_diccionario">Delete the whole dictionary</string>
+	<string name="borrar_todo">Delete all</string>
+	<string name="confirmar_borrar_diccionario">Delete the %1$d words in the dictionary?</string>
+	<string name="diccionario_borrado">Dictionary deleted</string>
+	<string name="diccionario_sin_entradas">The file has no words that can be imported.</string>
+	<string name="diccionario_importado">%1$d words imported. %2$d were already there and were not repeated.</string>
+	<plurals name="entradas">
+		<item quantity="one">%1$d word in the dictionary</item>
+		<item quantity="other">%1$d words in the dictionary</item>
+	</plurals>
+	<plurals name="entradas_exportadas">
+		<item quantity="one">%1$d word exported</item>
+		<item quantity="other">%1$d words exported</item>
+	</plurals>
+
+	<!-- Read text -->
+	<string name="voz_x">Voice: %1$s, %2$s. Change</string>
+	<string name="texto_para_leer">Text to read</string>
+	<string name="leer_en_voz_alta">Read aloud</string>
+	<string name="guardar_audio">Save as audio (WAV)</string>
+	<string name="pegar_portapapeles">Paste from clipboard</string>
+	<string name="escribe_algo">Type or paste some text</string>
+	<string name="leyendo">Reading</string>
+	<string name="lectura_terminada">Finished reading</string>
+	<string name="portapapeles_vacio">The clipboard is empty</string>
+	<string name="texto_pegado">Text pasted: %1$d characters</string>
+	<string name="generando_audio">Generating the audio…</string>
+	<string name="audio_listo">Audio generated. Choose where to save it.</string>
+	<string name="audio_fallo">The audio could not be generated</string>
+	<string name="audio_guardado">Audio saved</string>
+	<string name="audio_no_guardado">The audio could not be saved</string>
+	<string name="nombre_audio">Fonaria-%1$s.wav</string>
+
+	<!-- Manual and About -->
+	<string name="licencias">Licences and credits</string>
+	<string name="codigo_fuente">Source code on GitHub</string>
+	<string name="diagnostico">Diagnostics</string>
+	<string name="copiar_diagnostico">Copy diagnostics</string>
+	<string name="acerca_texto">Offline neural text-to-speech engine for Android, accessible with TalkBack.\n\nAuthor: Héctor J. Benítez Corredera. Free software under the GNU GPL version 3 or later.\n\nThe Phonon voices and model are by Gradium and build on Kyutai\'s Pocket TTS. The model is distributed under the CC BY-NC 4.0 licence: non-commercial use. Fonaria is not an official Gradium product.</string>
+
+	<!-- Updates -->
+	<string name="actualizacion">Update</string>
+	<string name="actualizacion_disponible">Fonaria %1$s available</string>
+	<string name="actualizacion_texto">You have version %1$s and there is a new one, %2$s.</string>
+	<string name="actualizacion_tamano">Size: %1$s.</string>
+	<string name="actualizacion_origen">From %1$s.</string>
+	<string name="novedades">What\'s new:</string>
+	<string name="actualizar">Update</string>
+	<string name="mas_tarde">Later</string>
+	<string name="omitir_version">Skip this version</string>
+	<string name="buscando_actualizaciones">Looking for a new version…</string>
+	<string name="sin_actualizaciones">You have the latest version (%1$s).</string>
+	<string name="error_comprobar_actualizacion">Could not check for a new version. %1$s</string>
+	<string name="error_descargar_actualizacion">Could not download the update. %1$s</string>
+	<string name="descargando_version">Downloading Fonaria %1$s</string>
+	<string name="descargando_inicio">Starting the download…</string>
+	<string name="descargando_progreso">%1$d percent, %2$s of %3$s</string>
+	<string name="actualizacion_descargada">Update downloaded</string>
+	<string name="actualizacion_pedir_permiso">To install the update, Android must allow Fonaria to install apps. Turn on the permission and come back.</string>
+	<string name="actualizacion_sin_permiso">Without the permission the update cannot be installed.</string>
+	<string name="actualizada_a">Fonaria updated to version %1$s</string>
+	<string name="abrir_ajustes">Open settings</string>
+	<string name="act_sin_direccion">Type the custom address in Settings, Updates.</string>
+	<string name="act_github_sin_versiones">The repository %1$s has no published releases.</string>
+	<string name="act_github_limite">GitHub has limited requests for a while. Try later or use the server.</string>
+	<string name="act_github_sin_apk">The GitHub release has no APK.</string>
+	<string name="act_version_no_valida">The published version information is not valid.</string>
+	<string name="act_no_app">The downloaded file is not an app.</string>
+	<string name="act_no_fonaria">The downloaded file is not Fonaria.</string>
+	<string name="act_no_nueva">The downloaded file is not newer than the installed version.</string>
+	<string name="act_firma">The downloaded file is not signed by Fonaria\'s author. It will not be installed.</string>
+	<string name="act_sin_instalador">There is no installer that can open it.</string>
+
+	<!-- Downloads and errors -->
+	<string name="descarga_cancelada">Download cancelled</string>
+	<string name="descarga_cortes">The connection dropped too many times. Try another network.</string>
+	<string name="descarga_incompleta">The download is incomplete.</string>
+	<string name="descarga_sha">The downloaded file does not match the published one (SHA-256).</string>
+	<string name="descarga_no_guardada">The downloaded file could not be saved.</string>
+	<string name="servidor_respondio">The server answered with code %1$d.</string>
+	<string name="sin_conexion_servidor">No connection to the server.</string>
+	<string name="respuesta_no_valida">The server response is not valid.</string>
+	<string name="error_inesperado">An unexpected error occurred.</string>
+	<string name="error_titulo">Error</string>
+	<string name="buscando">Searching…</string>
+
+	<plurals name="voces_instaladas">
+		<item quantity="one">%1$d voice installed: %2$s.</item>
+		<item quantity="other">%1$d voices installed: %2$s.</item>
+	</plurals>
+	<plurals name="voces_en_lista">
+		<item quantity="one">%1$d voice</item>
+		<item quantity="other">%1$d voices</item>
+	</plurals>
+	<plurals name="voces_por_descargar">
+		<item quantity="one">%1$d voice to download</item>
+		<item quantity="other">%1$d voices to download</item>
+	</plurals>
+	<plurals name="voces_importadas">
+		<item quantity="one">%1$d imported voice</item>
+		<item quantity="other">%1$d imported voices</item>
+	</plurals>
+	<plurals name="voces_descargadas">
+		<item quantity="one">%1$d voice downloaded</item>
+		<item quantity="other">%1$d voices downloaded</item>
+	</plurals>
+	<plurals name="descargando_voces">
+		<item quantity="one">Downloading %1$d voice</item>
+		<item quantity="other">Downloading %1$d voices</item>
+	</plurals>
+</resources>

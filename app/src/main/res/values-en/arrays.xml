@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings option names in English. The values are in values/arrays.xml and are never translated. -->
+<resources>
+	<string-array name="puntuacion_nombres">
+		<item>None (the voice makes the pauses)</item>
+		<item>Some: symbols such as # @ % &amp;</item>
+		<item>Most: also brackets, quotes and dashes</item>
+		<item>All: also full stops and commas</item>
+	</string-array>
+	<string-array name="modelo_nombres">
+		<item>Built-in (q8): balance of quality and speed</item>
+		<item>Light (q4k): faster, for older phones. Download, 77 MB</item>
+		<item>Highest quality (f32): most faithful and slowest. Download, 116 MB</item>
+	</string-array>
+	<string-array name="fuente_nombres">
+		<item>The Fonaria server</item>
+		<item>GitHub</item>
+		<item>Both (the newest version)</item>
+		<item>A custom address</item>
+	</string-array>
+	<string-array name="origen_nombres">
+		<item>The Fonaria server</item>
+		<item>Hugging Face (Gradium catalogue)</item>
+		<item>The server and, if it fails, Hugging Face</item>
+	</string-array>
+	<string-array name="idioma_app_nombres">
+		<item>System language</item>
+		<item>Español</item>
+		<item>English</item>
+	</string-array>
+	<string-array name="tema_nombres">
+		<item>System</item>
+		<item>Light</item>
+		<item>Dark</item>
+	</string-array>
+</resources>

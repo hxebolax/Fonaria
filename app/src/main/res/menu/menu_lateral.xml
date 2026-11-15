@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Menú lateral: arriba los destinos (secciones), tras el divisor las acciones generales. -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group android:id="@+id/grupo_destinos">
+		<item android:id="@+id/destino_inicio" android:icon="@drawable/ic_inicio" android:title="@string/inicio" />
+		<item android:id="@+id/destino_voces" android:icon="@drawable/ic_voces" android:title="@string/voces" />
+		<item android:id="@+id/destino_diccionario" android:icon="@drawable/ic_diccionario" android:title="@string/diccionario" />
+		<item android:id="@+id/destino_leer" android:icon="@drawable/ic_leer" android:title="@string/leer_texto" />
+	</group>
+	<group android:id="@+id/grupo_general">
+		<item android:id="@+id/accion_ajustes" android:icon="@drawable/ic_ajustes" android:title="@string/ajustes" />
+		<item android:id="@+id/accion_manual" android:icon="@drawable/ic_manual" android:title="@string/manual" />
+		<item android:id="@+id/accion_actualizaciones" android:icon="@drawable/ic_actualizar" android:title="@string/buscar_actualizaciones" />
+		<item android:id="@+id/accion_acerca" android:icon="@drawable/ic_info" android:title="@string/acerca_de" />
+	</group>
+</menu>

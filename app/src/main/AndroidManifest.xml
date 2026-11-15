@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<!-- Descargar voces y actualizaciones -->
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- Instalar las actualizaciones descargadas (Android pide confirmación cada vez) -->
+	<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+	<application
+		android:name=".FonariaApp"
+		android:allowBackup="true"
+		android:dataExtractionRules="@xml/extraccion_datos"
+		android:fullBackupContent="@xml/copia_seguridad"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:roundIcon="@mipmap/ic_launcher"
+		android:supportsRtl="true"
+		android:theme="@style/Tema.Fonaria"
+		tools:targetApi="35">
+
+		<!-- El motor de voz del sistema. Puede arrancar en la pantalla de bloqueo nada más
+		     reiniciar (Direct Boot): el modelo, las voces y los ajustes están en el almacenamiento
+		     protegido del dispositivo. -->
+		<service
+			android:name=".motor.ServicioVoz"
+			android:directBootAware="true"
+			android:exported="true"
+			android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.TTS_SERVICE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+			<meta-data
+				android:name="android.speech.tts"
+				android:resource="@xml/tts_engine" />
+		</service>
+
+		<activity
+			android:name=".motor.ComprobarDatosActivity"
+			android:directBootAware="true"
+			android:exported="true"
+			android:noHistory="true"
+			android:theme="@android:style/Theme.NoDisplay">
+			<intent-filter>
+				<action android:name="android.speech.tts.engine.CHECK_TTS_DATA" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".motor.TextoMuestraActivity"
+			android:directBootAware="true"
+			android:exported="true"
+			android:noHistory="true"
+			android:theme="@android:style/Theme.NoDisplay">
+			<intent-filter>
+				<action android:name="android.speech.tts.engine.GET_SAMPLE_TEXT" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".ui.PrincipalActivity"
+			android:exported="true"
+			android:launchMode="singleTop">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<!-- «Instalar datos de voz» desde los ajustes de Android: abre Voces -->
+			<intent-filter>
+				<action android:name="android.speech.tts.engine.INSTALL_TTS_DATA" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<!-- La rueda junto al motor en los ajustes de Android abre los ajustes de Fonaria -->
+		<activity
+			android:name=".ui.AjustesActivity"
+			android:exported="true"
+			android:label="@string/ajustes"
+			android:parentActivityName=".ui.PrincipalActivity">
+			<intent-filter>
+				<action android:name="android.speech.tts.engine.CONFIGURE_ENGINE" />
+				<category android:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".ui.VozActivity"
+			android:exported="false"
+			android:parentActivityName=".ui.PrincipalActivity" />
+		<activity
+			android:name=".ui.ManualActivity"
+			android:exported="false"
+			android:label="@string/manual"
+			android:parentActivityName=".ui.PrincipalActivity" />
+		<activity
+			android:name=".ui.AcercaDeActivity"
+			android:exported="false"
+			android:label="@string/acerca_de"
+			android:parentActivityName=".ui.PrincipalActivity" />
+
+		<!-- Para pasar el APK de una actualización al instalador del sistema -->
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.archivos"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/rutas_archivos" />
+		</provider>
+
+		<!-- Idioma propio de la app en Android 12 y anteriores (AppCompat lo guarda) -->
+		<service
+			android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+			android:enabled="false"
+			android:exported="false">
+			<meta-data
+				android:name="autoStoreLocales"
+				android:value="true" />
+		</service>
+	</application>
+</manifest>

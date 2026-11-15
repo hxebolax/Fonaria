@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Leer texto: escribir o pegar un texto, oírlo y guardarlo como audio. -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fillViewport="true">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:padding="16dp">
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/voz"
+			style="@style/Widget.Material3.Button.OutlinedButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="48dp" />
+
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/contenedor_texto"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:hint="@string/texto_para_leer">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/texto"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="top"
+				android:inputType="textMultiLine|textCapSentences"
+				android:minLines="6" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:orientation="horizontal">
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/leer"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="8dp"
+				android:layout_weight="1"
+				android:minHeight="48dp"
+				android:text="@string/leer_en_voz_alta" />
+
+			<com.google.android.material.button.MaterialButton
+				android:id="@+id/detener"
+				style="@style/Widget.Material3.Button.TonalButton"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:minHeight="48dp"
+				android:text="@string/detener" />
+		</LinearLayout>
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/guardar"
+			style="@style/Widget.Material3.Button.TonalButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="48dp"
+			android:text="@string/guardar_audio" />
+
+		<com.google.android.material.button.MaterialButton
+			android:id="@+id/pegar"
+			style="@style/Widget.Material3.Button.TextButton"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:minHeight="48dp"
+			android:text="@string/pegar_portapapeles" />
+
+		<TextView
+			android:id="@+id/estado"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="8dp"
+			android:accessibilityLiveRegion="polite"
+			android:textAppearance="?attr/textAppearanceBodyMedium" />
+	</LinearLayout>
+</ScrollView>

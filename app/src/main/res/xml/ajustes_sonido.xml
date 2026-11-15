@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ajustes, pestaña Sonido: lo que vale para todas las voces (cada voz puede tener lo suyo). -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory app:title="@string/cat_voz_general" app:iconSpaceReserved="false">
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="velocidad" app:title="@string/velocidad" app:summary="@string/velocidad_resumen" app:min="25" android:max="400" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="100" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="tono" app:title="@string/tono" app:summary="@string/tono_resumen" app:min="50" android:max="200" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="100" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="volumen" app:title="@string/volumen" app:summary="@string/volumen_resumen" app:min="10" android:max="200" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="100" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="ritmo" app:title="@string/ritmo" app:summary="@string/ritmo_resumen" app:min="-50" android:max="50" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="0" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="variacion" app:title="@string/variacion" app:summary="@string/variacion_resumen" app:min="0" android:max="100" app:seekBarIncrement="5" app:showSeekBarValue="true" android:defaultValue="30" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_sistema" app:iconSpaceReserved="false">
+		<SwitchPreferenceCompat app:key="velocidad_sistema" app:title="@string/velocidad_sistema" app:summary="@string/velocidad_sistema_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="tono_sistema" app:title="@string/tono_sistema" app:summary="@string/tono_sistema_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_entonacion" app:iconSpaceReserved="false">
+		<SwitchPreferenceCompat app:key="semilla_fija" app:title="@string/semilla_fija" app:summary="@string/semilla_fija_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="igualar_volumen" app:title="@string/igualar_volumen" app:summary="@string/igualar_volumen_resumen" android:defaultValue="false" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="guia" app:title="@string/guia" app:summary="@string/guia_resumen" app:min="10" android:max="30" app:seekBarIncrement="1" app:showSeekBarValue="true" android:defaultValue="10" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_pausas" app:iconSpaceReserved="false">
+		<SwitchPreferenceCompat app:key="recortar_silencios" app:title="@string/recortar_silencios" app:summary="@string/recortar_silencios_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="pausa_frases" app:title="@string/pausa_frases" app:summary="@string/pausa_frases_resumen" app:min="0" android:max="1500" app:seekBarIncrement="50" app:showSeekBarValue="true" android:defaultValue="150" app:iconSpaceReserved="false" />
+		<com.xebolax.fonaria.accesibilidad.DeslizadorAjuste app:key="pausa_parrafos" app:title="@string/pausa_parrafos" app:summary="@string/pausa_parrafos_resumen" app:min="0" android:max="2000" app:seekBarIncrement="50" app:showSeekBarValue="true" android:defaultValue="350" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+</PreferenceScreen>

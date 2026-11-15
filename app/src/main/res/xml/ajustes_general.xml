@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ajustes, pestaña General: idioma y aspecto de la app, copias y restablecer. -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<PreferenceCategory app:title="@string/cat_aspecto" app:iconSpaceReserved="false">
+		<ListPreference app:key="idioma_app" app:title="@string/idioma_app" app:entries="@array/idioma_app_nombres" app:entryValues="@array/idioma_app_valores" android:defaultValue="sistema" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+		<ListPreference app:key="tema" app:title="@string/tema" app:entries="@array/tema_nombres" app:entryValues="@array/tema_valores" android:defaultValue="sistema" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_copias" app:iconSpaceReserved="false">
+		<Preference app:key="exportar" app:title="@string/exportar_config" app:summary="@string/exportar_config_resumen" app:iconSpaceReserved="false" />
+		<Preference app:key="importar" app:title="@string/importar_config" app:summary="@string/importar_config_resumen" app:iconSpaceReserved="false" />
+		<Preference app:key="restablecer" app:title="@string/restablecer" app:summary="@string/restablecer_resumen" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+
+	<PreferenceCategory app:title="@string/cat_sistema" app:iconSpaceReserved="false">
+		<Preference app:key="ajustes_sistema" app:title="@string/ajustes_voz_sistema" app:summary="@string/ajustes_voz_sistema_resumen" app:iconSpaceReserved="false" />
+	</PreferenceCategory>
+</PreferenceScreen>

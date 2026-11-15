@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de Fonaria</title>
+<style>
+	:root { color-scheme: light dark; }
+	body { font-family: sans-serif; line-height: 1.55; margin: 0 1rem 2rem; font-size: 1.05rem; }
+	h1 { font-size: 1.6rem; } h2 { font-size: 1.35rem; margin-top: 2rem; } h3 { font-size: 1.15rem; }
+	code, kbd { font-family: monospace; }
+	table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #888; padding: .3rem .5rem; text-align: left; vertical-align: top; }
+	a { color: #3949ab; } @media (prefers-color-scheme: dark) { a { color: #b9c3ff; } }
+</style>
+</head>
+<body>
+<h1>Manual de Fonaria</h1>
+<p>Fonaria es un motor de voz para Android con voces neuronales muy naturales que funcionan <strong>sin conexión</strong>. Cuando lo eliges como motor del sistema, todas las apps que hablan (TalkBack, lectores de libros, navegadores, el GPS…) lo hacen con sus voces. Está pensado para usarse por completo con TalkBack.</p>
+<p>Este manual se navega por encabezados: con TalkBack, elige «Encabezados» en el control de lectura y desliza arriba o abajo.</p>
+
+<h2 id="indice">Índice</h2>
+<ol>
+	<li><a href="#empezar">Primeros pasos</a></li>
+	<li><a href="#activar">Elegir Fonaria como motor del sistema</a></li>
+	<li><a href="#pantalla">La pantalla principal y el menú lateral</a></li>
+	<li><a href="#inicio">Inicio</a></li>
+	<li><a href="#voces">Voces</a></li>
+	<li><a href="#diccionario">Diccionario</a></li>
+	<li><a href="#leer">Leer texto y guardar audio</a></li>
+	<li><a href="#ajustes">Ajustes</a></li>
+	<li><a href="#idiomas">Idiomas y voces de otros países</a></li>
+	<li><a href="#talkback">Consejos para TalkBack</a></li>
+	<li><a href="#antiguos">Móviles antiguos y rendimiento</a></li>
+	<li><a href="#actualizaciones">Actualizaciones</a></li>
+	<li><a href="#privacidad">Privacidad</a></li>
+	<li><a href="#problemas">Solución de problemas</a></li>
+	<li><a href="#licencias">Licencias y créditos</a></li>
+</ol>
+
+<h2 id="empezar">1. Primeros pasos</h2>
+<p>Fonaria trae dentro el modelo de voz Phonon y <strong>las 25 voces en español</strong>: 13 de España y 12 de México. No hace falta descargar nada para usarlo en español.</p>
+<p>La primera vez que se abre, Fonaria prepara el modelo en el almacenamiento del móvil (tarda unos segundos) y muestra una bienvenida con un botón para elegirlo como motor del sistema.</p>
+<p>Si el móvil está en otro idioma (por ejemplo, inglés), la app aparece en ese idioma si está traducida y te avisa de que debes descargar las voces de ese idioma en <a href="#voces">Voces</a>. Mientras tanto, el texto en ese idioma lo lee una voz española.</p>
+<p>Requisitos: Android 5.0 o posterior. Funciona en procesadores de 64 bits (arm64) y de 32 bits (armv7). Necesita unos 220 MB libres: la app y una copia del modelo preparada para leerla rápido.</p>
+
+<h2 id="activar">2. Elegir Fonaria como motor del sistema</h2>
+<ol>
+	<li>En Inicio, pulsa <strong>Elegir Fonaria como motor de voz</strong>. Se abren los ajustes de texto a voz de Android.</li>
+	<li>En <strong>Motor preferido</strong> (o «Motor de texto a voz preferido»), elige <strong>Fonaria</strong>.</li>
+	<li>Vuelve a Fonaria. En Inicio, el estado dirá «Fonaria es el motor de voz del sistema».</li>
+</ol>
+<p>En algunos móviles esa pantalla está en Ajustes, Accesibilidad, Salida de texto a voz; o en Ajustes, Sistema, Idiomas, Salida de texto a voz. En TalkBack también está en Ajustes de TalkBack, Ajustes de texto a voz.</p>
+<p><strong>Importante si usas TalkBack:</strong> antes de cambiar el motor, comprueba que Fonaria habla bien con el botón Escuchar de Inicio. Si algo fallase, vuelve a elegir tu motor anterior (por ejemplo, Google) en la misma pantalla.</p>
+<p>La rueda de ajustes que aparece junto a Fonaria en esa pantalla de Android abre directamente los Ajustes de Fonaria.</p>
+
+<h2 id="pantalla">3. La pantalla principal y el menú lateral</h2>
+<p>Arriba está la barra con el botón <strong>Abrir menú</strong> y el nombre de la sección. El menú lateral tiene dos partes:</p>
+<ul>
+	<li><strong>Secciones</strong>: Inicio, Voces, Diccionario y Leer texto. La actual se anuncia como «seleccionada».</li>
+	<li><strong>Acciones</strong>: Ajustes, Manual, Buscar actualizaciones y Acerca de.</li>
+</ul>
+<p>Al abrir el menú con TalkBack, el foco va directamente a la sección en la que estás. Atrás cierra el menú; en una sección que no es Inicio, Atrás vuelve a Inicio.</p>
+<p>En las listas, cada fila se lee de una vez: el nombre y, después, los detalles. Un doble toque hace la acción principal (por ejemplo, Escuchar). Las demás acciones están en el menú de acciones de TalkBack (desliza arriba y luego a la derecha, o toca con tres dedos según tu configuración) y también al mantener pulsada la fila, que abre la lista de todas las acciones.</p>
+
+<h2 id="inicio">4. Inicio</h2>
+<ul>
+	<li><strong>Estado</strong>: si Fonaria es el motor del sistema, cuántas voces hay instaladas y de qué idiomas, y cualquier problema del motor.</li>
+	<li><strong>Elegir Fonaria como motor de voz</strong> (o <strong>Ajustes de texto a voz de Android</strong> si ya lo es).</li>
+	<li><strong>Probar</strong>: el botón de voz dice qué voz se va a usar y permite cambiarla; escribe un texto y pulsa Escuchar. Detener lo calla.</li>
+	<li><strong>Descargar voces de otros idiomas</strong> y <strong>Abrir el manual</strong>.</li>
+</ul>
+
+<h2 id="voces">5. Voces</h2>
+<p>La sección Voces tiene tres pestañas.</p>
+<h3>Instaladas</h3>
+<p>Las voces que se pueden usar ahora. Cada fila dice el nombre, el perfil (por ejemplo, «Mujer joven adulta»), el idioma y la región, si es la voz preferida de su idioma y una descripción de cómo suena. Acciones:</p>
+<ul>
+	<li><strong>Escuchar</strong>: la voz se presenta y dice una frase de muestra.</li>
+	<li><strong>Usar para</strong> su idioma: la convierte en la voz preferida de ese idioma y región. Es la que oirás en TalkBack y en las demás apps.</li>
+	<li><strong>Ajustes de la voz</strong>: velocidad, tono, volumen, ritmo y variación propios de esa voz (ver <a href="#ajustes-voz">Ajustes de una voz</a>).</li>
+	<li><strong>Borrar</strong>: solo las descargadas. Las voces españolas vienen con la app y no se pueden borrar.</li>
+</ul>
+<p>El botón <strong>Idioma: todos. Filtrar</strong> muestra solo las voces de un idioma.</p>
+<h3>Descargar</h3>
+<p>Las voces del catálogo de Gradium que todavía no tienes: inglés de Reino Unido y Estados Unidos, voces de personaje en inglés, francés, alemán y portugués de Brasil. Cada voz ocupa unos 250 KB.</p>
+<ul>
+	<li>Un doble toque en una voz la descarga.</li>
+	<li><strong>Descargar un idioma completo</strong> baja todas las voces de un idioma de una vez, con su progreso. Se puede cancelar.</li>
+	<li>Al terminar, si es el primer idioma nuevo, Fonaria pregunta qué voz quieres para él.</li>
+</ul>
+<p>Cada archivo se comprueba con su huella SHA-256 antes de usarlo. Si la conexión se corta, la descarga sigue donde se quedó.</p>
+<h3>Importadas</h3>
+<p>Puedes usar voces propias diseñadas o clonadas en <strong>Gradium Studio</strong> (studio.gradium.ai): en una voz, menú «⋮», «Download for Phonon». Obtendrás un archivo <code>.safetensors</code>.</p>
+<ol>
+	<li>Pulsa <strong>Importar una voz</strong> y elige el archivo.</li>
+	<li>Escribe el nombre que quieres para la voz.</li>
+	<li>Elige el idioma en el que habla.</li>
+</ol>
+<p>Fonaria comprueba que el archivo es una voz válida para el modelo antes de guardarlo. Las importadas se pueden renombrar, cambiar de idioma, ajustar y borrar. Se guarda una copia; el archivo original no se toca.</p>
+
+<h2 id="diccionario">6. Diccionario</h2>
+<p>Sirve para corregir palabras que la voz dice mal: siglas, nombres propios, marcas, palabras de otros idiomas…</p>
+<h3>Añadir o cambiar una palabra</h3>
+<ul>
+	<li><strong>Lo que está escrito</strong>: la palabra o el texto que se busca, por ejemplo <code>NVDA</code>.</li>
+	<li><strong>Cómo debe sonar</strong>: cómo se escribe para que suene bien, por ejemplo <code>ene uve de a</code>. Vacío, se calla.</li>
+	<li><strong>Escuchar cómo suena</strong>: prueba el reemplazo con la voz del idioma elegido.</li>
+	<li>Tipo:
+		<ul>
+			<li><strong>Solo la palabra completa</strong>: «sol» no cambia «soldado». Es lo normal.</li>
+			<li><strong>En cualquier sitio</strong>: también dentro de otras palabras.</li>
+			<li><strong>Expresión regular</strong>: para usuarios avanzados. El reemplazo puede usar <code>$1</code>, <code>$2</code>… Por ejemplo, <code>(\d+)h</code> con <code>$1 horas</code> lee «3h» como «3 horas».</li>
+		</ul>
+	</li>
+	<li><strong>Distinguir mayúsculas y minúsculas</strong>: con esto, «ONCE» y «once» son distintas.</li>
+	<li><strong>Idioma</strong>: en qué idioma se aplica, o en todos.</li>
+	<li><strong>Activa</strong> y <strong>Comentario</strong>.</li>
+</ul>
+<p>Cada entrada tiene las acciones Cambiar, Escuchar, Activar o Desactivar y Borrar (con Deshacer).</p>
+<h3>Importar y exportar</h3>
+<p>En el menú «Más opciones» de la barra superior:</p>
+<ul>
+	<li><strong>Importar un diccionario</strong>: admite los diccionarios de voz de <strong>NVDA</strong> (<code>.dic</code>), copias de Fonaria (<code>.json</code>) y listas sencillas «palabra, tabulador, reemplazo». Las palabras que ya tienes no se repiten.</li>
+	<li><strong>Exportar para NVDA (.dic)</strong>: el archivo se puede usar tal cual en NVDA.</li>
+	<li><strong>Exportar copia de Fonaria (.json)</strong>: guarda también el idioma, si está activa y los comentarios.</li>
+	<li><strong>Borrar todo el diccionario</strong>.</li>
+</ul>
+
+<h2 id="leer">7. Leer texto y guardar audio</h2>
+<p>Escribe o pega un texto, elige la voz con el primer botón y pulsa <strong>Leer en voz alta</strong>. <strong>Pegar del portapapeles</strong> trae lo que hayas copiado.</p>
+<p><strong>Guardar como audio (WAV)</strong> genera el texto completo con la voz elegida y te deja guardar el archivo donde quieras: útil para crear audios de avisos, lecciones o mensajes.</p>
+
+<h2 id="ajustes">8. Ajustes</h2>
+<p>Se abren desde el menú lateral o con la rueda junto a Fonaria en los ajustes de texto a voz de Android. Tienen seis pestañas. Los deslizadores dicen su valor con su unidad y cambian un paso cada vez que deslizas arriba o abajo con TalkBack.</p>
+<h3>Voces</h3>
+<ul>
+	<li><strong>Voz para cada idioma y región</strong>: España, México, Reino Unido, Estados Unidos, Francia, Alemania y Brasil. «Automática» usa la primera voz de ese idioma.</li>
+	<li><strong>Hablar aunque falte la voz del idioma</strong> (activado): si una app pide un idioma del que no tienes voz, lo lee una voz española en vez de quedarse en silencio.</li>
+	<li><strong>Usar la voz que pida cada app</strong> (desactivado): con TalkBack conviene dejarlo así; si una app elige una voz concreta de Fonaria, al activarlo se respeta.</li>
+</ul>
+<h3>Sonido</h3>
+<p>Valen para todas las voces, salvo las que tengan ajustes propios.</p>
+<table>
+	<tr><th>Ajuste</th><th>Qué hace</th></tr>
+	<tr><td>Velocidad</td><td>De 25 a 400 por ciento. Se multiplica por la velocidad de TalkBack o de Android si está activado «Usar la velocidad del sistema». Mantiene la voz natural incluso muy rápida.</td></tr>
+	<tr><td>Tono</td><td>De 50 a 200 por ciento.</td></tr>
+	<tr><td>Volumen</td><td>De 10 a 200 por ciento. Por encima de 100 puede saturar.</td></tr>
+	<tr><td>Ritmo natural</td><td>Lo cambia el propio modelo: negativo, más ligero; positivo, más pausado. Suena más natural que la velocidad, pero el cambio es pequeño.</td></tr>
+	<tr><td>Variación de la entonación</td><td>0, siempre igual y más monótono; más alto, más expresivo. Por defecto, 30.</td></tr>
+	<tr><td>La misma frase suena siempre igual</td><td>Activado, cada frase se lee siempre del mismo modo, como un lector clásico. Desactivado, cada lectura es una toma distinta.</td></tr>
+	<tr><td>Igualar el volumen</td><td>Comprime el audio para que todas las voces suenen parecido de alto.</td></tr>
+	<tr><td>Fidelidad a la voz</td><td>Más alta se parece más a la voz original pero tarda el doble. Desactivada es lo más rápido.</td></tr>
+	<tr><td>Recortar silencios</td><td>Quita el silencio del principio y del final de cada frase: TalkBack responde antes.</td></tr>
+	<tr><td>Pausa entre frases y entre párrafos</td><td>Silencio que se añade, en milisegundos. Se acorta con la velocidad.</td></tr>
+</table>
+<h3 id="ajustes-voz">Ajustes de una voz</h3>
+<p>Desde Voces, acción «Ajustes de» la voz. Tiene la información de la voz, Escuchar, Usar para su idioma y los cinco ajustes de sonido. Lo que no cambies sigue a los ajustes generales; <strong>Volver a los ajustes generales</strong> quita todo lo propio. En la barra superior están Escuchar y Detener para probar mientras ajustas.</p>
+<h3>Texto</h3>
+<ul>
+	<li><strong>Leer bien números, fechas y símbolos</strong>: el motor convierte cifras, horas, fechas, monedas, correos y direcciones web en palabras del idioma.</li>
+	<li><strong>Leer la puntuación</strong>: ninguna (lo normal con TalkBack, que ya la gestiona), alguna (símbolos como # @ %), la mayoría (también paréntesis y comillas) o toda.</li>
+	<li><strong>Leer los emojis</strong> por su nombre, en los cinco idiomas.</li>
+	<li><strong>Usar el diccionario</strong>.</li>
+	<li><strong>Deletrear las letras sueltas</strong>: una letra o un signo solos se dicen por su nombre («be», «uve doble», «almohadilla»). Imprescindible al escribir o al moverse letra a letra con TalkBack.</li>
+	<li><strong>Subir el tono en las mayúsculas</strong>: al deletrear, la mayúscula suena más aguda. A 0 se dice «mayúscula» delante.</li>
+	<li><strong>Hablar frase a frase</strong>: empieza a sonar antes y se calla enseguida.</li>
+	<li><strong>Respuesta rápida</strong>: parte también la primera frase larga en su primera coma.</li>
+</ul>
+<h3>Motor</h3>
+<ul>
+	<li><strong>Modelo de voz</strong>:
+		<ul>
+			<li><strong>Integrado (q8)</strong>: viene con la app; buen equilibrio.</li>
+			<li><strong>Ligero (q4k)</strong>: más rápido, para móviles antiguos. Se descarga (77 MB).</li>
+			<li><strong>Máxima calidad (f32)</strong>: el más fiel y el más lento. Se descarga (116 MB).</li>
+		</ul>
+		Si eliges uno que no está, Fonaria ofrece descargarlo. <strong>Borrar los modelos descargados</strong> libera ese espacio.</li>
+	<li><strong>Medir la velocidad del motor</strong>: dice cuántos segundos de voz genera tu móvil por segundo, el tiempo hasta el primer sonido y lo que tarda en cargar el modelo. Si el primer número es menor que 1, prueba el modelo ligero.</li>
+	<li>Avanzado: <strong>Hilos de cálculo</strong> (automático usa hasta 4 núcleos; se aplica al reiniciar el móvil o forzar la detención), <strong>Pasos de decodificación</strong>, <strong>Final de frase</strong>, <strong>Tamaño de cada trozo</strong>, <strong>Audio por adelantado</strong> y <strong>Decodificador acelerado</strong>. Si no sabes qué hacen, déjalos como están.</li>
+</ul>
+<h3>Actualizaciones</h3>
+<p>Buscar actualizaciones al abrir, de dónde se actualiza (servidor de Fonaria, GitHub, los dos o una dirección personalizada) y de dónde se descargan las voces (servidor, Hugging Face o el servidor y, si falla, Hugging Face).</p>
+<h3>General</h3>
+<ul>
+	<li><strong>Idioma de la app</strong> y <strong>Tema</strong> (claro, oscuro o el del sistema).</li>
+	<li><strong>Exportar la configuración</strong> y <strong>Importar una configuración</strong>: todos los ajustes, también los de cada voz, y el diccionario, en un archivo. Sirve para pasarla a otro móvil.</li>
+	<li><strong>Restablecer los ajustes</strong>: vuelve a los valores de fábrica sin borrar el diccionario ni las voces.</li>
+	<li><strong>Ajustes de texto a voz de Android</strong>.</li>
+</ul>
+
+<h2 id="idiomas">9. Idiomas y voces de otros países</h2>
+<p>El modelo multilingüe habla español, inglés, francés, alemán y portugués. Cuando una app pide un idioma:</p>
+<ol>
+	<li>Si en Ajustes, Voces, hay una voz elegida para ese idioma y región, habla esa.</li>
+	<li>Si no, la primera voz instalada de ese idioma y región, o de ese idioma.</li>
+	<li>Si no hay ninguna y está activado «Hablar aunque falte la voz del idioma», una voz española lee el texto con las normas de lectura de ese idioma (con acento español).</li>
+</ol>
+<p>Fonaria informa a Android de qué idiomas tienen voz; en sus ajustes de texto a voz, «Instalar datos de voz» abre la sección Voces.</p>
+
+<h2 id="talkback">10. Consejos para TalkBack</h2>
+<ul>
+	<li>Deja activados «Deletrear las letras sueltas», «Recortar silencios» y «Hablar frase a frase».</li>
+	<li>Ajusta la velocidad en TalkBack (o en Android) y usa la de Fonaria solo para afinar cada voz.</li>
+	<li>Si notas retraso al moverte rápido, baja «Audio por adelantado» o elige el modelo ligero.</li>
+	<li>Fonaria funciona también en la pantalla de bloqueo justo después de reiniciar, antes de desbloquear: el modelo, las voces y los ajustes se guardan en el almacenamiento protegido del dispositivo.</li>
+	<li>Si tu móvil cierra apps en segundo plano, quita a Fonaria de la optimización de batería para que no tarde en responder.</li>
+</ul>
+
+<h2 id="antiguos">11. Móviles antiguos y rendimiento</h2>
+<p>Las voces de Fonaria son neuronales: suenan mucho mejor que las clásicas pero necesitan más procesador. Fonaria lleva dos versiones del motor para 64 bits y elige sola la más rápida que admite tu procesador; en los móviles de 32 bits usa una versión compatible.</p>
+<p>Si tu móvil va justo: elige el modelo Ligero, desactiva «Fidelidad a la voz», deja «Pasos de decodificación» en 1 y prueba «Decodificador acelerado». Usa «Medir la velocidad del motor» para comparar.</p>
+
+<h2 id="actualizaciones">12. Actualizaciones</h2>
+<p>Fonaria busca versiones nuevas al abrirse (como mucho cada seis horas) o cuando eliges <strong>Buscar actualizaciones</strong> en el menú lateral. Muestra las novedades y, si aceptas, descarga el APK, comprueba que es el publicado (tamaño y SHA-256), que es Fonaria, que es más nueva y que está firmada por el mismo autor, y abre el instalador de Android. La primera vez, Android pide permitir que Fonaria instale aplicaciones.</p>
+
+<h2 id="privacidad">13. Privacidad</h2>
+<p>Todo lo que Fonaria lee se genera en tu móvil: el texto no sale nunca del dispositivo ni se guarda. Solo se usa internet para descargar voces, modelos y actualizaciones cuando lo pides o al buscar actualizaciones (se puede desactivar). Fonaria no tiene publicidad ni estadísticas.</p>
+
+<h2 id="problemas">14. Solución de problemas</h2>
+<ul>
+	<li><strong>No habla nada</strong>: en Inicio, mira el Estado. Si dice que el modelo no está preparado, espera unos segundos tras la primera instalación. Si hay un problema del motor, copia el diagnóstico de Acerca de.</li>
+	<li><strong>TalkBack sigue con otra voz</strong>: comprueba el motor preferido en los ajustes de texto a voz de Android.</li>
+	<li><strong>Lee otro idioma con acento español</strong>: descarga las voces de ese idioma en Voces, Descargar.</li>
+	<li><strong>Va lento o con cortes</strong>: ver <a href="#antiguos">Móviles antiguos</a>.</li>
+	<li><strong>Una palabra suena mal</strong>: añádela al <a href="#diccionario">Diccionario</a>.</li>
+	<li><strong>Una descarga falla</strong>: en Ajustes, Actualizaciones, cambia «Descargar las voces desde».</li>
+</ul>
+<p>Para informar de un problema, abre una incidencia en el repositorio de GitHub (Acerca de, Código fuente) e incluye el diagnóstico copiado de Acerca de.</p>
+
+<h2 id="licencias">15. Licencias y créditos</h2>
+<p>Fonaria es software libre bajo la licencia GNU GPL versión 3 o posterior. Autor: Héctor J. Benítez Corredera.</p>
+<p>El modelo de voz Phonon 40m multilingüe es de <strong>Gradium</strong> y se distribuye bajo la licencia <strong>Creative Commons Reconocimiento-NoComercial 4.0 (CC BY-NC 4.0)</strong>: se puede usar y compartir sin fines comerciales, citando a Gradium. Las voces del catálogo de Gradium son Apache 2.0. El motor <code>ptts</code> de Gradium (MIT o Apache 2.0) se basa en Pocket TTS y Mimi de Kyutai. Fonaria no es un producto oficial de Gradium.</p>
+<p>Encontrarás todos los textos de licencia en Acerca de, Licencias y créditos.</p>
+</body>
+</html>
