@@ -159,7 +159,7 @@
 	<string name="guia_resumen">Higher sounds closer to the original voice but takes twice as long. Off is the fastest</string>
 	<string name="cat_pausas">Pauses and silence</string>
 	<string name="recortar_silencios">Trim silence</string>
-	<string name="recortar_silencios_resumen">Removes silence at the start and end of each sentence: responds sooner</string>
+	<string name="recortar_silencios_resumen">Removes silence at the start and end of each sentence (responds sooner) and shortens overly long pauses in long texts</string>
 	<string name="pausa_frases">Pause between sentences</string>
 	<string name="pausa_frases_resumen">Silence between one sentence and the next</string>
 	<string name="pausa_parrafos">Pause between paragraphs</string>
@@ -210,7 +210,7 @@
 	<string name="tokens_trozo">Chunk size</string>
 	<string name="tokens_trozo_resumen">How much text is generated at once. Automatic works almost always</string>
 	<string name="adelanto">Audio buffered ahead</string>
-	<string name="adelanto_resumen">How much is generated before it plays. More is smoother on slow phones; less stops sooner</string>
+	<string name="adelanto_resumen">How much speech may be generated ahead of what is playing. More avoids tiny gaps in long texts; stopping is still immediate, because pending audio is discarded</string>
 	<string name="mimi_q8">Accelerated decoder (experimental)</string>
 	<string name="mimi_q8_resumen">Faster on some processors, with slightly less quality</string>
 	<string name="automatico">Automatic</string>

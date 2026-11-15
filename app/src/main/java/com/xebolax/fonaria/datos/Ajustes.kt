@@ -117,7 +117,7 @@ class Ajustes(contexto: Context) {
 	val mimiQ8 get() = p.getBoolean("mimi_q8", false)
 	val tokensTrozo get() = entero("tokens_trozo", 0)
 	/** Cuánto audio puede ir por delante de lo que se oye. */
-	val adelantoMs get() = entero("adelanto", 400)
+	val adelantoMs get() = entero("adelanto", 1500)
 
 	/** Lo que obliga a recargar el modelo si cambia. */
 	fun claveCarga() = "$modelo|$hilos|$pasos|$umbralFin|$mimiQ8"

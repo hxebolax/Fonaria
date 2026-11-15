@@ -144,8 +144,12 @@ class ServicioVoz : TextToSpeechService() {
 						tokensTrozo = ajustes.tokensTrozo,
 						igualarVolumen = ajustes.igualarVolumen,
 					)
-					val ok = Motor.hablar(this, peticion) { muestras, n ->
-						!parar && salida.escribir(proc.procesar(muestras, n))
+					// El motor genera en su hilo y este hilo procesa y entrega (Android lo bloquea
+					// cuando lleva medio segundo por delante; así el motor no se para por ello)
+					val generador = Generador(this, peticion) { parar }
+					generador.empezar()
+					val ok = generador.recibir { muestras ->
+						!parar && salida.escribir(proc.procesar(muestras, muestras.size))
 					}
 					if (parar) break
 					if (!ok) {
@@ -228,7 +232,11 @@ class Salida(
 		// El margen de seguridad (80 ms) solo cuando de verdad falta: si el móvil genera más deprisa
 		// de lo que se oye, no se retiene nada y la voz sale al momento
 		val falta = ((tardara - sonara) * 1000f).toLong()
-		val esperaMs = if (falta > 0) falta + 80 - adelantado else 0L
+		// En los textos largos, un pequeño colchón al empezar (hasta 400 ms, el 10 % de lo que va a
+		// durar): el motor se para un instante en cada unión entre trozos y, sin margen acumulado,
+		// la primera se oiría. Las frases cortas de TalkBack salen al momento.
+		val colchon = if (sonara > 2.5f && !empezado) (sonara * 100f).toLong().coerceAtMost(400L) else 0L
+		val esperaMs = maxOf(if (falta > 0) falta + 80 - adelantado else 0L, colchon)
 		// Si el motor no llega a la velocidad de lo que suena, nunca se le hace esperar: todo lo que
 		// genere va por delante, que es justo lo que evita los cortes
 		sinRitmo = generacion < velocidad * 1.2f

@@ -25,6 +25,13 @@ class Procesador(
 	private val umbral = 0.008f
 	/** Margen de silencio que se respeta antes y después de la voz (20 ms). */
 	private val margen = frecuencia / 50
+	/**
+	 * Silencio más largo que se deja dentro de una lectura (500 ms, antes de acelerar; más corto
+	 * gastaría el margen de voz por delante, porque ese silencio también cuesta generarlo). El motor
+	 * parte los textos largos en trozos y entre uno y otro deja pausas del doble que entre frases
+	 * (660-730 ms frente a unos 330): con la voz rápida suenan a tropezón.
+	 */
+	private val maxSilencio = frecuencia / 2
 
 	init {
 		val v = velocidad.coerceIn(0.2f, 8f)
@@ -53,30 +60,49 @@ class Procesador(
 		return convertir(util)
 	}
 
-	/** Lo que queda en Sonic y el margen de silencio final. */
+	/** Lo que queda en Sonic (el silencio pendiente del final se descarta: ya salió su margen). */
 	fun terminar(): ShortArray {
-		val cola = silencio.tomar(minOf(silencio.tamano, margen))
 		silencio.limpiar()
-		val final = convertir(cola)
-		val s = sonic ?: return final
+		val s = sonic ?: return VACIO
 		s.flushStream()
-		return final + leerSonic(s)
+		return leerSonic(s)
 	}
 
-	/** Guarda aparte el silencio del final del trozo hasta saber si viene más voz. */
+	/**
+	 * Silencio que se pasa enseguida al empezar cada pausa (60 ms). Sonic se guarda siempre la cola
+	 * de lo último que recibe hasta tener más audio: si el silencio se apartase entero, el final de
+	 * la palabra anterior se quedaría atascado dentro de Sonic y saldría después de la pausa (o al
+	 * final de la frase), y se oiría como un microcorte. Con este empujón sale a su tiempo.
+	 */
+	private val empuje = frecuencia * 3 / 50
+	/** Silencio ya pasado desde la última voz. */
+	private var pasado = 0
+
+	/**
+	 * Separa la voz del silencio: la voz sale ya; del silencio sale enseguida el empujón y el resto se
+	 * aparta hasta saber si después viene más voz (entonces se suelta, hasta [maxSilencio] en total)
+	 * o es el final (entonces se descarta).
+	 */
 	private fun recortarFinal(m: FloatArray, desde: Int, n: Int): FloatArray {
 		var ultimaVoz = n - 1
 		while (ultimaVoz >= desde && abs(m[ultimaVoz]) < umbral) ultimaVoz--
-		if (ultimaVoz < desde) {
-			// Todo silencio: se acumula
-			silencio.anadir(m, desde, n)
-			return FloatArray(0)
-		}
 		val salida = FloatBuffer()
-		salida.anadir(silencio.tomar(silencio.tamano))
-		silencio.limpiar()
-		salida.anadir(m, desde, ultimaVoz + 1)
-		silencio.anadir(m, ultimaVoz + 1, n)
+		if (ultimaVoz >= desde) {
+			// Vuelve la voz: el silencio apartado, sin pasar del máximo
+			salida.anadir(silencio.tomar(minOf(silencio.tamano, (maxSilencio - pasado).coerceAtLeast(0))))
+			silencio.limpiar()
+			pasado = 0
+			salida.anadir(m, desde, ultimaVoz + 1)
+		}
+		// El silencio de este trozo: primero el empujón, luego se aparta
+		var i = if (ultimaVoz >= desde) ultimaVoz + 1 else desde
+		if (pasado < empuje && i < n) {
+			val cuanto = minOf(empuje - pasado, n - i)
+			salida.anadir(m, i, i + cuanto)
+			pasado += cuanto
+			i += cuanto
+		}
+		silencio.anadir(m, i, n)
 		return salida.tomar(salida.tamano)
 	}
 

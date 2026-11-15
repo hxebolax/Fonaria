@@ -3,6 +3,12 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.3
+- Sin microcortes al leer textos largos: el motor genera ahora en su propio hilo, con hasta tres segundos de voz por delante, y Android ya no lo frena mientras reproduce. Al empezar un texto largo se reúne un pequeño colchón para que las pausas internas del motor no se oigan. Mandar callar sigue siendo inmediato.
+- El final de las palabras ya no se corta antes de una pausa: el que acelera la voz se quedaba con el último pedacito de cada palabra y lo soltaba después de la pausa.
+- Responde antes: el primer sonido llega en unos 50 a 90 milisegundos en un Snapdragon 845.
+- Pausas igualadas en los textos largos: entre un trozo y el siguiente el motor dejaba pausas del doble que entre frases, que con la voz rápida sonaban a tropezón. Con «Recortar silencios» activado, ninguna pausa pasa de medio segundo.
+
 == 1.0.2
 - Sin cortes a velocidades altas: el propio modelo hace parte de la aceleración hablando más ligero, y Sonic estira menos la voz. Suena más natural y el móvil genera menos audio, así que le sobra margen (en un Snapdragon 845 con TalkBack al 400 %, un 20 % de sobra). Se puede desactivar en Ajustes, Sonido, «Acelerar con el propio modelo».
 - Responde mucho antes: el motor trabaja solo en los núcleos rápidos del procesador. En un Snapdragon 845, el primer sonido de una palabra pasa de unos 130 a unos 60 milisegundos, y genera más deprisa.

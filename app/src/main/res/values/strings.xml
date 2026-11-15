@@ -174,7 +174,7 @@
 	<string name="guia_resumen">Más alto se parece más a la voz original, pero tarda el doble. Desactivada es lo más rápido</string>
 	<string name="cat_pausas">Pausas y silencios</string>
 	<string name="recortar_silencios">Recortar silencios</string>
-	<string name="recortar_silencios_resumen">Quita el silencio del principio y del final de cada frase: responde antes</string>
+	<string name="recortar_silencios_resumen">Quita el silencio del principio y del final de cada frase (responde antes) y acorta las pausas demasiado largas de los textos largos</string>
 	<string name="pausa_frases">Pausa entre frases</string>
 	<string name="pausa_frases_resumen">Silencio entre una frase y la siguiente</string>
 	<string name="pausa_parrafos">Pausa entre párrafos</string>
@@ -225,7 +225,7 @@
 	<string name="tokens_trozo">Tamaño de cada trozo</string>
 	<string name="tokens_trozo_resumen">Cuánto texto genera de una vez. Automático va bien casi siempre</string>
 	<string name="adelanto">Audio por adelantado</string>
-	<string name="adelanto_resumen">Cuánto se genera antes de que suene. Más es más fluido en móviles lentos; menos se calla antes</string>
+	<string name="adelanto_resumen">Cuánta voz puede ir generada por delante de lo que suena. Más evita microcortes en los textos largos; callar sigue siendo inmediato, porque lo pendiente se descarta</string>
 	<string name="mimi_q8">Decodificador acelerado (experimental)</string>
 	<string name="mimi_q8_resumen">Más rápido en algunos procesadores, con algo menos de calidad</string>
 	<string name="automatico">Automático</string>
