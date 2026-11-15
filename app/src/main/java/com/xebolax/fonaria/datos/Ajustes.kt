@@ -101,7 +101,7 @@ class Ajustes(contexto: Context) {
 	val deletrear get() = p.getBoolean("deletrear", true)
 	val tonoMayusculas get() = entero("tono_mayusculas", 20)
 	val diccionarios get() = p.getBoolean("diccionarios", true)
-	val dividirFrases get() = p.getBoolean("dividir_frases", true)
+	val dividirFrases get() = p.getBoolean("dividir_frases", false)
 	val respuestaRapida get() = p.getBoolean("respuesta_rapida", false)
 
 	// --- Motor -------------------------------------------------------------------------

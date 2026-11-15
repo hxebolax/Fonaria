@@ -4,7 +4,7 @@
 
 Fonaria es un motor de texto a voz (TTS) para Android basado en **Phonon**, el modelo de voz neuronal de Gradium. Una vez elegido como motor del sistema, TalkBack y cualquier app que hable (lectores de libros, navegadores, GPS…) usan sus voces. Todo se genera en el móvil: no necesita internet ni envía nada a ningún sitio.
 
-- Versión actual: **1.0.1** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
+- Versión actual: **1.0.2** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
 - Android 5.0 (API 21) o posterior · procesadores de 64 bits (arm64) y de 32 bits (armv7).
 - Trae **las 25 voces en español** (España y México). Las de inglés, francés, alemán y portugués se descargan desde la app.
 - Interfaz en español (principal) e inglés, fácil de traducir.
@@ -52,7 +52,7 @@ Fonaria se organiza con un **menú lateral** y, en las secciones con varias part
   - **Importadas**: tus propias voces diseñadas o clonadas en Gradium Studio (`.safetensors`).
 - **Diccionario**: corrige cómo se pronuncian palabras, siglas y nombres. Compatible con los diccionarios de voz de **NVDA**.
 - **Leer texto**: escribe o pega un texto, óyelo con cualquier voz y **guárdalo como audio WAV**.
-- **Ajustes**, con seis pestañas: Voces, Sonido, Texto, Motor, Actualizaciones y General.
+- **Ajustes**, con seis pestañas abajo: General, Voces, Sonido, Texto, Motor y Actualizaciones.
 - **Manual** completo dentro de la app, **Buscar actualizaciones** y **Acerca de** (con licencias y un diagnóstico que se puede copiar).
 
 ### Las voces

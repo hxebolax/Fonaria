@@ -84,11 +84,29 @@ object Almacen {
 
 	// --- Voces instaladas --------------------------------------------------------------
 
-	/** Todas las voces que se pueden usar ahora: del catálogo con su archivo presente, e importadas. */
+	@Volatile
+	private var cacheInstaladas: Pair<String, List<Voz>>? = null
+	@Volatile
+	private var cambios = 0
+
+	/** Avisa de que algo de las voces ha cambiado sin tocar las carpetas (nombre o idioma de una importada). */
+	fun cambiado() {
+		cambios++
+	}
+
+	/**
+	 * Todas las voces que se pueden usar ahora: del catálogo con su archivo presente, e importadas.
+	 * Se guarda en memoria y solo se vuelve a mirar el disco si cambian las carpetas (al descargar,
+	 * borrar o importar): el servicio de voz lo pregunta en cada frase.
+	 */
 	fun instaladas(contexto: Context): List<Voz> {
 		val carpeta = carpetaVoces(contexto)
+		val clave = "${carpeta.lastModified()}|${carpetaImportadas(contexto).lastModified()}|$cambios"
+		cacheInstaladas?.let { (k, lista) -> if (k == clave) return lista }
 		val delCatalogo = Catalogo.voces(contexto).filter { File(carpeta, it.archivo).isFile }
-		return delCatalogo + importadas(contexto)
+		val lista = delCatalogo + importadas(contexto)
+		cacheInstaladas = clave to lista
+		return lista
 	}
 
 	fun archivo(contexto: Context, voz: Voz): File =
@@ -100,6 +118,7 @@ object Almacen {
 	/** Borra una voz descargada o importada. Las del APK no se pueden borrar. */
 	fun borrar(contexto: Context, voz: Voz): Boolean {
 		if (voz.incluida) return false
+		cambiado()
 		return if (voz.importada) File(carpetaImportadas(contexto), voz.id).deleteRecursively()
 		else File(carpetaVoces(contexto), voz.archivo).delete()
 	}
@@ -139,6 +158,7 @@ object Almacen {
 	/** Guarda una copia de un archivo de voz con su nombre e idioma. Devuelve la voz nueva. */
 	fun importar(contexto: Context, datos: ByteArray, nombre: String, idioma: String, region: String, genero: String): Voz {
 		require(datos.size in 1..MAX_VOZ) { "Tamaño de archivo de voz no válido" }
+		cambiado()
 		val id = "importada-" + UUID.randomUUID().toString().replace("-", "")
 		val carpeta = File(carpetaImportadas(contexto), id).apply { mkdirs() }
 		File(carpeta, "voz.safetensors").writeBytes(datos)
@@ -153,6 +173,7 @@ object Almacen {
 		val f = File(File(carpetaImportadas(contexto), voz.id), "voz.json")
 		val o = JSONObject(f.readText()).put("nombre", nombre).put("idioma", idioma).put("region", region)
 		f.writeText(o.toString())
+		cambiado()
 	}
 
 	/** Las voces de Gradium pesan 256 KB; se admite hasta 4 MB, como Phonon para NVDA. */

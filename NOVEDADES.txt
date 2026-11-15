@@ -3,6 +3,12 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.2
+- Responde mucho antes: el motor trabaja solo en los núcleos rápidos del procesador. En un Snapdragon 845, el primer sonido de una palabra pasa de unos 130 a unos 60 milisegundos, y genera más deprisa.
+- Más fluido: el texto va entero al motor en lugar de frase a frase, así que ya no hay pequeños huecos entre frases en los móviles lentos. Si prefieres lo de antes, está en Ajustes, Texto, «Hablar frase a frase».
+- Las pestañas de Ajustes, en orden: General, Voces, Sonido, Texto, Motor y Actualizaciones.
+- Menos trabajo en cada frase: la lista de voces instaladas ya no se lee del disco cada vez.
+
 == 1.0.1
 - La velocidad de TalkBack y del sistema ya no hace hablar a Fonaria rapidísimo: se suaviza para una voz neuronal (200 % suena 1,5 veces más rápido y 300 %, unas 2 veces). En Ajustes, Sonido, «Velocidad de TalkBack y del sistema» se puede usar tal cual o no usar.
 - La voz ya no se entrecorta cuando se pide hablar más rápido de lo que el móvil genera: Fonaria mide lo rápido que va tu móvil y guarda un poco de audio antes de cada frase.

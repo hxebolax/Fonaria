@@ -46,17 +46,18 @@
 <p>Type or paste text, choose a voice and tap <strong>Read aloud</strong>. <strong>Save as audio (WAV)</strong> generates the whole text and lets you save the file anywhere.</p>
 
 <h2>7. Settings</h2>
+<p>Six tabs at the bottom, in this order: General, Voices, Sound, Text, Engine and Updates.</p>
 <ul>
+	<li><strong>General</strong>: app language, theme, export and import settings (with the dictionary), reset settings.</li>
 	<li><strong>Voices</strong>: the voice for each language and region; speak even if a language voice is missing; use the voice each app asks for.</li>
 	<li><strong>Sound</strong>: rate (25–400 %, multiplied by the TalkBack or system rate, which is smoothed by default so that 300 % sounds about twice as fast; it can also be used as is or ignored), pitch, volume, natural pace (changed by the model itself), intonation variation, same reading every time, volume levelling, voice fidelity, silence trimming and pauses between sentences and paragraphs. Each voice can have its own sound settings.</li>
 	<li><strong>Text</strong>: read numbers, dates and symbols properly; punctuation level; emoji by name; dictionary; spelling single letters (with higher pitch for capitals); sentence-by-sentence speech and fast response.</li>
 	<li><strong>Engine</strong>: model (built-in q8, compact q4k — faster only on some processors —, highest-quality f32; the last two are downloaded), measure engine speed, and advanced options (threads, decoding steps, end of sentence, chunk size, audio buffered ahead, accelerated decoder).</li>
 	<li><strong>Updates</strong>: where the app updates from (Fonaria server, GitHub, both or a custom address) and where voices are downloaded from.</li>
-	<li><strong>General</strong>: app language, theme, export and import settings (with the dictionary), reset settings.</li>
 </ul>
 
 <h2>8. Tips for TalkBack</h2>
-<p>Keep «Spell single letters», «Trim silence» and «Speak sentence by sentence» on. Set the speech rate in TalkBack and use Fonaria's rate only to fine-tune each voice. If speech is too fast, keep the TalkBack rate smoothed or lower Fonaria's rate. If it lags when moving quickly, lower «Audio buffered ahead». Fonaria also works on the lock screen right after a restart.</p>
+<p>Keep «Spell single letters» and «Trim silence» on, and «Speak sentence by sentence» off (the whole text then goes to the engine at once: smoother, with no gaps on slow phones). Set the speech rate in TalkBack and use Fonaria's rate only to fine-tune each voice. If speech is too fast, keep the TalkBack rate smoothed or lower Fonaria's rate. If it lags when moving quickly, lower «Audio buffered ahead». Fonaria also works on the lock screen right after a restart.</p>
 
 <h2>9. Older phones</h2>
 <p>Fonaria carries two 64-bit engine builds and picks the fastest one your processor supports; 32-bit phones get a compatible build. «Measure engine speed» tells how fast your phone generates speech (a Snapdragon 845 manages about twice real time). If you ask for faster speech than that, Fonaria buffers a little audio before each sentence so it does not stutter. Voices and Settings have their tabs at the bottom.</p>

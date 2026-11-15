@@ -123,8 +123,15 @@ fn formato(nombre: &str) -> Quant {
 /// el grupo dura lo que dura el proceso.
 pub fn preparar_hilos(hilos: usize) -> usize {
     let nucleos = std::thread::available_parallelism().map_or(1, |n| n.get());
-    // En los móviles con núcleos rápidos y lentos, más de cuatro hilos suele ir peor.
-    let ancho = if hilos == 0 { nucleos.clamp(1, 4) } else { hilos.clamp(1, nucleos.max(1)) };
+    // Los hilos de cálculo, solo en los núcleos rápidos: los heredan de este hilo al crearse
+    let rapidos = crate::nucleos::rapidos();
+    crate::nucleos::fijar(&rapidos);
+    // Automático: uno por núcleo rápido (de 2 a 4); si no se distinguen, hasta 4
+    let ancho = if hilos == 0 {
+        if rapidos.is_empty() { nucleos.clamp(1, 4) } else { rapidos.len().clamp(2, 4) }
+    } else {
+        hilos.clamp(1, nucleos.max(1))
+    };
     xn::threadpool::start_pool_with(
         xn::threadpool::PoolConfig { workers: ancho - 1, spin_budget: None },
         |trabajo| {
@@ -134,6 +141,12 @@ pub fn preparar_hilos(hilos: usize) -> usize {
                 .expect("no se pudo crear un hilo de cálculo");
         },
     )
+}
+
+/// Fija el hilo actual a los núcleos rápidos (se calcula una vez).
+fn fijar_a_rapidos() {
+    static RAPIDOS: std::sync::OnceLock<Vec<usize>> = std::sync::OnceLock::new();
+    crate::nucleos::fijar(RAPIDOS.get_or_init(crate::nucleos::rapidos));
 }
 
 impl Motor {
@@ -259,6 +272,8 @@ impl Motor {
         salida: &mut dyn FnMut(&[f32]) -> bool,
     ) -> Result<Medida, String> {
         let inicio = Instant::now();
+        // El hilo que llama (el de síntesis de Android) también calcula y crea el del decodificador
+        fijar_a_rapidos();
         if texto_entrada.trim().is_empty() {
             return Ok(Medida::default());
         }

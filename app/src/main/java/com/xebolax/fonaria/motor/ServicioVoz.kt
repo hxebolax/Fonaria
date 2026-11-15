@@ -89,6 +89,7 @@ class ServicioVoz : TextToSpeechService() {
 			callback.error(TextToSpeech.ERROR_NOT_INSTALLED_YET)
 			return
 		}
+		val llegada = System.nanoTime()
 		val ajustes = Ajustes(this)
 		val texto: CharSequence = request.charSequenceText ?: ""
 		val trozos = try {
@@ -150,6 +151,13 @@ class ServicioVoz : TextToSpeechService() {
 			}
 		}
 		salida.terminar()
+		Log.i(
+			ETIQUETA,
+			"Frase de ${texto.length} car.: velocidad %.2f (sistema ${request.speechRate}), motor %.2fx, primer sonido %d ms, retenido %d ms, total %d ms%s".format(
+				velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada), salida.retenidoMs,
+				(System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else "",
+			),
+		)
 	}
 
 	companion object {
@@ -177,6 +185,13 @@ class Salida(
 	private val aArchivo = callback.javaClass.name.contains("File")
 	private var bytes = 0L
 	private var desde = 0L
+
+	/** Desde la llegada de la petición hasta el primer audio entregado (o -1). */
+	fun primerSonidoMs(llegada: Long) = if (empezado) (desde - llegada) / 1_000_000L else -1L
+
+	/** Cuánto audio se ha retenido en total para evitar cortes, en milisegundos. */
+	var retenidoMs = 0L
+		private set
 
 	private fun abrir(): Boolean {
 		if (empezado) return true
@@ -206,6 +221,7 @@ class Salida(
 		// genere va por delante, que es justo lo que evita los cortes
 		sinRitmo = generacion < velocidad * 1.2f
 		retenerHasta = if (esperaMs > 0) System.nanoTime() + minOf(esperaMs, 4000L) * 1_000_000L else 0L
+		if (esperaMs > 0) retenidoMs += minOf(esperaMs, 4000L)
 	}
 
 	/** Suelta lo retenido (al acabar la frase o al cumplirse el tiempo). */

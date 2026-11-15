@@ -7,6 +7,7 @@
 //! Copyright (C) 2026 Fonaria. Licencia GPL-3.0-or-later.
 
 pub mod motor;
+pub mod nucleos;
 mod puente;
 
 /// Versión de esta biblioteca, para el diagnóstico de la app.

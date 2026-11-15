@@ -194,7 +194,7 @@
 	<string name="tono_mayusculas_resumen">Al deletrear. A 0 se dice «mayúscula» delante</string>
 	<string name="cat_respuesta">Respuesta</string>
 	<string name="dividir_frases">Hablar frase a frase</string>
-	<string name="dividir_frases_resumen">Empieza a sonar antes y se calla enseguida al pedirlo</string>
+	<string name="dividir_frases_resumen">Genera cada frase por separado, con las pausas de Sonido. Desactivado (recomendado) el texto va entero al motor: suena más seguido y en móviles lentos no hay huecos entre frases</string>
 	<string name="respuesta_rapida">Respuesta rápida</string>
 	<string name="respuesta_rapida_resumen">Parte también la primera frase larga en la primera coma, para empezar a hablar antes</string>
 

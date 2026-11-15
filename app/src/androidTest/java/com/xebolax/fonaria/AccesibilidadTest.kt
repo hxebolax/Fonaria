@@ -60,7 +60,7 @@ class AccesibilidadTest {
 		"Diccionario" to { c -> Intent(c, com.xebolax.fonaria.ui.PrincipalActivity::class.java).putExtra("destino", R.id.destino_diccionario) },
 		"Leer texto" to { c -> Intent(c, com.xebolax.fonaria.ui.PrincipalActivity::class.java).putExtra("destino", R.id.destino_leer) },
 		"Ajustes" to { c -> Intent(c, com.xebolax.fonaria.ui.AjustesActivity::class.java) },
-		"Ajustes, Motor" to { c -> Intent(c, com.xebolax.fonaria.ui.AjustesActivity::class.java).putExtra("pestana", 3) },
+		"Ajustes, Motor" to { c -> Intent(c, com.xebolax.fonaria.ui.AjustesActivity::class.java).putExtra("pestana", "motor") },
 		"Una voz" to { c -> Intent(c, com.xebolax.fonaria.ui.VozActivity::class.java).putExtra("voz", "rmLBOdHrfkFym9MM") },
 		"Acerca de" to { c -> Intent(c, com.xebolax.fonaria.ui.AcercaDeActivity::class.java) },
 	)

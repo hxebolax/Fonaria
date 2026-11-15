@@ -16,7 +16,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory app:title="@string/cat_respuesta" app:iconSpaceReserved="false">
-		<SwitchPreferenceCompat app:key="dividir_frases" app:title="@string/dividir_frases" app:summary="@string/dividir_frases_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="dividir_frases" app:title="@string/dividir_frases" app:summary="@string/dividir_frases_resumen" android:defaultValue="false" app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat app:key="respuesta_rapida" app:title="@string/respuesta_rapida" app:summary="@string/respuesta_rapida_resumen" android:defaultValue="false" app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 </PreferenceScreen>

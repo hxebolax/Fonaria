@@ -361,6 +361,7 @@ name = "fonaria-nativo"
 version = "1.0.0"
 dependencies = [
  "jni",
+ "libc",
  "ptts",
  "serde_json",
  "xn",

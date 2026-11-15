@@ -44,7 +44,7 @@ object Descargas {
 		var ultimo: Exception? = null
 		for (url in urls(contexto, voz)) {
 			try {
-				return Descargador.bajar(url, destino, voz.tamano, voz.sha256, progreso)
+				return Descargador.bajar(url, destino, voz.tamano, voz.sha256, progreso).also { Almacen.cambiado() }
 			} catch (e: CancellationException) {
 				throw e
 			} catch (e: Exception) {

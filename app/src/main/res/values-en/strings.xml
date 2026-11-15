@@ -179,7 +179,7 @@
 	<string name="tono_mayusculas_resumen">When spelling. At 0, «capital» is said first</string>
 	<string name="cat_respuesta">Responsiveness</string>
 	<string name="dividir_frases">Speak sentence by sentence</string>
-	<string name="dividir_frases_resumen">Starts sounding sooner and stops at once when asked</string>
+	<string name="dividir_frases_resumen">Generates each sentence separately, with the Sound pauses. Off (recommended), the whole text goes to the engine at once: smoother, and no gaps between sentences on slow phones</string>
 	<string name="respuesta_rapida">Fast response</string>
 	<string name="respuesta_rapida_resumen">Also splits a long first sentence at its first comma, to start speaking sooner</string>
 

@@ -38,7 +38,9 @@ object Preparador {
 		return if (ajustes.dividirFrases) {
 			Trozos.dividir(texto, ajustes.pausaFrases, ajustes.pausaParrafos, ajustes.respuestaRapida)
 		} else {
-			listOf(Trozo.Habla(texto.replace(Regex("\\s+"), " ").trim()))
+			// Todo de una vez: los saltos de línea pasan a ser final de frase para que la voz haga la pausa
+			val unido = texto.replace(Regex("([^.!?…:;,\\s])\\s*\\n\\s*"), "$1. ").replace(Regex("\\s+"), " ").trim()
+			listOf(Trozo.Habla(unido))
 		}
 	}
 

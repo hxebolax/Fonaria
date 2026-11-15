@@ -14,8 +14,9 @@ import com.xebolax.fonaria.databinding.ActividadSimpleBinding
 import com.xebolax.fonaria.datos.Ajustes
 
 /**
- * Ajustes, con una pestaña por tema: Voces, Sonido, Texto, Motor, Actualizaciones y General.
- * Se abre solo desde el menú lateral.
+ * Ajustes, con una pestaña por tema, abajo y siempre en este orden: General, Voces, Sonido,
+ * Texto, Motor y Actualizaciones (de lo más general a lo más técnico). Se abre solo desde el
+ * menú lateral o desde la rueda de Fonaria en los ajustes de texto a voz de Android.
  */
 class AjustesActivity : AppCompatActivity() {
 	private lateinit var b: ActividadSimpleBinding
@@ -24,14 +25,14 @@ class AjustesActivity : AppCompatActivity() {
 
 	private var pestanas: Pestanas? = null
 
-	/** Las seis pestañas, abajo: nombre e icono. */
+	/** Las seis pestañas, en su orden: clave, nombre e icono. */
 	private val lista get() = listOf(
-		Pestanas.Pestana("0", getString(R.string.pestana_voces), R.drawable.ic_voces),
-		Pestanas.Pestana("1", getString(R.string.pestana_sonido), R.drawable.ic_sonido),
-		Pestanas.Pestana("2", getString(R.string.pestana_texto), R.drawable.ic_texto),
-		Pestanas.Pestana("3", getString(R.string.pestana_motor), R.drawable.ic_motor),
-		Pestanas.Pestana("4", getString(R.string.pestana_actualizaciones), R.drawable.ic_actualizar),
-		Pestanas.Pestana("5", getString(R.string.pestana_general), R.drawable.ic_ajustes),
+		Pestanas.Pestana(GENERAL, getString(R.string.pestana_general), R.drawable.ic_ajustes),
+		Pestanas.Pestana(VOCES, getString(R.string.pestana_voces), R.drawable.ic_voces),
+		Pestanas.Pestana(SONIDO, getString(R.string.pestana_sonido), R.drawable.ic_sonido),
+		Pestanas.Pestana(TEXTO, getString(R.string.pestana_texto), R.drawable.ic_texto),
+		Pestanas.Pestana(MOTOR, getString(R.string.pestana_motor), R.drawable.ic_motor),
+		Pestanas.Pestana(ACTUALIZACIONES, getString(R.string.pestana_actualizaciones), R.drawable.ic_actualizar),
 	)
 
 	override fun onCreate(estado: Bundle?) {
@@ -39,30 +40,41 @@ class AjustesActivity : AppCompatActivity() {
 		b = ActividadSimpleBinding.inflate(layoutInflater)
 		setContentView(b.root)
 		configurarBarra(b.barra, getString(R.string.ajustes))
-		val elegida = estado?.getInt("pestana") ?: intent.getIntExtra("pestana", 0)
+		val elegida = estado?.getString(EXTRA_PESTANA) ?: intent.getStringExtra(EXTRA_PESTANA) ?: GENERAL
 		val p = Pestanas(this, abajo = true)
 		b.pestanas.visibility = View.VISIBLE
 		b.pestanas.addView(p, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-		p.poner(lista, elegida.toString()) { clave -> mostrar(clave.toInt()) }
+		p.poner(lista, elegida) { clave -> mostrar(clave) }
 		pestanas = p
-		if (supportFragmentManager.findFragmentById(R.id.contenedor) == null) mostrar(elegida)
+		if (supportFragmentManager.findFragmentById(R.id.contenedor) == null) mostrar(p.actual)
 	}
 
 	override fun onSaveInstanceState(estado: Bundle) {
 		super.onSaveInstanceState(estado)
-		estado.putInt("pestana", pestanas?.actual?.toIntOrNull() ?: 0)
+		estado.putString(EXTRA_PESTANA, pestanas?.actual ?: GENERAL)
 	}
 
-	private fun mostrar(i: Int) {
-		val f: Fragment = when (i) {
-			1 -> AjustesSonidoFragment()
-			2 -> AjustesXml.nuevo(R.xml.ajustes_texto)
-			3 -> AjustesMotorFragment()
-			4 -> AjustesActualizacionesFragment()
-			5 -> AjustesGeneralFragment()
-			else -> AjustesVocesFragment()
+	private fun mostrar(clave: String) {
+		val f: Fragment = when (clave) {
+			VOCES -> AjustesVocesFragment()
+			SONIDO -> AjustesSonidoFragment()
+			TEXTO -> AjustesXml.nuevo(R.xml.ajustes_texto)
+			MOTOR -> AjustesMotorFragment()
+			ACTUALIZACIONES -> AjustesActualizacionesFragment()
+			else -> AjustesGeneralFragment()
 		}
 		supportFragmentManager.beginTransaction().replace(R.id.contenedor, f).commit()
+	}
+
+	companion object {
+		/** Extra con la pestaña que se abre (una de las claves de abajo). */
+		const val EXTRA_PESTANA = "pestana"
+		const val GENERAL = "general"
+		const val VOCES = "voces"
+		const val SONIDO = "sonido"
+		const val TEXTO = "texto"
+		const val MOTOR = "motor"
+		const val ACTUALIZACIONES = "actualizaciones"
 	}
 }
 
