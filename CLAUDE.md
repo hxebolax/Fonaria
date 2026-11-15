@@ -15,7 +15,7 @@ La firma no se puede recuperar desde aquí: `firma\fonaria.jks` y `firma\firma.p
 
 - `compilar.bat pruebas` y `compilar.bat compilar` sin errores.
 - Comprobar el cambio en el emulador. TalkBack se activa solo en el emulador, nunca en un móvil real (`ANDROID_SERIAL=emulator-5554` si hay un móvil conectado).
-- `compilar.bat publicar` copia la versión a `C:\Users\xebol\SynologyDrive\web\Fonaria` y crea la release en GitHub; después, commit y etiqueta.
+- Primero commit y `git push`: la release de GitHub se crea sobre el commit actual y el script no la crea si no está subido. Después, `compilar.bat publicar` copia la versión a `C:\Users\xebol\SynologyDrive\web\Fonaria` y crea la release y su etiqueta en GitHub.
 
 ## Agentes
 
