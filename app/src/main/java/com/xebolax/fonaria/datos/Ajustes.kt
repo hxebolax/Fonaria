@@ -73,7 +73,17 @@ class Ajustes(contexto: Context) {
 	)
 
 	/** Usar la velocidad que manda el sistema o la app que habla (además de la de Fonaria). */
-	val velocidadDelSistema get() = p.getBoolean("velocidad_sistema", true)
+	/**
+	 * Cómo se usa la velocidad que manda TalkBack o Android: «suave» (por defecto) la suaviza,
+	 * porque los motores clásicos no aceleran en línea recta y un 300 % pensado para ellos
+	 * sería demasiado para una voz neuronal; «completa» la aplica tal cual; «no» la ignora.
+	 * Migra el antiguo interruptor velocidad_sistema (1.0.0).
+	 */
+	val escalaVelocidad: String
+		get() = texto("escala_velocidad").ifEmpty { if (p.getBoolean("velocidad_sistema", true)) "suave" else "no" }
+
+	/** El factor de velocidad que corresponde a la velocidad del sistema [porCiento] (100 = normal). */
+	fun factorSistema(porCiento: Int): Float = factorSistema(porCiento, escalaVelocidad)
 	val tonoDelSistema get() = p.getBoolean("tono_sistema", true)
 	val semillaFija get() = p.getBoolean("semilla_fija", true)
 	val igualarVolumen get() = p.getBoolean("igualar_volumen", false)
@@ -168,6 +178,18 @@ class Ajustes(contexto: Context) {
 			private set
 
 		private var escuchador: SharedPreferences.OnSharedPreferenceChangeListener? = null
+
+		/** Exponente de la escala «suave»: 200 % → 1,5 ×, 310 % → 2 ×, 500 % → 2,6 ×. */
+		const val EXPONENTE_SUAVE = 0.6
+
+		fun factorSistema(porCiento: Int, escala: String): Float {
+			val f = (porCiento.coerceIn(10, 600)) / 100.0
+			return when (escala) {
+				"no" -> 1f
+				"completa" -> f.toFloat()
+				else -> Math.pow(f, EXPONENTE_SUAVE).toFloat()
+			}
+		}
 
 		/** Contexto de almacenamiento protegido del dispositivo (Android 7+); antes, el normal. */
 		fun contextoProtegido(contexto: Context): Context =

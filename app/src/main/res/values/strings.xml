@@ -119,6 +119,12 @@
 	<string name="volver_a_generales_resumen">Quita todos los ajustes propios de esta voz</string>
 	<string name="ajustes_quitados">Ajustes propios quitados</string>
 
+	<!-- Pestaña «Más» (las que no caben) -->
+	<string name="pestana_mas">Más</string>
+	<string name="pestana_mas_x">Más: %1$s</string>
+	<string name="pestana_mas_otras">Más pestañas</string>
+	<string name="pestana_mas_titulo">Más pestañas</string>
+
 	<!-- Ajustes: pestañas -->
 	<string name="pestana_voces">Voces</string>
 	<string name="pestana_sonido">Sonido</string>
@@ -143,7 +149,7 @@
 	<!-- Ajustes: Sonido -->
 	<string name="cat_voz_general">Voz (para todas las voces)</string>
 	<string name="velocidad">Velocidad</string>
-	<string name="velocidad_resumen">Se suma a la velocidad que elijas en TalkBack o en Android</string>
+	<string name="velocidad_resumen">Se multiplica por la velocidad de TalkBack o de Android (ver más abajo cómo se usa esa)</string>
 	<string name="tono">Tono</string>
 	<string name="tono_resumen">Más grave o más agudo</string>
 	<string name="volumen">Volumen</string>
@@ -153,7 +159,7 @@
 	<string name="variacion">Variación de la entonación</string>
 	<string name="variacion_resumen">0 es siempre igual y monótono; más alto, más expresivo y variado</string>
 	<string name="cat_sistema">Sistema</string>
-	<string name="velocidad_sistema">Usar la velocidad del sistema</string>
+	<string name="velocidad_sistema">Velocidad de TalkBack y del sistema</string>
 	<string name="velocidad_sistema_resumen">La velocidad que mandan TalkBack o la app que habla</string>
 	<string name="tono_sistema">Usar el tono del sistema</string>
 	<string name="tono_sistema_resumen">El tono que mandan TalkBack o la app que habla</string>
@@ -206,10 +212,10 @@
 	<string name="medir_motor">Medir la velocidad del motor</string>
 	<string name="medir_motor_resumen">Cuánto audio genera tu móvil por segundo con la configuración actual</string>
 	<string name="midiendo">Midiendo…</string>
-	<string name="resultado_medida">Genera %1$.1f segundos de voz por cada segundo de cálculo (más de 1 es más rápido que en tiempo real).\nPrimer sonido: %2$d milisegundos.\nCarga del modelo: %3$d milisegundos.\n\n%4$s</string>
+	<string name="resultado_medida">Genera %1$.1f segundos de voz por cada segundo de cálculo (más de 1 es más rápido que en tiempo real).\nPrimer sonido: %2$d milisegundos.\nCarga del modelo: %3$d milisegundos.\n\nPara que la voz no se entrecorte, la velocidad final (la tuya por la de TalkBack) no debería pasar de unas %1$.1f veces la normal en este móvil. Si la pasa, Fonaria guarda un poco de audio antes de empezar a hablar.\n\n%4$s</string>
 	<string name="cat_avanzado">Avanzado</string>
 	<string name="hilos">Hilos de cálculo</string>
-	<string name="hilos_resumen">Núcleos del procesador que usa el motor. Se aplica al reiniciar el móvil o forzar la detención de Fonaria</string>
+	<string name="hilos_resumen">Núcleos del procesador que usa el motor. Automático usa 4, lo más rápido en casi todos los móviles. Se aplica al reiniciar el móvil o forzar la detención de Fonaria</string>
 	<string name="pasos">Pasos de decodificación</string>
 	<string name="pasos_resumen">Más pasos, algo más de calidad y más lento. 1 es lo recomendado</string>
 	<string name="umbral_fin">Final de frase</string>

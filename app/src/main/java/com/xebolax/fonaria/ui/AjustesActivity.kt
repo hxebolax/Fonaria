@@ -3,10 +3,10 @@ package com.xebolax.fonaria.ui
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceFragmentCompat
-import com.google.android.material.tabs.TabLayout
 import com.xebolax.fonaria.R
 import com.xebolax.fonaria.accesibilidad.configurarBarra
 import com.xebolax.fonaria.actualizaciones.GestorActualizaciones
@@ -22,13 +22,16 @@ class AjustesActivity : AppCompatActivity() {
 	/** Para «Buscar actualizaciones» de la pestaña Actualizaciones. */
 	val actualizaciones = GestorActualizaciones(this)
 
-	private val pestanas = listOf(
-		R.string.pestana_voces,
-		R.string.pestana_sonido,
-		R.string.pestana_texto,
-		R.string.pestana_motor,
-		R.string.pestana_actualizaciones,
-		R.string.pestana_general,
+	private var pestanas: Pestanas? = null
+
+	/** Las seis pestañas, abajo: nombre e icono. */
+	private val lista get() = listOf(
+		Pestanas.Pestana("0", getString(R.string.pestana_voces), R.drawable.ic_voces),
+		Pestanas.Pestana("1", getString(R.string.pestana_sonido), R.drawable.ic_sonido),
+		Pestanas.Pestana("2", getString(R.string.pestana_texto), R.drawable.ic_texto),
+		Pestanas.Pestana("3", getString(R.string.pestana_motor), R.drawable.ic_motor),
+		Pestanas.Pestana("4", getString(R.string.pestana_actualizaciones), R.drawable.ic_actualizar),
+		Pestanas.Pestana("5", getString(R.string.pestana_general), R.drawable.ic_ajustes),
 	)
 
 	override fun onCreate(estado: Bundle?) {
@@ -36,22 +39,18 @@ class AjustesActivity : AppCompatActivity() {
 		b = ActividadSimpleBinding.inflate(layoutInflater)
 		setContentView(b.root)
 		configurarBarra(b.barra, getString(R.string.ajustes))
-		b.pestanas.visibility = View.VISIBLE
-		b.pestanas.tabMode = TabLayout.MODE_SCROLLABLE
-		pestanas.forEach { b.pestanas.addTab(b.pestanas.newTab().setText(it)) }
 		val elegida = estado?.getInt("pestana") ?: intent.getIntExtra("pestana", 0)
-		b.pestanas.getTabAt(elegida)?.select()
+		val p = Pestanas(this, abajo = true)
+		b.pestanas.visibility = View.VISIBLE
+		b.pestanas.addView(p, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+		p.poner(lista, elegida.toString()) { clave -> mostrar(clave.toInt()) }
+		pestanas = p
 		if (supportFragmentManager.findFragmentById(R.id.contenedor) == null) mostrar(elegida)
-		b.pestanas.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-			override fun onTabSelected(t: TabLayout.Tab) = mostrar(t.position)
-			override fun onTabUnselected(t: TabLayout.Tab) = Unit
-			override fun onTabReselected(t: TabLayout.Tab) = Unit
-		})
 	}
 
 	override fun onSaveInstanceState(estado: Bundle) {
 		super.onSaveInstanceState(estado)
-		estado.putInt("pestana", b.pestanas.selectedTabPosition)
+		estado.putInt("pestana", pestanas?.actual?.toIntOrNull() ?: 0)
 	}
 
 	private fun mostrar(i: Int) {

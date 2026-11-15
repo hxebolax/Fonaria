@@ -43,6 +43,15 @@ object Motor {
 	var error: String? = null
 		private set
 
+	/**
+	 * Segundos de voz que genera el motor por segundo de cálculo en este móvil (media de las
+	 * últimas frases). Con él, [ServicioVoz] sabe cuánto audio guardar antes de empezar a sonar
+	 * para que la voz no se entrecorte cuando se habla más rápido de lo que el móvil genera.
+	 */
+	@Volatile
+	var velocidadGeneracion = 1.5f
+		private set
+
 	/** Cuánto tardó la última carga, en milisegundos. */
 	@Volatile
 	var msCarga = 0L
@@ -125,10 +134,26 @@ object Motor {
 	 */
 	fun hablar(contexto: Context, p: Peticion, receptor: Nativo.Receptor): Boolean = cerrojo.withLock {
 		if (!asegurar(contexto)) return false
+		var muestras = 0L
+		var primero = 0L
+		var ultimo = 0L
+		val medidor = Nativo.Receptor { pcm, n ->
+			val ahora = SystemClock.elapsedRealtime()
+			if (primero == 0L) primero = ahora
+			ultimo = ahora
+			muestras += n
+			receptor.audio(pcm, n)
+		}
 		val ok = Nativo.hablar(
 			manejador, p.texto, p.voz, p.idioma, p.temperatura, p.semilla, p.ritmo, p.guia,
-			p.tokensTrozo, p.igualarVolumen, receptor,
+			p.tokensTrozo, p.igualarVolumen, medidor,
 		)
+		// Se mide desde el primer audio (sin la preparación de la voz) y solo en frases de más de un segundo
+		val segundos = muestras.toFloat() / frecuencia
+		if (ok && segundos > 1f && ultimo > primero) {
+			val medida = (segundos / ((ultimo - primero) / 1000f)).coerceIn(0.2f, 50f)
+			velocidadGeneracion = velocidadGeneracion * 0.7f + medida * 0.3f
+		}
 		if (!ok) {
 			error = Nativo.ultimoError()
 			Log.e(ETIQUETA, "El motor no pudo decir ${p.texto.length} caracteres con ${p.voz}: $error")

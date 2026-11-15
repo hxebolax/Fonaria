@@ -54,7 +54,7 @@
 <p>La rueda de ajustes que aparece junto a Fonaria en esa pantalla de Android abre directamente los Ajustes de Fonaria.</p>
 
 <h2 id="pantalla">3. La pantalla principal y el menú lateral</h2>
-<p>Arriba está la barra con el botón <strong>Abrir menú</strong> y el nombre de la sección. El menú lateral tiene dos partes:</p>
+<p>Arriba está la barra con el botón <strong>Abrir menú</strong> y el nombre de la sección. Las secciones con varias partes (Voces y Ajustes) tienen sus <strong>pestañas abajo</strong>, con icono y nombre; si no caben todas, las últimas van a la pestaña «Más». El menú lateral tiene dos partes:</p>
 <ul>
 	<li><strong>Secciones</strong>: Inicio, Voces, Diccionario y Leer texto. La actual se anuncia como «seleccionada».</li>
 	<li><strong>Acciones</strong>: Ajustes, Manual, Buscar actualizaciones y Acerca de.</li>
@@ -131,7 +131,7 @@
 <p><strong>Guardar como audio (WAV)</strong> genera el texto completo con la voz elegida y te deja guardar el archivo donde quieras: útil para crear audios de avisos, lecciones o mensajes.</p>
 
 <h2 id="ajustes">8. Ajustes</h2>
-<p>Se abren desde el menú lateral o con la rueda junto a Fonaria en los ajustes de texto a voz de Android. Tienen seis pestañas. Los deslizadores dicen su valor con su unidad y cambian un paso cada vez que deslizas arriba o abajo con TalkBack.</p>
+<p>Se abren desde el menú lateral o con la rueda junto a Fonaria en los ajustes de texto a voz de Android. Tienen seis pestañas, abajo. Los deslizadores dicen su valor con su unidad y cambian un paso cada vez que deslizas arriba o abajo con TalkBack.</p>
 <h3>Voces</h3>
 <ul>
 	<li><strong>Voz para cada idioma y región</strong>: España, México, Reino Unido, Estados Unidos, Francia, Alemania y Brasil. «Automática» usa la primera voz de ese idioma.</li>
@@ -142,7 +142,8 @@
 <p>Valen para todas las voces, salvo las que tengan ajustes propios.</p>
 <table>
 	<tr><th>Ajuste</th><th>Qué hace</th></tr>
-	<tr><td>Velocidad</td><td>De 25 a 400 por ciento. Se multiplica por la velocidad de TalkBack o de Android si está activado «Usar la velocidad del sistema». Mantiene la voz natural incluso muy rápida.</td></tr>
+	<tr><td>Velocidad</td><td>De 25 a 400 por ciento. Se multiplica por la velocidad de TalkBack o de Android. Mantiene la voz natural incluso muy rápida.</td></tr>
+	<tr><td>Velocidad de TalkBack y del sistema</td><td><strong>Suavizada</strong> (recomendada): la velocidad que ya tenías para otro motor se convierte para una voz neuronal; 200 % suena 1,5 veces más rápido y 300 %, unas 2 veces. <strong>Completa</strong>: tal cual, como un motor clásico. <strong>No usarla</strong>: solo cuenta la velocidad de Fonaria.</td></tr>
 	<tr><td>Tono</td><td>De 50 a 200 por ciento.</td></tr>
 	<tr><td>Volumen</td><td>De 10 a 200 por ciento. Por encima de 100 puede saturar.</td></tr>
 	<tr><td>Ritmo natural</td><td>Lo cambia el propio modelo: negativo, más ligero; positivo, más pausado. Suena más natural que la velocidad, pero el cambio es pequeño.</td></tr>
@@ -171,11 +172,11 @@
 	<li><strong>Modelo de voz</strong>:
 		<ul>
 			<li><strong>Integrado (q8)</strong>: viene con la app; buen equilibrio.</li>
-			<li><strong>Ligero (q4k)</strong>: más rápido, para móviles antiguos. Se descarga (77 MB).</li>
+			<li><strong>Compacto (q4k)</strong>: ocupa menos. En unos procesadores es más rápido y en otros más lento (por ejemplo, en un Snapdragon 845 va más lento): compruébalo con «Medir la velocidad del motor». Se descarga (77 MB).</li>
 			<li><strong>Máxima calidad (f32)</strong>: el más fiel y el más lento. Se descarga (116 MB).</li>
 		</ul>
 		Si eliges uno que no está, Fonaria ofrece descargarlo. <strong>Borrar los modelos descargados</strong> libera ese espacio.</li>
-	<li><strong>Medir la velocidad del motor</strong>: dice cuántos segundos de voz genera tu móvil por segundo, el tiempo hasta el primer sonido y lo que tarda en cargar el modelo. Si el primer número es menor que 1, prueba el modelo ligero.</li>
+	<li><strong>Medir la velocidad del motor</strong>: dice cuántos segundos de voz genera tu móvil por segundo, el tiempo hasta el primer sonido y lo que tarda en cargar el modelo. También dice hasta qué velocidad puede hablar tu móvil sin entrecortarse.</li>
 	<li>Avanzado: <strong>Hilos de cálculo</strong> (automático usa hasta 4 núcleos; se aplica al reiniciar el móvil o forzar la detención), <strong>Pasos de decodificación</strong>, <strong>Final de frase</strong>, <strong>Tamaño de cada trozo</strong>, <strong>Audio por adelantado</strong> y <strong>Decodificador acelerado</strong>. Si no sabes qué hacen, déjalos como están.</li>
 </ul>
 <h3>Actualizaciones</h3>
@@ -201,14 +202,16 @@
 <ul>
 	<li>Deja activados «Deletrear las letras sueltas», «Recortar silencios» y «Hablar frase a frase».</li>
 	<li>Ajusta la velocidad en TalkBack (o en Android) y usa la de Fonaria solo para afinar cada voz.</li>
-	<li>Si notas retraso al moverte rápido, baja «Audio por adelantado» o elige el modelo ligero.</li>
+	<li>Si la voz va demasiado rápida, deja «Velocidad de TalkBack y del sistema» en Suavizada o baja la Velocidad de Fonaria.</li>
+	<li>Si notas retraso al moverte rápido, baja «Audio por adelantado».</li>
 	<li>Fonaria funciona también en la pantalla de bloqueo justo después de reiniciar, antes de desbloquear: el modelo, las voces y los ajustes se guardan en el almacenamiento protegido del dispositivo.</li>
 	<li>Si tu móvil cierra apps en segundo plano, quita a Fonaria de la optimización de batería para que no tarde en responder.</li>
 </ul>
 
 <h2 id="antiguos">11. Móviles antiguos y rendimiento</h2>
 <p>Las voces de Fonaria son neuronales: suenan mucho mejor que las clásicas pero necesitan más procesador. Fonaria lleva dos versiones del motor para 64 bits y elige sola la más rápida que admite tu procesador; en los móviles de 32 bits usa una versión compatible.</p>
-<p>Si tu móvil va justo: elige el modelo Ligero, desactiva «Fidelidad a la voz», deja «Pasos de decodificación» en 1 y prueba «Decodificador acelerado». Usa «Medir la velocidad del motor» para comparar.</p>
+<p>Cada móvil genera la voz a su propio ritmo: «Medir la velocidad del motor» dice cuántas veces más rápido que el tiempo real lo hace el tuyo (por ejemplo, un Snapdragon 845 llega a unas 2 veces). Si pides hablar más rápido de lo que tu móvil genera, Fonaria guarda un poco de audio antes de empezar cada frase para que no se entrecorte.</p>
+<p>Si tu móvil va justo: deja «Velocidad de TalkBack y del sistema» en Suavizada, desactiva «Fidelidad a la voz», deja «Pasos de decodificación» en 1 y los hilos en automático. El modelo Compacto y el decodificador acelerado van más rápido solo en algunos procesadores: compruébalo midiendo.</p>
 
 <h2 id="actualizaciones">12. Actualizaciones</h2>
 <p>Fonaria busca versiones nuevas al abrirse (como mucho cada seis horas) o cuando eliges <strong>Buscar actualizaciones</strong> en el menú lateral. Muestra las novedades y, si aceptas, descarga el APK, comprueba que es el publicado (tamaño y SHA-256), que es Fonaria, que es más nueva y que está firmada por el mismo autor, y abre el instalador de Android. La primera vez, Android pide permitir que Fonaria instale aplicaciones.</p>
@@ -221,6 +224,7 @@
 	<li><strong>No habla nada</strong>: en Inicio, mira el Estado. Si dice que el modelo no está preparado, espera unos segundos tras la primera instalación. Si hay un problema del motor, copia el diagnóstico de Acerca de.</li>
 	<li><strong>TalkBack sigue con otra voz</strong>: comprueba el motor preferido en los ajustes de texto a voz de Android.</li>
 	<li><strong>Lee otro idioma con acento español</strong>: descarga las voces de ese idioma en Voces, Descargar.</li>
+	<li><strong>Habla demasiado rápido</strong>: en Ajustes, Sonido, deja «Velocidad de TalkBack y del sistema» en Suavizada o baja la Velocidad.</li>
 	<li><strong>Va lento o con cortes</strong>: ver <a href="#antiguos">Móviles antiguos</a>.</li>
 	<li><strong>Una palabra suena mal</strong>: añádela al <a href="#diccionario">Diccionario</a>.</li>
 	<li><strong>Una descarga falla</strong>: en Ajustes, Actualizaciones, cambia «Descargar las voces desde».</li>

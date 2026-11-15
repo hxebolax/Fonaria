@@ -132,6 +132,16 @@ if (-not $SinGitHub) {
 			Write-Host "[AVISO] gh no tiene la sesion iniciada (gh auth login): no se publica en GitHub."
 		} else {
 			$etiqueta = "v$nombre"
+			# La release se crea sobre el commit actual: tiene que estar subido a GitHub
+			Push-Location $Raiz
+			$commit = (& git rev-parse HEAD 2>$null)
+			& git fetch -q origin 2>$null
+			$subido = (& git branch -r --contains $commit 2>$null)
+			Pop-Location
+			if (-not $commit -or -not $subido) {
+				Write-Host "[AVISO] El commit actual no esta subido a GitHub: haz commit y git push, y vuelve a publicar. No se crea la release." -ForegroundColor Yellow
+				exit 0
+			}
 			$fichNotas = Join-Path $Dist "notas.md"
 			[IO.File]::WriteAllText($fichNotas, $notas + "`n", $Utf8)
 			& gh release view $etiqueta --repo $Repo *> $null
@@ -139,7 +149,7 @@ if (-not $SinGitHub) {
 				& gh release upload $etiqueta $destino (Join-Path $Dist "version.json") --repo $Repo --clobber
 				& gh release edit $etiqueta --repo $Repo --notes-file $fichNotas
 			} else {
-				& gh release create $etiqueta $destino (Join-Path $Dist "version.json") --repo $Repo --title "Fonaria $nombre" --notes-file $fichNotas --latest
+				& gh release create $etiqueta $destino (Join-Path $Dist "version.json") --repo $Repo --title "Fonaria $nombre" --notes-file $fichNotas --target $commit --latest
 			}
 			if ($LASTEXITCODE -eq 0) { Write-Host "[OK] Publicada en GitHub: https://github.com/$Repo/releases/tag/$etiqueta" -ForegroundColor Green }
 			else { Write-Host "[ERROR] No se pudo publicar en GitHub." -ForegroundColor Red }

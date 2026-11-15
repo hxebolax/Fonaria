@@ -104,6 +104,12 @@
 	<string name="volver_a_generales_resumen">Removes all of this voice\'s own settings</string>
 	<string name="ajustes_quitados">Own settings removed</string>
 
+	<!-- «More» tab (the ones that do not fit) -->
+	<string name="pestana_mas">More</string>
+	<string name="pestana_mas_x">More: %1$s</string>
+	<string name="pestana_mas_otras">More tabs</string>
+	<string name="pestana_mas_titulo">More tabs</string>
+
 	<!-- Settings tabs -->
 	<string name="pestana_voces">Voices</string>
 	<string name="pestana_sonido">Sound</string>
@@ -128,7 +134,7 @@
 	<!-- Settings: Sound -->
 	<string name="cat_voz_general">Voice (for every voice)</string>
 	<string name="velocidad">Speech rate</string>
-	<string name="velocidad_resumen">Added to the rate you choose in TalkBack or Android</string>
+	<string name="velocidad_resumen">Multiplied by the TalkBack or Android rate (see below how that one is used)</string>
 	<string name="tono">Pitch</string>
 	<string name="tono_resumen">Lower or higher</string>
 	<string name="volumen">Volume</string>
@@ -138,7 +144,7 @@
 	<string name="variacion">Intonation variation</string>
 	<string name="variacion_resumen">0 is always the same and flat; higher is more expressive and varied</string>
 	<string name="cat_sistema">System</string>
-	<string name="velocidad_sistema">Use the system speech rate</string>
+	<string name="velocidad_sistema">TalkBack and system speech rate</string>
 	<string name="velocidad_sistema_resumen">The rate sent by TalkBack or the app that speaks</string>
 	<string name="tono_sistema">Use the system pitch</string>
 	<string name="tono_sistema_resumen">The pitch sent by TalkBack or the app that speaks</string>
@@ -191,10 +197,10 @@
 	<string name="medir_motor">Measure engine speed</string>
 	<string name="medir_motor_resumen">How much audio your phone generates per second with the current settings</string>
 	<string name="midiendo">Measuring…</string>
-	<string name="resultado_medida">Generates %1$.1f seconds of speech per second of computing (over 1 is faster than real time).\nFirst sound: %2$d milliseconds.\nModel load: %3$d milliseconds.\n\n%4$s</string>
+	<string name="resultado_medida">Generates %1$.1f seconds of speech per second of computing (over 1 is faster than real time).\nFirst sound: %2$d milliseconds.\nModel load: %3$d milliseconds.\n\nTo avoid choppy speech, the final rate (yours times the TalkBack rate) should not exceed about %1$.1f times normal on this phone. Above that, Fonaria buffers a little audio before it starts speaking.\n\n%4$s</string>
 	<string name="cat_avanzado">Advanced</string>
 	<string name="hilos">Computing threads</string>
-	<string name="hilos_resumen">Processor cores the engine uses. Applied after restarting the phone or force-stopping Fonaria</string>
+	<string name="hilos_resumen">Processor cores the engine uses. Automatic uses 4, the fastest on almost every phone. Applied after restarting the phone or force-stopping Fonaria</string>
 	<string name="pasos">Decoding steps</string>
 	<string name="pasos_resumen">More steps, a bit more quality and slower. 1 is recommended</string>
 	<string name="umbral_fin">End of sentence</string>

@@ -74,6 +74,8 @@ Actualizar `ptts`: cambia la versión en `nativo/Cargo.toml`, ejecuta `cargo upd
 ## El audio
 
 - `Procesador` (uno por frase): recorta el silencio del principio y guarda aparte el del final hasta saber si viene más voz (umbral 0,008 y margen de 20 ms). Si velocidad, tono o volumen no son 1, pasa por **Sonic** (`app/src/main/java/sonic/Sonic.java`, sin cambios) con calidad alta solo hasta 1,5×.
+- Velocidad: la de Fonaria por la que manda el sistema. Esta se suaviza por defecto (`Ajustes.factorSistema`, exponente 0,6: 310 % → 1,97×), porque un 300 % pensado para un motor clásico es demasiado para una voz neuronal y además el móvil no la genera tan deprisa (un Snapdragon 845 llega a unas 2 veces el tiempo real con el modelo q8 y 4 hilos; q4k y Mimi en q8 van más lentos sin `dotprod`).
+- Anticortes: `Motor.velocidadGeneracion` es la media de los segundos de voz por segundo de cálculo medidos en cada frase. Antes de cada frase, `Salida.retenerPara` calcula cuánto tardará en generarse y cuánto en sonar a esa velocidad; si se generaría más despacio de lo que suena, retiene el audio el tiempo justo (menos lo que ya va por delante) y no aplica el ritmo de entrega.
 - `Salida`: avisa a Android de que empieza solo cuando hay algo que oír (como evvdroid y RHVoice: si no, TalkBack entiende que la cola se ha vaciado), trocea al `maxBufferSize` y no se adelanta más de «Audio por adelantado» a lo que suena, para que al mandar callar no se pierdan frases que nadie ha oído. Al guardar en archivo no espera.
 
 ## Almacenamiento y Direct Boot

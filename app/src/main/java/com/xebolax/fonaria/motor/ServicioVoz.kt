@@ -109,7 +109,7 @@ class ServicioVoz : TextToSpeechService() {
 		}
 		salida.frecuencia = Motor.frecuencia
 		val p = ajustes.parametros(voz.id)
-		val velocidad = p.velocidad / 100f * (if (ajustes.velocidadDelSistema) request.speechRate / 100f else 1f)
+		val velocidad = p.velocidad / 100f * ajustes.factorSistema(request.speechRate)
 		val tono = p.tono / 100f * (if (ajustes.tonoDelSistema) request.pitch / 100f else 1f)
 		val volumen = p.volumen / 100f
 		val semilla = if (ajustes.semillaFija) SEMILLA else Random.nextLong()
@@ -121,6 +121,9 @@ class ServicioVoz : TextToSpeechService() {
 				// El silencio también se acelera con la velocidad
 				is Trozo.Pausa -> salida.silencio((t.ms / velocidad.coerceAtLeast(0.25f)).toInt())
 				is Trozo.Habla -> {
+					// Si el móvil genera más despacio de lo que se oye a esta velocidad, se guarda
+					// audio antes de soltarlo, para que la frase suene seguida y no a trompicones.
+					salida.retenerPara(t.texto.length, velocidad, Motor.velocidadGeneracion)
 					val proc = Procesador(Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios)
 					val peticion = Motor.Peticion(
 						texto = t.texto,
@@ -142,6 +145,7 @@ class ServicioVoz : TextToSpeechService() {
 						return
 					}
 					if (!salida.escribir(proc.terminar())) break
+					if (!salida.soltar()) break
 				}
 			}
 		}
@@ -181,8 +185,53 @@ class Salida(
 		return empezado
 	}
 
-	/** Entrega PCM. Devuelve false si hay que dejar de generar. */
+	/** Audio guardado mientras se retiene, y hasta cuándo (System.nanoTime). */
+	private val retenido = ArrayList<ShortArray>()
+	private var sinRitmo = false
+	private var retenerHasta = 0L
+
+	/**
+	 * Antes de una frase de [caracteres] letras: si a [velocidad] se oye más deprisa de lo que el
+	 * motor genera ([generacion] segundos de voz por segundo), retiene el audio el tiempo justo
+	 * para que la frase entera suene seguida. Lo que ya va por delante sonando cuenta a favor.
+	 */
+	fun retenerPara(caracteres: Int, velocidad: Float, generacion: Float) {
+		// Unos 14 caracteres por segundo a la velocidad natural de las voces
+		val duracion = caracteres / 14f
+		val sonara = duracion / velocidad.coerceAtLeast(0.1f)
+		val tardara = duracion / generacion.coerceAtLeast(0.1f)
+		val adelantado = if (empezado) ((bytes * 1000L / (frecuencia * 2L)) - (System.nanoTime() - desde) / 1_000_000L).coerceAtLeast(0) else 0L
+		val esperaMs = ((tardara - sonara) * 1000f).toLong() + 80 - adelantado
+		// Si el motor no llega a la velocidad de lo que suena, nunca se le hace esperar: todo lo que
+		// genere va por delante, que es justo lo que evita los cortes
+		sinRitmo = generacion < velocidad * 1.2f
+		retenerHasta = if (esperaMs > 0) System.nanoTime() + minOf(esperaMs, 4000L) * 1_000_000L else 0L
+	}
+
+	/** Suelta lo retenido (al acabar la frase o al cumplirse el tiempo). */
+	fun soltar(): Boolean {
+		retenerHasta = 0L
+		val todo = retenido.toList()
+		retenido.clear()
+		for (pcm in todo) if (!entregar(pcm)) return false
+		return !parado()
+	}
+
+	/** Entrega PCM (o lo guarda si se está reteniendo). Devuelve false si hay que dejar de generar. */
 	fun escribir(pcm: ShortArray): Boolean {
+		if (pcm.isEmpty()) return !parado()
+		if (parado()) return false
+		if (retenerHasta != 0L) {
+			if (System.nanoTime() < retenerHasta) {
+				retenido += pcm
+				return true
+			}
+			if (!soltar()) return false
+		}
+		return entregar(pcm)
+	}
+
+	private fun entregar(pcm: ShortArray): Boolean {
 		if (pcm.isEmpty()) return !parado()
 		if (parado() || !abrir()) return false
 		val maximo = callback.maxBufferSize.coerceIn(1024, 16384) and 1.inv()
@@ -207,12 +256,12 @@ class Salida(
 	/** Silencio de [ms] milisegundos (solo entre cosas dichas, nunca al principio). */
 	fun silencio(ms: Int) {
 		if (!empezado || ms <= 0) return
-		escribir(ShortArray(frecuencia * ms / 1000))
+		entregar(ShortArray(frecuencia * ms / 1000))
 	}
 
 	/** No se adelanta más de [adelantoMs] a lo que suena. */
 	private fun esperar() {
-		if (aArchivo) return
+		if (aArchivo || sinRitmo) return
 		while (!parado()) {
 			val sonando = (System.nanoTime() - desde) / 1_000_000L
 			val generado = bytes * 1000L / (frecuencia * 2L)
@@ -237,6 +286,7 @@ class Salida(
 	}
 
 	fun terminar() {
+		if (retenido.isNotEmpty() && !parado()) soltar()
 		when {
 			empezado -> callback.done()
 			// Mandaron callar antes de que sonara nada: no se debe nada (como RHVoice y evvdroid)

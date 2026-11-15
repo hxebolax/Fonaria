@@ -3,6 +3,14 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.1
+- La velocidad de TalkBack y del sistema ya no hace hablar a Fonaria rapidísimo: se suaviza para una voz neuronal (200 % suena 1,5 veces más rápido y 300 %, unas 2 veces). En Ajustes, Sonido, «Velocidad de TalkBack y del sistema» se puede usar tal cual o no usar.
+- La voz ya no se entrecorta cuando se pide hablar más rápido de lo que el móvil genera: Fonaria mide lo rápido que va tu móvil y guarda un poco de audio antes de cada frase.
+- Las pestañas de Voces y de Ajustes están ahora abajo, con icono y nombre, siempre enteras (las que no caben van a «Más»).
+- Ajustes: los títulos largos ya no se cortan.
+- «Medir la velocidad del motor» dice además hasta qué velocidad puede hablar tu móvil sin cortes.
+- El modelo q4k se llama ahora Compacto: en algunos procesadores no es más rápido que el integrado.
+
 == 1.0.0
 - Primera versión de Fonaria: motor de voz para Android con las voces neuronales Phonon de Gradium, que funcionan sin conexión. Se elige como motor del sistema y la usan TalkBack y todas las apps que hablan.
 - Trae las 25 voces en español, de España y de México. Las de inglés (Reino Unido, Estados Unidos y voces de personaje), francés, alemán y portugués de Brasil se descargan en Voces, una a una o un idioma completo. También se pueden importar voces propias de Gradium Studio.

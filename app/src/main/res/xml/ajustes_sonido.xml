@@ -12,7 +12,7 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory app:title="@string/cat_sistema" app:iconSpaceReserved="false">
-		<SwitchPreferenceCompat app:key="velocidad_sistema" app:title="@string/velocidad_sistema" app:summary="@string/velocidad_sistema_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<ListPreference app:key="escala_velocidad" app:title="@string/velocidad_sistema" app:entries="@array/escala_velocidad_nombres" app:entryValues="@array/escala_velocidad_valores" android:defaultValue="suave" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat app:key="tono_sistema" app:title="@string/tono_sistema" app:summary="@string/tono_sistema_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 

@@ -17,6 +17,48 @@
 		<item name="colorSecondary">@color/secundario</item>
 		<item name="colorSecondaryContainer">@color/contenedor_secundario</item>
 		<item name="colorOnSecondaryContainer">@color/sobre_contenedor_secundario</item>
-		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+		<item name="preferenceTheme">@style/TemaAjustes</item>
+	</style>
+
+	<!-- Pestañas de abajo (Voces y Ajustes): icono y nombre, compactas, con el indicador arriba -->
+	<style name="TemaPestanasAbajo" parent="">
+		<item name="tabStyle">@style/PestanasAbajo</item>
+	</style>
+	<!-- El mismo tamaño que las etiquetas de abajo de Material, sin espacio extra entre letras (así caben las seis) -->
+	<style name="TextoPestanaAbajo" parent="TextAppearance.Material3.LabelMedium">
+		<item name="android:letterSpacing">0</item>
+	</style>
+	<style name="PestanasAbajo" parent="Widget.Material3.TabLayout">
+		<item name="tabMinWidth">48dp</item>
+		<item name="tabPaddingStart">2dp</item>
+		<item name="tabPaddingEnd">2dp</item>
+		<item name="tabInlineLabel">false</item>
+		<item name="tabTextAppearance">@style/TextoPestanaAbajo</item>
+		<item name="tabIndicatorGravity">top</item>
+		<item name="android:background">?attr/colorSurfaceContainer</item>
+	</style>
+
+	<!-- Ajustes: los títulos largos ocupan las líneas que hagan falta (nunca se cortan con «...») -->
+	<style name="TemaAjustes" parent="PreferenceThemeOverlay">
+		<item name="preferenceStyle">@style/Ajuste</item>
+		<item name="switchPreferenceCompatStyle">@style/Ajuste.Interruptor</item>
+		<item name="dialogPreferenceStyle">@style/Ajuste.Dialogo</item>
+		<item name="editTextPreferenceStyle">@style/Ajuste.Texto</item>
+		<item name="seekBarPreferenceStyle">@style/Ajuste.Deslizador</item>
+	</style>
+	<style name="Ajuste" parent="Preference.Material">
+		<item name="singleLineTitle">false</item>
+	</style>
+	<style name="Ajuste.Interruptor" parent="Preference.SwitchPreferenceCompat.Material">
+		<item name="singleLineTitle">false</item>
+	</style>
+	<style name="Ajuste.Dialogo" parent="Preference.DialogPreference.Material">
+		<item name="singleLineTitle">false</item>
+	</style>
+	<style name="Ajuste.Texto" parent="Preference.DialogPreference.EditTextPreference.Material">
+		<item name="singleLineTitle">false</item>
+	</style>
+	<style name="Ajuste.Deslizador" parent="Preference.SeekBarPreference.Material">
+		<item name="singleLineTitle">false</item>
 	</style>
 </resources>

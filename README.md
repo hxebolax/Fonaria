@@ -4,7 +4,7 @@
 
 Fonaria es un motor de texto a voz (TTS) para Android basado en **Phonon**, el modelo de voz neuronal de Gradium. Una vez elegido como motor del sistema, TalkBack y cualquier app que hable (lectores de libros, navegadores, GPS…) usan sus voces. Todo se genera en el móvil: no necesita internet ni envía nada a ningún sitio.
 
-- Versión actual: **1.0.0** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
+- Versión actual: **1.0.1** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
 - Android 5.0 (API 21) o posterior · procesadores de 64 bits (arm64) y de 32 bits (armv7).
 - Trae **las 25 voces en español** (España y México). Las de inglés, francés, alemán y portugués se descargan desde la app.
 - Interfaz en español (principal) e inglés, fácil de traducir.
@@ -43,7 +43,7 @@ Fonaria es un motor de texto a voz (TTS) para Android basado en **Phonon**, el m
 
 ### Qué vas a encontrar
 
-Fonaria se organiza con un **menú lateral** y **pestañas**, igual en todas sus secciones:
+Fonaria se organiza con un **menú lateral** y, en las secciones con varias partes, **pestañas abajo** con icono y nombre:
 
 - **Inicio**: si Fonaria es el motor del sistema, qué voces tienes, una prueba rápida con cualquier voz y el botón para elegir Fonaria como motor de voz de Android.
 - **Voces**, con tres pestañas:
@@ -86,7 +86,8 @@ En total, **102 voces**. Cada una ocupa unos 250 KB. Si una app pide un idioma d
 - **Por voz** (y en general): velocidad (25–400 %), tono, volumen, **ritmo natural** (lo cambia el propio modelo) y **variación de la entonación**.
 - **Sonido**: usar o no la velocidad y el tono de TalkBack o de Android, misma lectura cada vez o tomas distintas, igualar el volumen, fidelidad a la voz (guía sin clasificador), recortar silencios, pausas entre frases y párrafos.
 - **Voz de cada idioma y región**, voz de reserva y respetar la voz que pida cada app.
-- **Motor**: modelo integrado (q8), ligero (q4k) o de máxima calidad (f32), hilos de cálculo, pasos de decodificación, umbral de final de frase, tamaño de los trozos, audio por adelantado y decodificador acelerado.
+- **Velocidad de TalkBack**: suavizada para voz neuronal (300 % suena unas 2 veces más rápido), tal cual o sin usar.
+- **Motor**: modelo integrado (q8), compacto (q4k) o de máxima calidad (f32), hilos de cálculo, pasos de decodificación, umbral de final de frase, tamaño de los trozos, audio por adelantado y decodificador acelerado.
 - **General**: idioma de la app, tema claro u oscuro, actualizaciones desde el servidor, GitHub o los dos, y de dónde se descargan las voces.
 
 ### Accesibilidad
@@ -112,7 +113,7 @@ Fonaria se actualiza sola: busca versiones nuevas al abrirse (como mucho cada se
 
 ### Móviles antiguos
 
-Las voces neuronales necesitan más procesador que las clásicas. Fonaria lleva dos versiones del motor para 64 bits (una optimizada para procesadores ARMv8.2, casi todos desde 2019, y otra para cualquiera) y elige sola; en 32 bits usa una versión compatible. En móviles justos, el **modelo ligero** y las opciones de rendimiento de Ajustes, Motor marcan la diferencia.
+Las voces neuronales necesitan más procesador que las clásicas. Fonaria lleva dos versiones del motor para 64 bits (una optimizada para procesadores ARMv8.2, casi todos desde 2019, y otra para cualquiera) y elige sola; en 32 bits usa una versión compatible. «Medir la velocidad del motor» dice a qué ritmo genera tu móvil (un Snapdragon 845, unas 2 veces el tiempo real); si se pide hablar más rápido, Fonaria guarda un poco de audio antes de cada frase para que no se entrecorte.
 
 ### Privacidad
 
@@ -144,7 +145,7 @@ Audio 24 kHz flotante ──► Procesador (recorte de silencios, Sonic: velocid
 
 - El **motor nativo** (`nativo/`) es una biblioteca de Rust que usa el crate [`ptts`](https://crates.io/crates/ptts) de Gradium y expone sus funciones a Kotlin por JNI: cargar el modelo, registrar voces (se leen del disco la primera vez que se usan), hablar con temperatura, semilla, ritmo (`duration_delta`), guía sin clasificador, tamaño de trozo y compresor-limitador opcional.
 - Se compila para `arm64-v8a` (dos variantes: genérica y ARMv8.2 con `dotprod` y `fp16`; la app elige al arrancar mirando `/proc/cpuinfo`), `armeabi-v7a` y `x86_64` (emulador), con páginas de 16 KB.
-- El **modelo** es `phonon-40m-multilingual` cuantizado a GGUF q8_0 (el integrado) y q4_K (el ligero) con el ejemplo `quantize` de `xn-ptts`. Va dentro del APK y se copia al almacenamiento protegido del dispositivo, para que el motor funcione antes de desbloquear el móvil.
+- El **modelo** es `phonon-40m-multilingual` cuantizado a GGUF q8_0 (el integrado) y q4_K (el compacto) con el ejemplo `quantize` de `xn-ptts`. Va dentro del APK y se copia al almacenamiento protegido del dispositivo, para que el motor funcione antes de desbloquear el móvil.
 - Las pantallas de la app hablan a través del propio servicio del sistema, así que el modelo se carga una sola vez.
 
 Más detalles en [docs/DESARROLLO.md](docs/DESARROLLO.md).
@@ -268,6 +269,6 @@ Fonaria es un proyecto independiente: no es un producto oficial de Gradium.
 
 ## English summary
 
-**Fonaria** is an offline neural text-to-speech engine for Android built on Gradium's **Phonon** model and designed to be fully usable with TalkBack. It ships with the multilingual model and all **25 Spanish voices** (Spain and Mexico); the other 77 voices (British and American English, English character voices, French, German, Brazilian Portuguese) are downloaded in the app, and you can import your own Gradium Studio voices. It offers per-voice rate, pitch, volume, natural pace and intonation variation; a pronunciation dictionary compatible with NVDA `.dic` files; spelling, emoji names, punctuation levels and text normalisation; save-as-WAV; three model sizes for old and new phones (arm64 with an ARMv8.2-optimised build, and armv7); Direct Boot support; and self-updates from the author's server or GitHub. The UI is in Spanish and English.
+**Fonaria** is an offline neural text-to-speech engine for Android built on Gradium's **Phonon** model and designed to be fully usable with TalkBack. It ships with the multilingual model and all **25 Spanish voices** (Spain and Mexico); the other 77 voices (British and American English, English character voices, French, German, Brazilian Portuguese) are downloaded in the app, and you can import your own Gradium Studio voices. It offers per-voice rate, pitch, volume, natural pace and intonation variation; a pronunciation dictionary compatible with NVDA `.dic` files; spelling, emoji names, punctuation levels and text normalisation; save-as-WAV; three model variants (arm64 with an ARMv8.2-optimised build, and armv7); Direct Boot support; and self-updates from the author's server or GitHub. The UI is in Spanish and English.
 
 The native engine is a Rust JNI library over the [`ptts`](https://crates.io/crates/ptts) crate (`nativo/`). Build on Windows with `compilar.bat`, which sets up a portable JDK, Android SDK/NDK, Gradle and emulator in `entorno\`. Elsewhere: Rust + NDK r27 + JDK 17 + Gradle 8.11.1 + SDK 35; run `herramientas/preparar_modelo.ps1`, `herramientas/compilar_nativo.ps1`, then `gradle assembleDebug`. The code is GPL-3.0-or-later; the voice model is CC BY-NC 4.0 (non-commercial), so the APK must not be used commercially.

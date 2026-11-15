@@ -14,9 +14,20 @@
 		<item>toda</item>
 	</string-array>
 
+	<string-array name="escala_velocidad_nombres">
+		<item>Suavizada (recomendada): 200 % suena 1,5 veces más rápido y 300 %, unas 2 veces</item>
+		<item>Completa: tal cual, como un motor clásico (puede entrecortarse en móviles lentos)</item>
+		<item>No usarla: solo la velocidad de Fonaria</item>
+	</string-array>
+	<string-array name="escala_velocidad_valores" translatable="false">
+		<item>suave</item>
+		<item>completa</item>
+		<item>no</item>
+	</string-array>
+
 	<string-array name="modelo_nombres">
 		<item>Integrado (q8): equilibrio entre calidad y velocidad</item>
-		<item>Ligero (q4k): más rápido, para móviles antiguos. Se descarga, 77 MB</item>
+		<item>Compacto (q4k): ocupa menos; en unos procesadores es más rápido y en otros más lento. Se descarga, 77 MB</item>
 		<item>Máxima calidad (f32): el más fiel y el más lento. Se descarga, 116 MB</item>
 	</string-array>
 	<string-array name="modelo_valores" translatable="false">

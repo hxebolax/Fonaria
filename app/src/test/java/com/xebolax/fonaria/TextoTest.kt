@@ -111,6 +111,15 @@ class TextoTest {
 	}
 
 	@Test
+	fun velocidadDelSistemaSuavizada() {
+		val f = { r: Int, e: String -> com.xebolax.fonaria.datos.Ajustes.factorSistema(r, e) }
+		assertEquals(1f, f(100, "suave"), 0.001f)
+		assertTrue(f(310, "suave") in 1.9f..2.05f)
+		assertEquals(3.1f, f(310, "completa"), 0.001f)
+		assertEquals(1f, f(310, "no"), 0.001f)
+	}
+
+	@Test
 	fun versiones() {
 		assertTrue(Actualizador.compararVersiones("1.0.10", "1.0.9") > 0)
 		assertEquals(0, Actualizador.compararVersiones("1.0", "1.0.0"))

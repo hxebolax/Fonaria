@@ -7,9 +7,15 @@
 		<item>Most: also brackets, quotes and dashes</item>
 		<item>All: also full stops and commas</item>
 	</string-array>
+	<string-array name="escala_velocidad_nombres">
+		<item>Smoothed (recommended): 200 % sounds 1.5 times faster and 300 % about twice</item>
+		<item>Full: as is, like a classic engine (may stutter on slow phones)</item>
+		<item>Ignore it: only the Fonaria rate</item>
+	</string-array>
+
 	<string-array name="modelo_nombres">
 		<item>Built-in (q8): balance of quality and speed</item>
-		<item>Light (q4k): faster, for older phones. Download, 77 MB</item>
+		<item>Compact (q4k): smaller; faster on some processors, slower on others. Download, 77 MB</item>
 		<item>Highest quality (f32): most faithful and slowest. Download, 116 MB</item>
 	</string-array>
 	<string-array name="fuente_nombres">
