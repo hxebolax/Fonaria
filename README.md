@@ -86,6 +86,7 @@ En total, **102 voces**. Cada una ocupa unos 250 KB. Si una app pide un idioma d
 - **Por voz** (y en general): velocidad (25–400 %), tono, volumen, **ritmo natural** (lo cambia el propio modelo) y **variación de la entonación**.
 - **Sonido**: usar o no la velocidad y el tono de TalkBack o de Android, misma lectura cada vez o tomas distintas, igualar el volumen, fidelidad a la voz (guía sin clasificador), recortar silencios, pausas entre frases y párrafos.
 - **Voz de cada idioma y región**, voz de reserva y respetar la voz que pida cada app.
+- **Aceleración por el propio modelo** a velocidades altas (más natural y sin cortes en móviles lentos).
 - **Velocidad de TalkBack**: suavizada para voz neuronal (300 % suena unas 2 veces más rápido), tal cual o sin usar.
 - **Motor**: modelo integrado (q8), compacto (q4k) o de máxima calidad (f32), hilos de cálculo, pasos de decodificación, umbral de final de frase, tamaño de los trozos, audio por adelantado y decodificador acelerado.
 - **General**: idioma de la app, tema claro u oscuro, actualizaciones desde el servidor, GitHub o los dos, y de dónde se descargan las voces.

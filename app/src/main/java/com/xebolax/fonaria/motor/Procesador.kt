@@ -35,8 +35,8 @@ class Procesador(
 			speed = v
 			pitch = t
 			this.volume = vol
-			// Calidad alta solo a velocidades normales: a 3x no se nota y cuesta el doble
-			quality = if (v <= 1.5f) 1 else 0
+			// Calidad alta hasta 2x (con la ayuda del modelo, lo normal); más allá no se nota y cuesta el doble
+			quality = if (v <= 2.0f) 1 else 0
 		}
 	}
 

@@ -146,6 +146,8 @@
 	<string name="cat_sistema">System</string>
 	<string name="velocidad_sistema">TalkBack and system speech rate</string>
 	<string name="velocidad_sistema_resumen">The rate sent by TalkBack or the app that speaks</string>
+	<string name="acelerar_modelo">Speed up with the model itself</string>
+	<string name="acelerar_modelo_resumen">At high rates the voice itself speaks faster and Sonic stretches less: more natural, quicker, and no stutter on slow phones</string>
 	<string name="tono_sistema">Use the system pitch</string>
 	<string name="tono_sistema_resumen">The pitch sent by TalkBack or the app that speaks</string>
 	<string name="cat_entonacion">Intonation and quality</string>

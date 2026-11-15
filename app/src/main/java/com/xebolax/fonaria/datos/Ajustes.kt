@@ -85,6 +85,8 @@ class Ajustes(contexto: Context) {
 	/** El factor de velocidad que corresponde a la velocidad del sistema [porCiento] (100 = normal). */
 	fun factorSistema(porCiento: Int): Float = factorSistema(porCiento, escalaVelocidad)
 	val tonoDelSistema get() = p.getBoolean("tono_sistema", true)
+	/** Que el propio modelo haga parte de la aceleración (ver motor/Acelerar.kt). */
+	val acelerarModelo get() = p.getBoolean("acelerar_modelo", true)
 	val semillaFija get() = p.getBoolean("semilla_fija", true)
 	val igualarVolumen get() = p.getBoolean("igualar_volumen", false)
 	val recortarSilencios get() = p.getBoolean("recortar_silencios", true)

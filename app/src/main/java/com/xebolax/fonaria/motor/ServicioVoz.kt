@@ -110,7 +110,14 @@ class ServicioVoz : TextToSpeechService() {
 		}
 		salida.frecuencia = Motor.frecuencia
 		val p = ajustes.parametros(voz.id)
-		val velocidad = p.velocidad / 100f * ajustes.factorSistema(request.speechRate)
+		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
+		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
+		// resto Sonic; el modelo suena más natural que estirar el audio.
+		val pedida = p.velocidad / 100f * ajustes.factorSistema(request.speechRate)
+		val ritmoAuto = if (ajustes.acelerarModelo) Acelerar.ritmo(pedida) else 0f
+		val porModelo = Acelerar.factor(ritmoAuto)
+		val velocidad = pedida / porModelo
+		val ritmo = (p.ritmo / 100f + ritmoAuto).coerceIn(-0.8f, 1f)
 		val tono = p.tono / 100f * (if (ajustes.tonoDelSistema) request.pitch / 100f else 1f)
 		val volumen = p.volumen / 100f
 		val semilla = if (ajustes.semillaFija) SEMILLA else Random.nextLong()
@@ -120,11 +127,11 @@ class ServicioVoz : TextToSpeechService() {
 			if (parar) break
 			when (t) {
 				// El silencio también se acelera con la velocidad
-				is Trozo.Pausa -> salida.silencio((t.ms / velocidad.coerceAtLeast(0.25f)).toInt())
+				is Trozo.Pausa -> salida.silencio((t.ms / pedida.coerceAtLeast(0.25f)).toInt())
 				is Trozo.Habla -> {
 					// Si el móvil genera más despacio de lo que se oye a esta velocidad, se guarda
 					// audio antes de soltarlo, para que la frase suene seguida y no a trompicones.
-					salida.retenerPara(t.texto.length, velocidad, Motor.velocidadGeneracion)
+					salida.retenerPara(t.texto.length / porModelo, velocidad, Motor.velocidadGeneracion)
 					val proc = Procesador(Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios)
 					val peticion = Motor.Peticion(
 						texto = t.texto,
@@ -132,7 +139,7 @@ class ServicioVoz : TextToSpeechService() {
 						idioma = normalizar,
 						temperatura = p.variacion / 100f,
 						semilla = semilla,
-						ritmo = p.ritmo / 100f,
+						ritmo = ritmo,
 						guia = ajustes.guia / 10f,
 						tokensTrozo = ajustes.tokensTrozo,
 						igualarVolumen = ajustes.igualarVolumen,
@@ -153,8 +160,8 @@ class ServicioVoz : TextToSpeechService() {
 		salida.terminar()
 		Log.i(
 			ETIQUETA,
-			"Frase de ${texto.length} car.: velocidad %.2f (sistema ${request.speechRate}), motor %.2fx, primer sonido %d ms, retenido %d ms, total %d ms%s".format(
-				velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada), salida.retenidoMs,
+			"Frase de ${texto.length} car.: velocidad %.2f (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primer sonido %d ms, retenido %d ms, total %d ms%s".format(
+				pedida, ritmo, velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada), salida.retenidoMs,
 				(System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else "",
 			),
 		)
@@ -210,13 +217,18 @@ class Salida(
 	 * motor genera ([generacion] segundos de voz por segundo), retiene el audio el tiempo justo
 	 * para que la frase entera suene seguida. Lo que ya va por delante sonando cuenta a favor.
 	 */
-	fun retenerPara(caracteres: Int, velocidad: Float, generacion: Float) {
-		// Unos 14 caracteres por segundo a la velocidad natural de las voces
+	fun retenerPara(caracteres: Float, velocidad: Float, generacion: Float) {
+		// Unos 14 caracteres por segundo a la velocidad natural de las voces (ya dividido por lo
+		// que acelera el propio modelo)
 		val duracion = caracteres / 14f
 		val sonara = duracion / velocidad.coerceAtLeast(0.1f)
-		val tardara = duracion / generacion.coerceAtLeast(0.1f)
+		// Con un 12 % de margen: el procesador no genera siempre al mismo ritmo
+		val tardara = duracion / (generacion * 0.88f).coerceAtLeast(0.1f)
 		val adelantado = if (empezado) ((bytes * 1000L / (frecuencia * 2L)) - (System.nanoTime() - desde) / 1_000_000L).coerceAtLeast(0) else 0L
-		val esperaMs = ((tardara - sonara) * 1000f).toLong() + 80 - adelantado
+		// El margen de seguridad (80 ms) solo cuando de verdad falta: si el móvil genera más deprisa
+		// de lo que se oye, no se retiene nada y la voz sale al momento
+		val falta = ((tardara - sonara) * 1000f).toLong()
+		val esperaMs = if (falta > 0) falta + 80 - adelantado else 0L
 		// Si el motor no llega a la velocidad de lo que suena, nunca se le hace esperar: todo lo que
 		// genere va por delante, que es justo lo que evita los cortes
 		sinRitmo = generacion < velocidad * 1.2f

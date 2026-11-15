@@ -161,6 +161,8 @@
 	<string name="cat_sistema">Sistema</string>
 	<string name="velocidad_sistema">Velocidad de TalkBack y del sistema</string>
 	<string name="velocidad_sistema_resumen">La velocidad que mandan TalkBack o la app que habla</string>
+	<string name="acelerar_modelo">Acelerar con el propio modelo</string>
+	<string name="acelerar_modelo_resumen">A velocidades altas, la voz habla más ligera por sí misma y Sonic acelera menos: suena más natural, responde antes y no se entrecorta en móviles lentos</string>
 	<string name="tono_sistema">Usar el tono del sistema</string>
 	<string name="tono_sistema_resumen">El tono que mandan TalkBack o la app que habla</string>
 	<string name="cat_entonacion">Entonación y calidad</string>

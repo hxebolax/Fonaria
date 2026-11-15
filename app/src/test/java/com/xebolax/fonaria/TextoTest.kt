@@ -120,6 +120,15 @@ class TextoTest {
 	}
 
 	@Test
+	fun aceleracionDelModelo() {
+		val a = com.xebolax.fonaria.motor.Acelerar
+		assertEquals(0f, a.ritmo(1f), 0.001f)
+		assertEquals(-0.6f, a.ritmo(2.34f), 0.001f)
+		assertEquals(1.33f, a.factor(-0.6f), 0.01f)
+		assertEquals(1f, a.factor(0.3f), 0.001f)
+	}
+
+	@Test
 	fun versiones() {
 		assertTrue(Actualizador.compararVersiones("1.0.10", "1.0.9") > 0)
 		assertEquals(0, Actualizador.compararVersiones("1.0", "1.0.0"))
