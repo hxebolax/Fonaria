@@ -3,6 +3,11 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.8
+- Las frases cortas ya no salen mal unas veces sí y otras no: a velocidades altas el modelo aceleraba tanto por su cuenta que palabras como «Leer texto», «Voces» o «Sí» salían comidas o alargadas en una de cada ocho lecturas. Ahora el modelo acelera un poco menos y Sonic hace el resto: la velocidad final es la misma.
+- Cambiar de voz se nota al momento también con «Respetar la voz que pida cada app» activado. TalkBack repite en cada frase el nombre de la voz que había al conectar, y Fonaria lo tomaba como una petición suya: seguía sonando la voz anterior hasta reiniciar.
+- El registro anota los ajustes con los que se habla (una vez por cambio) y la voz que pide cada app, para poder entender un fallo sin adivinar.
+
 == 1.0.7
 - Atrás vuelve a funcionar después de usar el menú lateral: el menú dejaba enganchado su «cerrar» y se tragaba el gesto. Desde Voces, Diccionario o Leer texto, Atrás vuelve a Inicio; desde Inicio, sale.
 - En Ajustes, Atrás desde cualquier pestaña vuelve a General y, desde General, sale.

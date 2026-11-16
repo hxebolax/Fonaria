@@ -11,8 +11,16 @@ import kotlin.math.round
  * forma más barata de ir deprisa: el móvil tarda menos y Sonic estira menos la voz.
  */
 object Acelerar {
-	/** Ritmo nativo más rápido que se usa automáticamente. */
-	const val MAXIMO = -0.6f
+	/**
+	 * Ritmo nativo más rápido que se usa automáticamente. Más allá la voz deja de ser fiable en las
+	 * frases cortas: con -0,6, «Leer texto», «Voces» o «Sí» salían mal (palabras comidas o
+	 * alargadas) en 44 de 384 tomas con tres voces; con -0,5, en 1 de 384 (ejemplo `tomas`).
+	 * Se deja un paso de margen.
+	 */
+	const val MAXIMO = -0.45f
+
+	/** El ritmo más rápido que se le pide al modelo, sumando el automático y el que elija el usuario. */
+	const val LIMITE = -0.5f
 
 	/** Ritmo automático para una velocidad final [velocidad] (1 = normal), en pasos de 0,05. */
 	fun ritmo(velocidad: Float): Float {

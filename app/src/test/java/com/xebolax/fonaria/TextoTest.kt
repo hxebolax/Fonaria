@@ -123,7 +123,8 @@ class TextoTest {
 	fun aceleracionDelModelo() {
 		val a = com.xebolax.fonaria.motor.Acelerar
 		assertEquals(0f, a.ritmo(1f), 0.001f)
-		assertEquals(-0.6f, a.ritmo(2.34f), 0.001f)
+		assertEquals(a.MAXIMO, a.ritmo(2.34f), 0.001f)
+		assertEquals(-0.3f, a.ritmo(1.67f), 0.001f)
 		assertEquals(1.33f, a.factor(-0.6f), 0.01f)
 		assertEquals(1f, a.factor(0.3f), 0.001f)
 		// ritmoDe es lo contrario de factor, sin pasar del máximo

@@ -25,6 +25,7 @@ class ServicioVoz : TextToSpeechService() {
 
 	@Volatile
 	private var parar = false
+	private var revisionEscrita = -1
 
 	/**
 	 * Mantiene despierto el procesador solo mientras se genera voz: con la pantalla apagada el
@@ -42,6 +43,10 @@ class ServicioVoz : TextToSpeechService() {
 		// El modelo se carga ya, en segundo plano: la primera frase no tiene que esperarlo entero
 		Thread({
 			try {
+				// Las voces por defecto de ahora: quien ya estaba conectado las pidió antes de este arranque
+				for (v in Almacen.instaladas(this).distinctBy { it.idioma + it.region }) {
+					Idiomas.elegirVoz(this, v.idioma, v.region)?.let { PorDefecto.anotar(this, it.nombreSistema) }
+				}
 				if (Motor.asegurar(this)) calentar()
 			} catch (e: Throwable) {
 				Log.e(ETIQUETA, "No se pudo precargar el motor", e)
@@ -92,7 +97,7 @@ class ServicioVoz : TextToSpeechService() {
 
 	override fun onGetDefaultVoiceNameFor(lang: String?, country: String?, variant: String?): String? {
 		val idioma = Idiomas.codigo(lang) ?: return null
-		return Idiomas.elegirVoz(this, idioma, Idiomas.region(country))?.nombreSistema
+		return Idiomas.elegirVoz(this, idioma, Idiomas.region(country))?.nombreSistema?.also { PorDefecto.anotar(this, it) }
 	}
 
 	// ---- Hablar --------------------------------------------------------------------------
@@ -122,7 +127,11 @@ class ServicioVoz : TextToSpeechService() {
 		val region = Idiomas.region(request.country)
 		// Las pantallas de Fonaria piden una voz concreta para probarla
 		val forzada = request.params?.getString(PARAM_VOZ)?.let { id -> Almacen.instaladas(this).firstOrNull { it.id == id } }
-		val voz = forzada ?: Idiomas.elegirVoz(this, idioma, region, request.voiceName)
+		// La voz que «pide» quien habla casi nunca es una elección suya: Android le da el nombre de
+		// la voz por defecto al conectar y la app lo repite en cada frase. Si es uno de esos nombres,
+		// manda lo elegido en Fonaria; si no, al cambiar de voz seguiría sonando la de antes.
+		val vozPedida = request.voiceName?.takeUnless { PorDefecto.es(this, it) }
+		val voz = forzada ?: Idiomas.elegirVoz(this, idioma, region, vozPedida)
 		if (voz == null) {
 			callback.error(TextToSpeech.ERROR_NOT_INSTALLED_YET)
 			return
@@ -136,7 +145,12 @@ class ServicioVoz : TextToSpeechService() {
 
 		// Para el registro; con «%» doblado porque va dentro de cadenas de formato
 		val quien = voz.nombre.replace("%", "%%")
-		val pedido = "${request.language}-${request.country}".replace("%", "%%")
+		val pedido = "${request.language}-${request.country}${request.voiceName?.let { ", voz $it" } ?: ""}".replace("%", "%%")
+		// Los ajustes con los que se habla, una vez por cada cambio: para entender un fallo por el registro
+		if (ajustes.revision != revisionEscrita) {
+			revisionEscrita = ajustes.revision
+			Log.i(ETIQUETA, "Ajustes: " + ajustes.p.all.toSortedMap().entries.joinToString(", ") { "${it.key}=${it.value}" })
+		}
 		val p = ajustes.parametros(voz.id)
 		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
 		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
@@ -157,7 +171,7 @@ class ServicioVoz : TextToSpeechService() {
 		var velocidad = pedida / porModelo
 		val limitada = limitar && velocidad > tope
 		if (limitada) velocidad = tope
-		val ritmo = (p.ritmo / 100f + ritmoAuto).coerceIn(-0.8f, 1f)
+		val ritmo = (p.ritmo / 100f + ritmoAuto).coerceIn(Acelerar.LIMITE, 1f)
 		val tono = p.tono / 100f * (if (ajustes.tonoDelSistema) request.pitch / 100f else 1f)
 		val volumen = p.volumen / 100f
 
