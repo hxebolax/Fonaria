@@ -20,6 +20,13 @@ object Memoria {
 	private val frases = LinkedHashMap<String, ShortArray>(64, 0.75f, true)
 	private var bytes = 0L
 
+	/**
+	 * La clave de una frase: el texto y todo lo que cambia cómo suena. El texto nunca pasa por
+	 * `format`: puede traer «%» («300 %»), que rompería la cadena de formato y cerraría el motor.
+	 */
+	fun clave(texto: CharSequence, resto: String, velocidad: Float, ritmo: Float, tono: Float, volumen: Float): String =
+		"%.2f|%.2f|%.2f|%.2f".format(velocidad, ritmo, tono, volumen) + "|" + resto + "\u0001" + texto
+
 	@Synchronized
 	fun buscar(clave: String): ShortArray? = frases[clave]
 

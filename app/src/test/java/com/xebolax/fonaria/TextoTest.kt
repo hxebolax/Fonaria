@@ -135,6 +135,10 @@ class TextoTest {
 	@Test
 	fun memoriaDeFrases() {
 		val m = com.xebolax.fonaria.motor.Memoria
+		// Un texto con «%» no rompe la clave (en la 1.0.5 cerraba el motor al leer «300 %»)
+		val clave = m.clave("Al 300 % suena unas 2 veces más rápido, %s %d %", "alba|es|ES", 1.76f, -0.6f, 1f, 1f)
+		assertTrue(clave.endsWith("%s %d %"))
+		assertTrue(clave != m.clave("Al 300 % suena unas 2 veces más rápido, %s %d %", "alba|es|ES", 1.5f, -0.6f, 1f, 1f))
 		m.vaciar()
 		assertNull(m.buscar("hola"))
 		m.guardar("hola", ShortArray(1000) { 7 })

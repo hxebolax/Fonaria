@@ -161,7 +161,7 @@ class ServicioVoz : TextToSpeechService() {
 		// ¿Ya se dijo esto mismo, con la misma voz y los mismos ajustes? Sale de memoria, al instante
 		val clave = if (ajustes.memoriaFrases && ajustes.semillaFija && !salida.aArchivo && texto.length <= Memoria.MAXIMO_TEXTO) {
 			val diccionario = Diccionario.archivo(this).lastModified()
-			"$texto\u0001${voz.id}|$idioma|$region|%.2f|%.2f|%.2f|%.2f|${ajustes.revision}|$diccionario".format(velocidad, ritmo, tono, volumen)
+			Memoria.clave(texto, "${voz.id}|$idioma|$region|${ajustes.revision}|$diccionario", velocidad, ritmo, tono, volumen)
 		} else null
 		val recordada = clave?.let { Memoria.buscar(it) }
 		if (recordada != null) {

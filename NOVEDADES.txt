@@ -3,6 +3,9 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.6
+- Corregido: en la 1.0.5 el motor se cerraba y se reiniciaba al leer cualquier texto con el signo «%» (por ejemplo, en Ajustes, Sonido, «300 % suena unas 2 veces más rápido»). Era un fallo de la memoria de frases nueva.
+
 == 1.0.5
 - La voz llega seguida, no a golpes: el motor agrupaba hasta 1,3 segundos de voz antes de entregarla, y al principio de casi cada frase había un hueco de un cuarto de segundo. Ahora la entrega cada 80 o 160 milisegundos. Era la causa principal de los microcortes y del chisporroteo.
 - Responde antes: en un Snapdragon 845 con TalkBack al 400 %, la voz empieza a los 150 a 250 milisegundos (antes, entre 400 y 500). Fonaria pone en marcha el audio de Android mientras el motor prepara la frase, deja de perder 20 a 30 milisegundos en comprobaciones al empezar cada frase, y arranca cada frase un poco más despacio durante el primer medio segundo para que la voz salga en cuanto llega.
