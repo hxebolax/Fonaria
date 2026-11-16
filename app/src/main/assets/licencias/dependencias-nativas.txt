@@ -71,7 +71,7 @@ pastey 0.2.3 - MIT OR Apache-2.0 - https://github.com/as1100k/pastey
 pin-project-lite 0.2.17 - Apache-2.0 OR MIT - https://github.com/taiki-e/pin-project-lite
 ppv-lite86 0.2.21 - MIT OR Apache-2.0 - https://github.com/cryptocorrosion/cryptocorrosion
 proc-macro2 1.0.107 - MIT OR Apache-2.0 - https://github.com/dtolnay/proc-macro2
-ptts 0.7.1 - MIT OR Apache-2.0 - https://github.com/gradium-ai/xn-ptts
+ptts 0.7.1 - MIT OR Apache-2.0 - https://github.com/gradium-ai/xn-ptts (copia en nativo/vendor/ptts con un cambio de Fonaria en src/synth.rs)
 pulp 0.22.3 - MIT - https://github.com/sarah-quinones/pulp/
 pulp-wasm-simd-flag 0.1.1 - MIT - https://github.com/sarah-quinones/pulp/
 quote 1.0.47 - MIT OR Apache-2.0 - https://github.com/dtolnay/quote

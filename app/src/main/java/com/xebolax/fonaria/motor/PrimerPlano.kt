@@ -92,6 +92,9 @@ class PrimerPlano : Service() {
 		private const val REVISAR_MS = 5_000L
 		private const val INACTIVO_MS = 120_000L
 		private const val REINTENTO_MS = 2_000L
+		private const val REINTENTO_NEGADO_MS = 60_000L
+		@Volatile
+		private var espera = REINTENTO_MS
 
 		@Volatile
 		private var activo = false
@@ -107,13 +110,16 @@ class PrimerPlano : Service() {
 		fun mantener(contexto: Context) {
 			val ahora = SystemClock.elapsedRealtime()
 			ultimoUso = ahora
-			if (activo || ahora - ultimaPeticion < REINTENTO_MS) return
+			if (activo || ahora - ultimaPeticion < espera) return
 			ultimaPeticion = ahora
 			try {
 				ContextCompat.startForegroundService(contexto, Intent(contexto, PrimerPlano::class.java))
+				espera = REINTENTO_MS
 			} catch (e: Exception) {
-				// Android 12 y posteriores pueden negarlo desde segundo plano: se reintenta en el siguiente uso
-				Log.w(ETIQUETA, "No se pudo arrancar", e)
+				// Android 12 y posteriores lo niegan desde segundo plano salvo que la app esté libre
+				// de la optimización de batería (Ajustes, Motor): se reintenta más adelante
+				if (espera == REINTENTO_MS) Log.w(ETIQUETA, "Android no deja pasar a primer plano ahora: ${e.message}")
+				espera = REINTENTO_NEGADO_MS
 			}
 		}
 	}

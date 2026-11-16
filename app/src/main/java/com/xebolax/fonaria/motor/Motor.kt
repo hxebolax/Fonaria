@@ -26,6 +26,8 @@ object Motor {
 	private val cerrojo = ReentrantLock()
 	private var manejador = 0L
 	private var claveCarga = ""
+	/** [Ajustes.revision] con la que se comprobó [claveCarga] por última vez. */
+	private var revisionVista = -1
 	private var vocesRegistradas = emptyMap<String, String>()
 
 	/** Frecuencia del audio del modelo (24 000 Hz). */
@@ -52,6 +54,38 @@ object Motor {
 	var velocidadGeneracion = 1.5f
 		private set
 
+	/** Si [velocidadGeneracion] ya se midió o se recuperó de la última vez. */
+	@Volatile
+	private var velocidadConocida = false
+	private var velocidadGuardada = 0f
+
+	private fun estado(contexto: Context) =
+		Ajustes.contextoProtegido(contexto.applicationContext ?: contexto).getSharedPreferences("estado", Context.MODE_PRIVATE)
+
+	/**
+	 * [velocidadGeneracion], recuperando la medida de la última vez si el proceso acaba de
+	 * arrancar: así la primera frase ya sale con el margen que este móvil necesita.
+	 */
+	fun velocidad(contexto: Context): Float {
+		if (!velocidadConocida) {
+			val guardada = estado(contexto).getFloat("generacion", 0f)
+			if (guardada > 0f) {
+				velocidadGeneracion = guardada
+				velocidadGuardada = guardada
+			}
+			velocidadConocida = true
+		}
+		return velocidadGeneracion
+	}
+
+	/** Olvida la medida (al cambiar de modelo, de hilos...): se vuelve a medir. */
+	private fun olvidarVelocidad(contexto: Context) {
+		velocidadGeneracion = 1.5f
+		velocidadGuardada = 0f
+		velocidadConocida = true
+		estado(contexto).edit().remove("generacion").apply()
+	}
+
 	/** Cuánto tardó la última carga, en milisegundos. */
 	@Volatile
 	var msCarga = 0L
@@ -65,8 +99,14 @@ object Motor {
 	 */
 	fun asegurar(contexto: Context): Boolean = cerrojo.withLock {
 		val ajustes = Ajustes(contexto)
+		// Lo normal: cargado y sin ajustes tocados desde la última vez (se mira en cada frase)
+		if (manejador != 0L && ajustes.revision == revisionVista) {
+			registrarVoces(contexto)
+			return true
+		}
 		val clave = ajustes.claveCarga()
 		if (manejador != 0L && clave == claveCarga) {
+			revisionVista = ajustes.revision
 			registrarVoces(contexto)
 			return true
 		}
@@ -79,6 +119,12 @@ object Motor {
 			return false
 		}
 		cerrar()
+		// Con otro modelo u otros hilos, la velocidad medida ya no vale (ni las frases recordadas)
+		if (claveMedida(contexto) != clave) {
+			olvidarVelocidad(contexto)
+			estado(contexto).edit().putString("clave", clave).apply()
+		}
+		Memoria.vaciar()
 		val carpeta = Almacen.carpetaModelo(contexto)
 		// Si el modelo elegido no está descargado, se usa el integrado
 		val pesos = Almacen.archivoModelo(ajustes.modelo).takeIf { File(carpeta, it).isFile } ?: Almacen.archivoModelo("q8")
@@ -93,18 +139,28 @@ object Motor {
 		msCarga = SystemClock.elapsedRealtime() - inicio
 		manejador = h
 		claveCarga = clave
+		revisionVista = ajustes.revision
 		error = null
 		frecuencia = Nativo.frecuencia(h)
 		idiomas = Nativo.idiomas(h).toList()
 		vocesRegistradas = emptyMap()
+		instaladasVistas = null
 		registrarVoces(contexto)
 		Log.i(ETIQUETA, "Modelo $pesos cargado en $msCarga ms; idiomas $idiomas; ${vocesRegistradas.size} voces")
 		true
 	}
 
+	private fun claveMedida(contexto: Context) = estado(contexto).getString("clave", "") ?: ""
+
+	private var instaladasVistas: Any? = null
+
 	/** Da a conocer al motor las voces instaladas (las nuevas) y olvida las borradas. */
 	private fun registrarVoces(contexto: Context) {
-		val ahora = Almacen.instaladas(contexto).associate { it.id to Almacen.archivo(contexto, it).absolutePath }
+		val instaladas = Almacen.instaladas(contexto)
+		// La misma lista (Almacen la guarda mientras no cambie nada): nada que hacer
+		if (instaladas === instaladasVistas) return
+		instaladasVistas = instaladas
+		val ahora = instaladas.associate { it.id to Almacen.archivo(contexto, it).absolutePath }
 		if (ahora == vocesRegistradas) return
 		for ((id, _) in vocesRegistradas) if (id !in ahora) Nativo.olvidar(manejador, id)
 		for ((id, ruta) in ahora) {
@@ -139,9 +195,14 @@ object Motor {
 		var ultimo = 0L
 		// Lo que el receptor tarda en aceptar el audio (cuando va muy por delante) no es del motor
 		var esperando = 0L
+		// El primer trozo no cuenta: se mide el tiempo entre él y el último
+		var primeras = 0
 		val medidor = Nativo.Receptor { pcm, n ->
 			val ahora = SystemClock.elapsedRealtime()
-			if (primero == 0L) primero = ahora
+			if (primero == 0L) {
+				primero = ahora
+				primeras = n
+			}
 			muestras += n
 			val sigue = receptor.audio(pcm, n)
 			val despues = SystemClock.elapsedRealtime()
@@ -157,8 +218,13 @@ object Motor {
 		val segundos = muestras.toFloat() / frecuencia
 		val trabajo = ultimo - primero - esperando
 		if (ok && segundos > 1f && trabajo > 0) {
-			val medida = (segundos / (trabajo / 1000f)).coerceIn(0.2f, 50f)
-			velocidadGeneracion = velocidadGeneracion * 0.7f + medida * 0.3f
+			val medida = ((muestras - primeras).toFloat() / frecuencia / (trabajo / 1000f)).coerceIn(0.2f, 50f)
+			// La primera medida vale entera; después, media suave para que no baile de frase a frase
+			velocidadGeneracion = if (velocidadGuardada == 0f) medida else velocidadGeneracion * 0.8f + medida * 0.2f
+			if (kotlin.math.abs(velocidadGeneracion - velocidadGuardada) > 0.05f * velocidadGeneracion) {
+				velocidadGuardada = velocidadGeneracion
+				estado(contexto).edit().putFloat("generacion", velocidadGeneracion).apply()
+			}
 		}
 		if (!ok) {
 			error = Nativo.ultimoError()

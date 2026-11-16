@@ -17,6 +17,13 @@ class Procesador(
 	tono: Float,
 	volumen: Float,
 	private val recortar: Boolean,
+	/**
+	 * Velocidad de Sonic durante los primeros [ARRANQUE_MS] de voz; después sube poco a poco hasta
+	 * la pedida. Al empezar una frase el motor entrega la voz más despacio que después: si Sonic
+	 * la consumiera ya a toda velocidad, habría que esperar a tener un colchón antes de sonar.
+	 * Empezando un poco más lento, la voz sale en cuanto llega y no se queda sin audio.
+	 */
+	arranque: Float = velocidad,
 ) {
 	private val sonic: Sonic?
 	private var empezado = !recortar
@@ -45,8 +52,13 @@ class Procesador(
 	/** Dónde empieza el fundido (en muestras desde el principio de la frase), o -1 si aún no se sabe. */
 	private var inicioFundido = if (recortar) -1L else ceros.toLong()
 
+	private val velocidadFinal = velocidad.coerceIn(0.2f, 8f)
+	private val velocidadArranque = arranque.coerceIn(0.2f, velocidadFinal)
+	/** Muestras de voz pasadas a Sonic. */
+	private var aSonic = 0L
+
 	init {
-		val v = velocidad.coerceIn(0.2f, 8f)
+		val v = velocidadArranque
 		val t = tono.coerceIn(0.25f, 4f)
 		val vol = volumen.coerceIn(0f, 4f)
 		sonic = if (abs(v - 1f) < 0.01f && abs(t - 1f) < 0.01f && abs(vol - 1f) < 0.01f) null
@@ -55,7 +67,7 @@ class Procesador(
 			pitch = t
 			this.volume = vol
 			// Calidad alta hasta 2x (con la ayuda del modelo, lo normal); más allá no se nota y cuesta el doble
-			quality = if (v <= 2.0f) 1 else 0
+			quality = if (velocidadFinal <= 2.0f) 1 else 0
 		}
 	}
 
@@ -157,6 +169,13 @@ class Procesador(
 	private fun convertir(m: FloatArray): ShortArray {
 		if (m.isEmpty()) return VACIO
 		val s = sonic ?: return aPcm(m)
+		if (velocidadArranque < velocidadFinal) {
+			// Velocidad de arranque y, después, subida en línea recta hasta la final
+			val tramo = frecuencia.toLong() * ARRANQUE_MS / 1000
+			val avance = ((aSonic - tramo).toFloat() / tramo).coerceIn(0f, 1f)
+			s.speed = velocidadArranque + (velocidadFinal - velocidadArranque) * avance
+			aSonic += m.size
+		}
 		s.writeFloatToStream(m, m.size)
 		return leerSonic(s)
 	}
@@ -190,6 +209,9 @@ class Procesador(
 	}
 
 	companion object {
+		/** Cuánto dura la velocidad de arranque (y otro tanto la subida hasta la final). */
+		const val ARRANQUE_MS = 480
+
 		val VACIO = ShortArray(0)
 
 		fun aPcm(m: FloatArray): ShortArray = ShortArray(m.size) { i ->

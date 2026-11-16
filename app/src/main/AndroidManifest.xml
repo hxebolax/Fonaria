@@ -11,6 +11,9 @@
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<!-- Para pedir (Ajustes, Motor) que Android no restrinja a Fonaria en segundo plano: sin eso,
+	     Android 12 y posteriores no la dejan pasar a primer plano cuando la usa TalkBack -->
+	<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
 	<application
 		android:name=".FonariaApp"

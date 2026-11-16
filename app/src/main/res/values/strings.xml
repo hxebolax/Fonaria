@@ -421,4 +421,13 @@
 	</plurals>
 	<string name="canal_motor">Avisos del motor de voz</string>
 	<string name="aviso_motor">Fonaria está hablando</string>
+	<string name="limitar_velocidad">No acelerar más de lo que el móvil puede</string>
+	<string name="limitar_velocidad_resumen">Si pides una velocidad que tu móvil no llega a generar, la voz va a la más alta que puede en lugar de entrecortarse</string>
+	<string name="memoria_frases">Recordar las frases cortas</string>
+	<string name="memoria_frases_resumen">Lo que se repite (botones, letras, nombres de apps) suena al instante la segunda vez. Necesita «La misma frase suena siempre igual»</string>
+	<string name="bateria">Uso de batería sin restricciones</string>
+	<string name="bateria_resumen">Recomendado. Deja que Fonaria trabaje a pleno rendimiento con la pantalla apagada o desde otras apps</string>
+	<string name="bateria_ya">Fonaria ya puede trabajar sin restricciones de batería.</string>
+	<string name="bateria_estado_si">Activado: Fonaria trabaja a pleno rendimiento también con la pantalla apagada</string>
+	<string name="bateria_no_disponible">Tu versión de Android no necesita este permiso.</string>
 </resources>

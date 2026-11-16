@@ -88,6 +88,10 @@ class Ajustes(contexto: Context) {
 	/** Que el propio modelo haga parte de la aceleración (ver motor/Acelerar.kt). */
 	val acelerarModelo get() = p.getBoolean("acelerar_modelo", true)
 	val semillaFija get() = p.getBoolean("semilla_fija", true)
+	/** No acelerar la voz más de lo que este móvil puede generar (así nunca se entrecorta). */
+	val limitarVelocidad get() = p.getBoolean("limitar_velocidad", true)
+	/** Repetir de memoria las frases cortas ya dichas (ver motor/Memoria.kt). */
+	val memoriaFrases get() = p.getBoolean("memoria_frases", true)
 	val igualarVolumen get() = p.getBoolean("igualar_volumen", false)
 	val recortarSilencios get() = p.getBoolean("recortar_silencios", true)
 	val pausaFrases get() = entero("pausa_frases", 150)
@@ -157,12 +161,16 @@ class Ajustes(contexto: Context) {
 	}
 
 	/** Los deslizadores guardan Int y las listas guardan texto: se acepta cualquiera de los dos. */
-	fun entero(clave: String, defecto: Int): Int = when (val v = p.all[clave]) {
-		is Int -> v
-		is Long -> v.toInt()
-		is String -> v.toIntOrNull() ?: defecto
-		is Float -> v.toInt()
-		else -> defecto
+	fun entero(clave: String, defecto: Int): Int = try {
+		// Lo normal, sin copiar todas las preferencias (esto se lee varias veces en cada frase)
+		p.getInt(clave, defecto)
+	} catch (e: ClassCastException) {
+		when (val v = p.all[clave]) {
+			is Long -> v.toInt()
+			is String -> v.toIntOrNull() ?: defecto
+			is Float -> v.toInt()
+			else -> defecto
+		}
 	}
 
 	companion object {

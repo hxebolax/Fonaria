@@ -1,6 +1,5 @@
 package com.xebolax.fonaria.motor
 
-import android.media.AudioFormat
 import android.os.PowerManager
 import android.speech.tts.SynthesisCallback
 import android.speech.tts.SynthesisRequest
@@ -9,6 +8,7 @@ import android.speech.tts.TextToSpeechService
 import android.speech.tts.Voice
 import android.util.Log
 import com.xebolax.fonaria.datos.Ajustes
+import com.xebolax.fonaria.texto.Diccionario
 import com.xebolax.fonaria.texto.Preparador
 import com.xebolax.fonaria.texto.Trozo
 import com.xebolax.fonaria.voces.Almacen
@@ -17,9 +17,9 @@ import kotlin.random.Random
 /**
  * El motor de voz que ve Android: lo usan TalkBack y cualquier app que hable con TextToSpeech.
  *
- * [onSynthesizeText] llega en el hilo de síntesis del sistema y es el único sitio donde se
- * genera audio. [onStop] llega desde otro hilo y solo levanta [parar]: el receptor del audio lo
- * ve en el siguiente trozo y el motor deja de generar.
+ * [onSynthesizeText] llega en el hilo de síntesis del sistema. El motor genera en su propio hilo
+ * ([Generador]) y este procesa y entrega ([Procesador], [Salida]). [onStop] llega desde otro hilo
+ * y solo levanta [parar]: todos lo ven en el siguiente trozo y se deja de generar.
  */
 class ServicioVoz : TextToSpeechService() {
 
@@ -42,11 +42,27 @@ class ServicioVoz : TextToSpeechService() {
 		// El modelo se carga ya, en segundo plano: la primera frase no tiene que esperarlo entero
 		Thread({
 			try {
-				Motor.asegurar(this)
+				if (Motor.asegurar(this)) calentar()
 			} catch (e: Throwable) {
 				Log.e(ETIQUETA, "No se pudo precargar el motor", e)
 			}
 		}, "fonaria-precarga").start()
+	}
+
+	/**
+	 * Dice una palabra sin que se oiga, nada más cargar: la primera vez el motor lee del
+	 * almacenamiento los pesos que usa y prepara la voz, y eso tardaba medio segundo de más en la
+	 * primera frase de verdad.
+	 */
+	private fun calentar() {
+		val voz = Idiomas.elegirVoz(this, "es", "ES") ?: Almacen.instaladas(this).firstOrNull() ?: return
+		val ajustes = Ajustes(this)
+		val inicio = System.nanoTime()
+		Motor.hablar(
+			this,
+			Motor.Peticion("Hola.", voz.id, if (ajustes.normalizar) voz.idioma else "none", 0.3f, SEMILLA, 0f, ajustes.guia / 10f, ajustes.tokensTrozo, ajustes.igualarVolumen),
+		) { _, _ -> true }
+		Log.i(ETIQUETA, "Motor calentado con ${voz.id} en ${(System.nanoTime() - inicio) / 1_000_000L} ms")
 	}
 
 	// ---- Idiomas -------------------------------------------------------------------------
@@ -97,6 +113,7 @@ class ServicioVoz : TextToSpeechService() {
 	}
 
 	private fun sintetizar(request: SynthesisRequest, callback: SynthesisCallback) {
+		val llegada = System.nanoTime()
 		val idioma = Idiomas.codigo(request.language)
 		if (idioma == null) {
 			callback.error(TextToSpeech.ERROR_INVALID_REQUEST)
@@ -110,41 +127,63 @@ class ServicioVoz : TextToSpeechService() {
 			callback.error(TextToSpeech.ERROR_NOT_INSTALLED_YET)
 			return
 		}
-		val llegada = System.nanoTime()
 		val ajustes = Ajustes(this)
 		val texto: CharSequence = request.charSequenceText ?: ""
+		val salida = Salida(callback, ajustes.adelantoMs) { parar }
+		salida.frecuencia = Motor.frecuencia
+		PrimerPlano.mantener(this)
+		Hilos.subir()
+
+		val p = ajustes.parametros(voz.id)
+		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
+		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
+		// resto Sonic; el modelo suena más natural que estirar el audio.
+		val pedida = p.velocidad / 100f * ajustes.factorSistema(request.speechRate)
+		var ritmoAuto = if (ajustes.acelerarModelo) Acelerar.ritmo(pedida) else 0f
+		var porModelo = Acelerar.factor(ritmoAuto)
+		// Lo que el móvil genera (segundos de voz por segundo) pone el tope a lo que Sonic puede
+		// acelerar: por encima, la voz se quedaría sin audio y se entrecortaría sin remedio.
+		val generacion = Motor.velocidad(this)
+		val tope = (generacion / MARGEN_GENERACION).coerceAtLeast(1f)
+		val limitar = ajustes.limitarVelocidad && !salida.aArchivo
+		if (limitar && pedida / porModelo > tope && ajustes.acelerarModelo) {
+			// Antes de frenar la voz, que el modelo ponga más de su parte
+			porModelo = (pedida / tope).coerceIn(porModelo, Acelerar.factor(Acelerar.MAXIMO))
+			ritmoAuto = Acelerar.ritmoDe(porModelo)
+		}
+		var velocidad = pedida / porModelo
+		val limitada = limitar && velocidad > tope
+		if (limitada) velocidad = tope
+		val ritmo = (p.ritmo / 100f + ritmoAuto).coerceIn(-0.8f, 1f)
+		val tono = p.tono / 100f * (if (ajustes.tonoDelSistema) request.pitch / 100f else 1f)
+		val volumen = p.volumen / 100f
+
+		// ¿Ya se dijo esto mismo, con la misma voz y los mismos ajustes? Sale de memoria, al instante
+		val clave = if (ajustes.memoriaFrases && ajustes.semillaFija && !salida.aArchivo && texto.length <= Memoria.MAXIMO_TEXTO) {
+			val diccionario = Diccionario.archivo(this).lastModified()
+			"$texto\u0001${voz.id}|$idioma|$region|%.2f|%.2f|%.2f|%.2f|${ajustes.revision}|$diccionario".format(velocidad, ritmo, tono, volumen)
+		} else null
+		val recordada = clave?.let { Memoria.buscar(it) }
+		if (recordada != null) {
+			salida.entera(recordada)
+			salida.terminar()
+			Log.i(ETIQUETA, "Frase de ${texto.length} car.: de memoria, %d ms%s".format((System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else ""))
+			return
+		}
+
 		val trozos = try {
 			Preparador.preparar(this, texto, idioma, region, voz.id, ajustes)
 		} catch (e: Exception) {
 			Log.e(ETIQUETA, "No se pudo preparar el texto; se lee tal cual", e)
 			listOf(Trozo.Habla(texto.toString()))
 		}
-		val salida = Salida(callback, ajustes.adelantoMs) { parar }
 		if (trozos.none { it is Trozo.Habla }) {
 			salida.vacio()
 			return
 		}
-		if (!Motor.asegurar(this)) {
-			Log.e(ETIQUETA, "Motor no disponible: ${Motor.error}")
-			callback.error(TextToSpeech.ERROR_SERVICE)
-			return
-		}
-		salida.frecuencia = Motor.frecuencia
-		PrimerPlano.mantener(this)
-		Hilos.subir()
-		val p = ajustes.parametros(voz.id)
-		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
-		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
-		// resto Sonic; el modelo suena más natural que estirar el audio.
-		val pedida = p.velocidad / 100f * ajustes.factorSistema(request.speechRate)
-		val ritmoAuto = if (ajustes.acelerarModelo) Acelerar.ritmo(pedida) else 0f
-		val porModelo = Acelerar.factor(ritmoAuto)
-		val velocidad = pedida / porModelo
-		val ritmo = (p.ritmo / 100f + ritmoAuto).coerceIn(-0.8f, 1f)
-		val tono = p.tono / 100f * (if (ajustes.tonoDelSistema) request.pitch / 100f else 1f)
-		val volumen = p.volumen / 100f
 		val semilla = if (ajustes.semillaFija) SEMILLA else Random.nextLong()
 		val normalizar = if (ajustes.normalizar) idioma else "none"
+		if (clave != null) salida.grabar()
 
 		// Todas las frases se piden ya: el motor las genera seguidas, por delante de lo que suena
 		val peticiones = trozos.filterIsInstance<Trozo.Habla>().map { t ->
@@ -163,42 +202,86 @@ class ServicioVoz : TextToSpeechService() {
 		// El motor genera en su hilo y este hilo procesa y entrega (Android lo bloquea cuando lleva
 		// medio segundo por delante; así el motor no se para por ello)
 		val generador = Generador(this, peticiones) { parar }
+		val preparado = System.nanoTime()
+		var primeraPieza = 0L
+		var completa = false
 		generador.empezar()
+		// Al empezar una frase el motor entrega la voz a menos de la mitad de su ritmo normal:
+		// Sonic arranca a una velocidad que el motor aguanta desde el primer trozo y luego sube
+		val arranque = minOf(velocidad, (generacion / ARRANQUE_LENTO).coerceAtLeast(1f))
+		// La pista de audio se pone en marcha ya, mientras el motor prepara la frase
+		salida.preparar(cebar = true, colchonMs = colchon(trozos, generacion, velocidad, arranque, porModelo))
+		var primera = true
 		try {
+			var todas = true
 			for (t in trozos) {
 				if (parar) break
 				when (t) {
 					// El silencio también se acelera con la velocidad
 					is Trozo.Pausa -> salida.silencio((t.ms / pedida.coerceAtLeast(0.25f)).toInt())
 					is Trozo.Habla -> {
-						// Si el móvil genera más despacio de lo que se oye a esta velocidad, se guarda
-						// audio antes de soltarlo, para que la frase suene seguida y no a trompicones.
-						salida.retenerPara(t.texto.length / porModelo, velocidad, Motor.velocidadGeneracion)
-						val proc = Procesador(Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios)
+						// Solo la primera frase arranca despacio: las siguientes ya llevan ventaja
+						val proc = Procesador(
+							Motor.frecuencia, velocidad, tono * (1f + t.subirTono / 100f), volumen, ajustes.recortarSilencios,
+							arranque = if (primera) arranque else velocidad,
+						)
+						primera = false
 						val resultado = generador.recibir { muestras ->
+							if (primeraPieza == 0L) primeraPieza = System.nanoTime()
 							!parar && salida.escribir(proc.procesar(muestras, muestras.size))
 						}
-						if (parar || resultado == Generador.Resultado.CORTADA) break
+						if (parar || resultado == Generador.Resultado.CORTADA) {
+							todas = false
+							break
+						}
 						if (resultado == Generador.Resultado.FALLO) {
+							Log.e(ETIQUETA, "El motor falló: ${Motor.error}")
 							salida.fallo()
 							return
 						}
-						if (!salida.escribir(proc.terminar())) break
-						if (!salida.soltar()) break
+						if (!salida.escribir(proc.terminar()) || !salida.soltar()) {
+							todas = false
+							break
+						}
 					}
 				}
 			}
+			completa = todas && !parar
 		} finally {
 			generador.cerrar()
 		}
 		salida.terminar()
+		if (completa && clave != null) salida.grabado()?.let { Memoria.guardar(clave, it) }
 		Log.i(
 			ETIQUETA,
-			"Frase de ${texto.length} car.: velocidad %.2f (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primer sonido %d ms, retenido %d ms, total %d ms%s".format(
-				pedida, ritmo, velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada), salida.retenidoMs,
+			"Frase de ${texto.length} car.: velocidad %.2f%s (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primera voz %d ms (preparar %d, motor %d, colchón %d), huecos %d (%d ms), total %d ms%s".format(
+				pedida, if (limitada) " limitada" else "", ritmo, velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada),
+				(preparado - llegada) / 1_000_000L, if (primeraPieza == 0L) -1 else (primeraPieza - preparado) / 1_000_000L,
+				salida.retenidoMs, salida.huecos, salida.huecosMs,
 				(System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else "",
 			),
 		)
+	}
+
+	/**
+	 * Voz que hay que tener por delante de lo que suena para arrancar sin cortes, en milisegundos.
+	 *
+	 * Al empezar una frase el motor va más lento que después: los primeros cinco trozos (de 80 ms)
+	 * tardan cada uno unas [ARRANQUE_LENTO] veces más. Si a la velocidad de [arranque] Sonic los
+	 * gasta antes de que llegue el siguiente, hace falta guardar la diferencia; si no, basta medio
+	 * trozo y la voz sale casi al momento. Y si ni con el tope de velocidad llega (móviles muy
+	 * lentos), se guarda lo que le faltará a la frase entera.
+	 */
+	private fun colchon(trozos: List<Trozo>, generacion: Float, velocidad: Float, arranque: Float, porModelo: Float): Int {
+		val holgura = generacion / velocidad.coerceAtLeast(0.1f)
+		val tarda = ARRANQUE_LENTO * 80f / generacion.coerceAtLeast(0.1f)
+		val dura = 80f / arranque.coerceAtLeast(0.1f)
+		val inicio = 40f + 5f * (tarda - dura).coerceAtLeast(0f)
+		// Unos 14 caracteres por segundo a la velocidad natural de las voces
+		val caracteres = trozos.sumOf { if (it is Trozo.Habla) it.texto.length else 0 }
+		val sonara = caracteres / 14f / porModelo / velocidad.coerceAtLeast(0.1f)
+		val falta = (sonara * 1000f * (1f - holgura * 0.9f)).coerceIn(0f, 1500f)
+		return (inicio.coerceAtMost(300f) + falta).toInt()
 	}
 
 	companion object {
@@ -209,157 +292,9 @@ class ServicioVoz : TextToSpeechService() {
 		const val PARAM_VOZ = "com.xebolax.fonaria.VOZ"
 		/** Tope de seguridad del bloqueo de suspensión (se suelta al acabar cada lectura). */
 		private const val DESPIERTO_MAXIMO_MS = 10 * 60 * 1000L
-	}
-}
-
-/**
- * Entrega el audio al sistema: dice que empieza solo cuando hay algo que oír, lo trocea al
- * tamaño que admite el sistema y no se adelanta más de [adelantoMs] a lo que suena, para que al
- * mandar callar no se pierdan frases ya generadas que nadie ha oído.
- */
-class Salida(
-	private val callback: SynthesisCallback,
-	private val adelantoMs: Int,
-	private val parado: () -> Boolean,
-) {
-	var frecuencia = 24000
-	private var empezado = false
-	/** Guardar en un archivo (synthesizeToFile) no se oye: no hace falta ir al ritmo de la voz. */
-	private val aArchivo = callback.javaClass.name.contains("File")
-	private var bytes = 0L
-	private var desde = 0L
-
-	/** Desde la llegada de la petición hasta el primer audio entregado (o -1). */
-	fun primerSonidoMs(llegada: Long) = if (empezado) (desde - llegada) / 1_000_000L else -1L
-
-	/** Cuánto audio se ha retenido en total para evitar cortes, en milisegundos. */
-	var retenidoMs = 0L
-		private set
-
-	private fun abrir(): Boolean {
-		if (empezado) return true
-		empezado = callback.start(frecuencia, AudioFormat.ENCODING_PCM_16BIT, 1) == TextToSpeech.SUCCESS
-		desde = System.nanoTime()
-		return empezado
-	}
-
-	/** Audio guardado mientras se retiene, y hasta cuándo (System.nanoTime). */
-	private val retenido = ArrayList<ShortArray>()
-	private var sinRitmo = false
-	private var retenerHasta = 0L
-
-	/**
-	 * Antes de una frase de [caracteres] letras: si a [velocidad] se oye más deprisa de lo que el
-	 * motor genera ([generacion] segundos de voz por segundo), retiene el audio el tiempo justo
-	 * para que la frase entera suene seguida. Lo que ya va por delante sonando cuenta a favor.
-	 */
-	fun retenerPara(caracteres: Float, velocidad: Float, generacion: Float) {
-		// Unos 14 caracteres por segundo a la velocidad natural de las voces (ya dividido por lo
-		// que acelera el propio modelo)
-		val duracion = caracteres / 14f
-		val sonara = duracion / velocidad.coerceAtLeast(0.1f)
-		// Con un 12 % de margen: el procesador no genera siempre al mismo ritmo
-		val tardara = duracion / (generacion * 0.88f).coerceAtLeast(0.1f)
-		val adelantado = if (empezado) ((bytes * 1000L / (frecuencia * 2L)) - (System.nanoTime() - desde) / 1_000_000L).coerceAtLeast(0) else 0L
-		// El margen de seguridad (80 ms) solo cuando de verdad falta: si el móvil genera más deprisa
-		// de lo que se oye, no se retiene nada y la voz sale al momento
-		val falta = ((tardara - sonara) * 1000f).toLong()
-		// En los textos largos, un pequeño colchón al empezar (hasta 400 ms, el 10 % de lo que va a
-		// durar): el motor se para un instante en cada unión entre trozos y, sin margen acumulado,
-		// la primera se oiría. Las frases cortas de TalkBack salen al momento.
-		val colchon = if (sonara > 2.5f && !empezado) (sonara * 100f).toLong().coerceAtMost(400L) else 0L
-		val esperaMs = maxOf(if (falta > 0) falta + 80 - adelantado else 0L, colchon)
-		// Si el motor no llega a la velocidad de lo que suena, nunca se le hace esperar: todo lo que
-		// genere va por delante, que es justo lo que evita los cortes
-		sinRitmo = generacion < velocidad * 1.2f
-		retenerHasta = if (esperaMs > 0) System.nanoTime() + minOf(esperaMs, 4000L) * 1_000_000L else 0L
-		if (esperaMs > 0) retenidoMs += minOf(esperaMs, 4000L)
-	}
-
-	/** Suelta lo retenido (al acabar la frase o al cumplirse el tiempo). */
-	fun soltar(): Boolean {
-		retenerHasta = 0L
-		val todo = retenido.toList()
-		retenido.clear()
-		for (pcm in todo) if (!entregar(pcm)) return false
-		return !parado()
-	}
-
-	/** Entrega PCM (o lo guarda si se está reteniendo). Devuelve false si hay que dejar de generar. */
-	fun escribir(pcm: ShortArray): Boolean {
-		if (pcm.isEmpty()) return !parado()
-		if (parado()) return false
-		if (retenerHasta != 0L) {
-			if (System.nanoTime() < retenerHasta) {
-				retenido += pcm
-				return true
-			}
-			if (!soltar()) return false
-		}
-		return entregar(pcm)
-	}
-
-	private fun entregar(pcm: ShortArray): Boolean {
-		if (pcm.isEmpty()) return !parado()
-		if (parado() || !abrir()) return false
-		val maximo = callback.maxBufferSize.coerceIn(1024, 16384) and 1.inv()
-		val datos = ByteArray(pcm.size * 2)
-		for (i in pcm.indices) {
-			val s = pcm[i].toInt()
-			datos[2 * i] = (s and 0xff).toByte()
-			datos[2 * i + 1] = (s shr 8 and 0xff).toByte()
-		}
-		var i = 0
-		while (i < datos.size) {
-			if (parado()) return false
-			val n = minOf(maximo, datos.size - i)
-			if (callback.audioAvailable(datos, i, n) != TextToSpeech.SUCCESS) return false
-			i += n
-			bytes += n
-			esperar()
-		}
-		return true
-	}
-
-	/** Silencio de [ms] milisegundos (solo entre cosas dichas, nunca al principio). */
-	fun silencio(ms: Int) {
-		if (!empezado || ms <= 0) return
-		entregar(ShortArray(frecuencia * ms / 1000))
-	}
-
-	/** No se adelanta más de [adelantoMs] a lo que suena. */
-	private fun esperar() {
-		if (aArchivo || sinRitmo) return
-		while (!parado()) {
-			val sonando = (System.nanoTime() - desde) / 1_000_000L
-			val generado = bytes * 1000L / (frecuencia * 2L)
-			val sobra = generado - sonando - adelantoMs
-			if (sobra <= 0) return
-			try {
-				Thread.sleep(minOf(sobra, 40L))
-			} catch (e: InterruptedException) {
-				Thread.currentThread().interrupt()
-				return
-			}
-		}
-	}
-
-	/** Nada que decir: se abre y se cierra para que quien espera sepa que ha terminado. */
-	fun vacio() {
-		if (callback.start(frecuencia, AudioFormat.ENCODING_PCM_16BIT, 1) == TextToSpeech.SUCCESS) callback.done()
-	}
-
-	fun fallo() {
-		callback.error(TextToSpeech.ERROR_SYNTHESIS)
-	}
-
-	fun terminar() {
-		if (retenido.isNotEmpty() && !parado()) soltar()
-		when {
-			empezado -> callback.done()
-			// Mandaron callar antes de que sonara nada: no se debe nada (como RHVoice y evvdroid)
-			parado() -> Unit
-			else -> vacio()
-		}
+		/** El motor debe generar al menos un 15 % más deprisa de lo que Sonic consume. */
+		const val MARGEN_GENERACION = 1.15f
+		/** Cuántas veces más tarda el motor en cada trozo al empezar una frase (medido: 2 a 2,5). */
+		const val ARRANQUE_LENTO = 2.5f
 	}
 }

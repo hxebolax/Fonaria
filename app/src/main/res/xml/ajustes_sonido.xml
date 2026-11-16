@@ -14,6 +14,7 @@
 	<PreferenceCategory app:title="@string/cat_sistema" app:iconSpaceReserved="false">
 		<ListPreference app:key="escala_velocidad" app:title="@string/velocidad_sistema" app:entries="@array/escala_velocidad_nombres" app:entryValues="@array/escala_velocidad_valores" android:defaultValue="suave" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat app:key="acelerar_modelo" app:title="@string/acelerar_modelo" app:summary="@string/acelerar_modelo_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="limitar_velocidad" app:title="@string/limitar_velocidad" app:summary="@string/limitar_velocidad_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
 		<SwitchPreferenceCompat app:key="tono_sistema" app:title="@string/tono_sistema" app:summary="@string/tono_sistema_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 

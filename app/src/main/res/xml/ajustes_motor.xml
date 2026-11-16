@@ -7,6 +7,8 @@
 		<ListPreference app:key="modelo" app:title="@string/modelo" app:entries="@array/modelo_nombres" app:entryValues="@array/modelo_valores" android:defaultValue="q8" app:useSimpleSummaryProvider="true" app:iconSpaceReserved="false" />
 		<Preference app:key="borrar_modelos" app:title="@string/borrar_modelos" app:summary="@string/borrar_modelos_resumen" app:iconSpaceReserved="false" />
 		<Preference app:key="medir" app:title="@string/medir_motor" app:summary="@string/medir_motor_resumen" app:iconSpaceReserved="false" />
+		<Preference app:key="bateria" app:title="@string/bateria" app:summary="@string/bateria_resumen" app:iconSpaceReserved="false" />
+		<SwitchPreferenceCompat app:key="memoria_frases" app:title="@string/memoria_frases" app:summary="@string/memoria_frases_resumen" android:defaultValue="true" app:iconSpaceReserved="false" />
 	</PreferenceCategory>
 
 	<PreferenceCategory app:title="@string/cat_avanzado" app:iconSpaceReserved="false">

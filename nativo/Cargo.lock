@@ -644,8 +644,6 @@ dependencies = [
 [[package]]
 name = "ptts"
 version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "776d41f81c1aee97ad351f9180316fe897114840367494e3e62131a1722309b1"
 dependencies = [
  "ebur128",
  "rand",

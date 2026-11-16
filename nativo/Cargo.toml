@@ -22,6 +22,11 @@ serde_json = "1"
 libc = "0.2"
 jni = { version = "0.21.1", default-features = false }
 
+# ptts con un cambio pequeño de Fonaria (vendor/ptts/src/synth.rs, «Fonaria:»): el tamaño de
+# los lotes del decodificador se puede limitar, para que el audio salga seguido y no a golpes.
+[patch.crates-io]
+ptts = { path = "vendor/ptts" }
+
 [profile.release]
 opt-level = 3
 lto = "fat"

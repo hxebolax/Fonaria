@@ -21,6 +21,9 @@ object Acelerar {
 		return round(r * 20f) / 20f
 	}
 
+	/** El ritmo con el que el modelo habla [factor] veces más rápido (lo contrario de [factor]). */
+	fun ritmoDe(factor: Float): Float = if (factor <= 1f) 0f else (-(factor - 1f) / 0.55f).coerceAtLeast(MAXIMO)
+
 	/** Cuántas veces más rápido habla el modelo con el ritmo [ritmo] (solo los negativos aceleran). */
 	fun factor(ritmo: Float): Float = if (ritmo >= 0f) 1f else 1f + 0.55f * abs(ritmo)
 }

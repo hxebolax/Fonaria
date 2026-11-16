@@ -133,6 +133,10 @@ class AjustesMotorFragment : AjustesBase() {
 			medir()
 			true
 		}
+		findPreference<Preference>("bateria")!!.setOnPreferenceClickListener {
+			pedirBateria()
+			true
+		}
 	}
 
 	private fun ofrecerDescarga(m: ModeloDescargable, preferencia: ListPreference) {
@@ -198,6 +202,44 @@ class AjustesMotorFragment : AjustesBase() {
 	}
 
 	/** Mide cuánto audio genera el motor por segundo de cálculo con la voz preferida. */
+	override fun onResume() {
+		super.onResume()
+		// Al volver de la pantalla de Android, el resumen dice cómo ha quedado
+		if (sinRestricciones()) findPreference<Preference>("bateria")?.summary = getString(R.string.bateria_estado_si)
+	}
+
+	private fun sinRestricciones(): Boolean {
+		if (android.os.Build.VERSION.SDK_INT < 23) return true
+		val energia = requireContext().getSystemService(android.content.Context.POWER_SERVICE) as android.os.PowerManager
+		return energia.isIgnoringBatteryOptimizations(requireContext().packageName)
+	}
+
+	/**
+	 * Pide a Android que no restrinja a Fonaria en segundo plano. Sin esto, Android 12 y
+	 * posteriores no dejan que el motor pase a primer plano cuando lo usa TalkBack, y con la
+	 * pantalla apagada puede quedarse en los núcleos lentos.
+	 */
+	@android.annotation.SuppressLint("BatteryLife")
+	private fun pedirBateria() {
+		val c = requireContext()
+		when {
+			android.os.Build.VERSION.SDK_INT < 23 -> c.mensaje(getString(R.string.bateria), getString(R.string.bateria_no_disponible))
+			sinRestricciones() -> c.mensaje(getString(R.string.bateria), getString(R.string.bateria_ya))
+			else -> try {
+				startActivity(
+					android.content.Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, android.net.Uri.parse("package:" + c.packageName)),
+				)
+			} catch (e: Exception) {
+				// Algunos fabricantes quitan esa pantalla: se abre la lista general
+				try {
+					startActivity(android.content.Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+				} catch (e2: Exception) {
+					c.mensaje(getString(R.string.bateria), c.motivo(e2))
+				}
+			}
+		}
+	}
+
 	private fun medir() {
 		val actividad = activity as? AppCompatActivity ?: return
 		actividad.lifecycleScope.launch {

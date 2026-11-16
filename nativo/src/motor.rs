@@ -119,6 +119,13 @@ fn formato(nombre: &str) -> Quant {
     }
 }
 
+/// Tramas (de 80 ms) que el decodificador agrupa como mucho en una llamada. `ptts` agrupa todas
+/// las que tenga esperando, hasta 16: es lo más barato, pero en un móvil el audio llega entonces a
+/// golpes (80 ms, 80, 240, 320... hasta 1,28 s) con huecos de cientos de milisegundos entre uno y
+/// otro, y una voz que suena en tiempo real se queda sin audio al principio de cada frase. Con 2,
+/// en un Snapdragon 845 llegan 160 ms cada 60 ms sin perder velocidad (con 1 se pierde un 10 %).
+pub const LOTE: usize = 2;
+
 /// Arranca el grupo de hilos de cálculo una sola vez. Las siguientes llamadas no hacen nada:
 /// el grupo dura lo que dura el proceso.
 pub fn preparar_hilos(hilos: usize) -> usize {
@@ -153,6 +160,8 @@ impl Motor {
     /// Carga el modelo de `carpeta`: `config.json`, `tokenizer.json` y los pesos.
     pub fn abrir(carpeta: &Path, carga: &Carga) -> Result<Self, String> {
         preparar_hilos(carga.hilos);
+        // El decodificador entrega la voz cada una o dos tramas, no a golpes de hasta 1,3 s (ver LOTE)
+        ptts::synth::set_decode_batch(LOTE);
         let mut cfg = read_config(carpeta.join("config.json")).map_err(texto)?;
         if carga.pasos > 0 {
             cfg.lsd_decode_steps = carga.pasos.min(8);

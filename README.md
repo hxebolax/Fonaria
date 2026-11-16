@@ -4,7 +4,7 @@
 
 Fonaria es un motor de texto a voz (TTS) para Android basado en **Phonon**, el modelo de voz neuronal de Gradium. Una vez elegido como motor del sistema, TalkBack y cualquier app que hable (lectores de libros, navegadores, GPS…) usan sus voces. Todo se genera en el móvil: no necesita internet ni envía nada a ningún sitio.
 
-- Versión actual: **1.0.4** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
+- Versión actual: **1.0.5** · [Descargar el APK](https://github.com/hxebolax/Fonaria/releases/latest)
 - Android 5.0 (API 21) o posterior · procesadores de 64 bits (arm64) y de 32 bits (armv7).
 - Trae **las 25 voces en español** (España y México). Las de inglés, francés, alemán y portugués se descargan desde la app.
 - Interfaz en español (principal) e inglés, fácil de traducir.
@@ -87,6 +87,8 @@ En total, **102 voces**. Cada una ocupa unos 250 KB. Si una app pide un idioma d
 - **Sonido**: usar o no la velocidad y el tono de TalkBack o de Android, misma lectura cada vez o tomas distintas, igualar el volumen, fidelidad a la voz (guía sin clasificador), recortar silencios, pausas entre frases y párrafos.
 - **Voz de cada idioma y región**, voz de reserva y respetar la voz que pida cada app.
 - **Aceleración por el propio modelo** a velocidades altas (más natural y sin cortes en móviles lentos).
+- **Nunca más rápido de lo que el móvil puede generar**: si pides una velocidad que tu móvil no alcanza, la voz va a la más alta que puede en lugar de entrecortarse.
+- **Memoria de frases cortas**: lo que un lector de pantalla repite (botones, letras, nombres de apps) suena al instante la segunda vez.
 - **Velocidad de TalkBack**: suavizada para voz neuronal (300 % suena unas 2 veces más rápido), tal cual o sin usar.
 - **Motor**: modelo integrado (q8), compacto (q4k) o de máxima calidad (f32), hilos de cálculo, pasos de decodificación, umbral de final de frase, tamaño de los trozos, audio por adelantado y decodificador acelerado.
 - **General**: idioma de la app, tema claro u oscuro, actualizaciones desde el servidor, GitHub o los dos, y de dónde se descargan las voces.

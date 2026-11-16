@@ -126,6 +126,31 @@ class TextoTest {
 		assertEquals(-0.6f, a.ritmo(2.34f), 0.001f)
 		assertEquals(1.33f, a.factor(-0.6f), 0.01f)
 		assertEquals(1f, a.factor(0.3f), 0.001f)
+		// ritmoDe es lo contrario de factor, sin pasar del máximo
+		assertEquals(-0.4f, a.ritmoDe(a.factor(-0.4f)), 0.001f)
+		assertEquals(0f, a.ritmoDe(1f), 0.001f)
+		assertEquals(a.MAXIMO, a.ritmoDe(3f), 0.001f)
+	}
+
+	@Test
+	fun memoriaDeFrases() {
+		val m = com.xebolax.fonaria.motor.Memoria
+		m.vaciar()
+		assertNull(m.buscar("hola"))
+		m.guardar("hola", ShortArray(1000) { 7 })
+		assertEquals(1000, m.buscar("hola")!!.size)
+		// Las frases demasiado largas no se guardan
+		m.guardar("larga", ShortArray(m.MAXIMO_MUESTRAS + 1))
+		assertNull(m.buscar("larga"))
+		// Al llenarse sale la que más tiempo lleva sin usarse, no la recién usada
+		val grande = ShortArray(m.MAXIMO_MUESTRAS)
+		for (i in 1..30) {
+			m.buscar("hola")
+			m.guardar("f$i", grande)
+		}
+		assertEquals(1000, m.buscar("hola")!!.size)
+		assertNull(m.buscar("f1"))
+		m.vaciar()
 	}
 
 	@Test

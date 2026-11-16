@@ -393,4 +393,13 @@
 	</plurals>
 	<string name="canal_motor">Speech engine notices</string>
 	<string name="aviso_motor">Fonaria is speaking</string>
+	<string name="limitar_velocidad">Never faster than the phone can manage</string>
+	<string name="limitar_velocidad_resumen">If you ask for a rate your phone cannot generate, the voice goes as fast as it can instead of stuttering</string>
+	<string name="memoria_frases">Remember short phrases</string>
+	<string name="memoria_frases_resumen">Whatever repeats (buttons, letters, app names) plays instantly the second time. Needs «The same sentence always sounds the same»</string>
+	<string name="bateria">Unrestricted battery use</string>
+	<string name="bateria_resumen">Recommended. Lets Fonaria work at full speed with the screen off or from other apps</string>
+	<string name="bateria_ya">Fonaria can already work without battery restrictions.</string>
+	<string name="bateria_estado_si">On: Fonaria works at full speed with the screen off too</string>
+	<string name="bateria_no_disponible">Your Android version does not need this permission.</string>
 </resources>

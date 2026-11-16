@@ -3,6 +3,15 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.5
+- La voz llega seguida, no a golpes: el motor agrupaba hasta 1,3 segundos de voz antes de entregarla, y al principio de casi cada frase había un hueco de un cuarto de segundo. Ahora la entrega cada 80 o 160 milisegundos. Era la causa principal de los microcortes y del chisporroteo.
+- Responde antes: en un Snapdragon 845 con TalkBack al 400 %, la voz empieza a los 150 a 250 milisegundos (antes, entre 400 y 500). Fonaria pone en marcha el audio de Android mientras el motor prepara la frase, deja de perder 20 a 30 milisegundos en comprobaciones al empezar cada frase, y arranca cada frase un poco más despacio durante el primer medio segundo para que la voz salga en cuanto llega.
+- Lo que se repite suena al instante: Fonaria recuerda las frases cortas ya dichas (botones, letras al escribir, nombres de apps) y la segunda vez no las genera. Se puede quitar en Ajustes, Motor, «Recordar las frases cortas».
+- Nunca más rápido de lo que el móvil puede: si pides una velocidad que tu móvil no llega a generar, el modelo pone más de su parte y, si aun así no basta, la voz va a la más alta posible en vez de entrecortarse. Se acabó esperar varios segundos antes de un texto largo. Se puede quitar en Ajustes, Sonido.
+- Nuevo en Ajustes, Motor: «Uso de batería sin restricciones». Android 12 y posteriores no dejan que el motor pase a primer plano cuando lo usa TalkBack si la app tiene la batería optimizada; con este permiso sí, y trabaja a pleno rendimiento con la pantalla apagada.
+- El hilo de Android que reproduce la voz tiene ahora la máxima prioridad (antes no se le aplicaba por un nombre mal comparado).
+- La primera frase tras encender el móvil ya no tarda medio segundo de más: el motor se calienta solo al cargarse y recuerda lo rápido que va tu móvil.
+
 == 1.0.4
 - Fuera los chasquidos y microcortes: cuando la voz tenía un pico por encima del máximo, al acelerarla daba la vuelta y sonaba como un pequeño golpe o un corte. Ahora se limita antes de acelerarla. También se silencia el arranque del decodificador al empezar cada frase y la voz entra con un fundido muy corto, sin clic.
 - Más fluida con la pantalla apagada o dentro de otras apps: mientras habla, Fonaria pasa a primer plano y mantiene despierto el procesador. Sin esto, Android la dejaba en los núcleos lentos y generaba la voz más despacio de lo que sonaba. Se para sola a los dos minutos sin hablar. En Android 12 y anteriores se ve un aviso discreto, «Fonaria está hablando», mientras se usa.
