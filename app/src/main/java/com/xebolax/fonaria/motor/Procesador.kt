@@ -56,6 +56,17 @@ class Procesador(
 	private val velocidadArranque = arranque.coerceIn(0.2f, velocidadFinal)
 	/** Muestras de voz pasadas a Sonic. */
 	private var aSonic = 0L
+	/** Freno: parte de la velocidad que se aplica ahora (1 = toda) y a la que se quiere llegar. */
+	private var freno = 1f
+	private var frenoPedido = 1f
+
+	/**
+	 * Pide ir a [parte] de la velocidad (de [FRENO_MINIMO] a 1) porque queda poca voz por delante.
+	 * El cambio se hace poco a poco, un 3 % por trozo como mucho, para que no se note.
+	 */
+	fun frenar(parte: Float) {
+		frenoPedido = parte.coerceIn(FRENO_MINIMO, 1f)
+	}
 
 	init {
 		val v = velocidadArranque
@@ -169,11 +180,15 @@ class Procesador(
 	private fun convertir(m: FloatArray): ShortArray {
 		if (m.isEmpty()) return VACIO
 		val s = sonic ?: return aPcm(m)
-		if (velocidadArranque < velocidadFinal) {
+		freno += (frenoPedido - freno).coerceIn(-0.03f, 0.03f)
+		if (velocidadArranque < velocidadFinal || freno < 1f || s.speed != velocidadFinal) {
 			// Velocidad de arranque y, después, subida en línea recta hasta la final
 			val tramo = frecuencia.toLong() * ARRANQUE_MS / 1000
 			val avance = ((aSonic - tramo).toFloat() / tramo).coerceIn(0f, 1f)
-			s.speed = velocidadArranque + (velocidadFinal - velocidadArranque) * avance
+			val base = velocidadArranque + (velocidadFinal - velocidadArranque) * avance
+			// El freno no se suma al arranque: manda el más lento de los dos, y así la voz nunca
+			// empieza muy por debajo de su velocidad para luego ir acelerando, que se nota
+			s.speed = minOf(base, velocidadFinal * freno)
 			aSonic += m.size
 		}
 		s.writeFloatToStream(m, m.size)
@@ -209,8 +224,11 @@ class Procesador(
 	}
 
 	companion object {
+		/** Lo más que se frena la voz cuando el motor va justo: al 78 % de la velocidad pedida. */
+		const val FRENO_MINIMO = 0.78f
+
 		/** Cuánto dura la velocidad de arranque (y otro tanto la subida hasta la final). */
-		const val ARRANQUE_MS = 480
+		const val ARRANQUE_MS = 320
 
 		val VACIO = ShortArray(0)
 

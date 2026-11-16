@@ -119,6 +119,18 @@ class Salida(
 		return (cebadas - sonadas).coerceAtLeast(0L).toInt()
 	}
 
+	/**
+	 * Cuánto audio entregado queda por sonar, en milisegundos (negativo: la pista ya se ha quedado
+	 * sin nada). Cuenta también lo retenido.
+	 */
+	fun ventajaMs(): Long {
+		val retenidoAhora = retenidas * 1000L / frecuencia
+		// Con el reloj de la simulación de la pista, que descuenta el tiempo que estuvo sin audio
+		if (simInicio == 0L) return simEntregadoMs.toLong() + retenidoAhora
+		val sonado = (System.nanoTime() - simInicio) / 1e6 - simPerdidoMs
+		return (simEntregadoMs - sonado).toLong() + retenidoAhora
+	}
+
 	/** Suelta lo retenido (al reunir el colchón o al acabar la frase). */
 	fun soltar(): Boolean {
 		reteniendo = false

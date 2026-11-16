@@ -21,7 +21,10 @@ param(
 	[string]$Repo = "hxebolax/Fonaria",
 	[switch]$ConRecursos,
 	[switch]$SinGitHub,
-	[switch]$SinServidor
+	[switch]$SinServidor,
+	# Por defecto solo queda publicada la ultima version (en dist, en el servidor y en GitHub);
+	# con esto se conservan tambien las anteriores.
+	[switch]$ConservarAnteriores
 )
 
 $ErrorActionPreference = "Stop"
@@ -66,6 +69,9 @@ New-Item -ItemType Directory -Force $Dist | Out-Null
 $archivo = "Fonaria_v$nombre.apk"
 $destino = Join-Path $Dist $archivo
 Copy-Item -Force $Apk $destino
+if (-not $ConservarAnteriores) {
+	Get-ChildItem -Path $Dist -Filter "Fonaria_v*.apk" -File | Where-Object { $_.FullName -ne $destino } | Remove-Item -Force
+}
 $sha = (Get-FileHash -Algorithm SHA256 $destino).Hash.ToLower()
 $tamano = (Get-Item $destino).Length
 $manifiesto = [ordered]@{
@@ -117,6 +123,11 @@ if (-not $SinServidor) {
 		Copy-Item -Force $destino (Join-Path $Servidor $archivo)
 		Copy-Item -Force (Join-Path $Dist "version.json") (Join-Path $Servidor "version.json")
 		Write-Host "[OK] APK y version.json copiados a $Servidor (Synology Drive los sube)." -ForegroundColor Green
+		if (-not $ConservarAnteriores) {
+			$viejos = @(Get-ChildItem -Path $Servidor -Filter "Fonaria_v*.apk" -File | Where-Object { $_.Name -ne $archivo })
+			foreach ($v in $viejos) { Remove-Item -Force $v.FullName }
+			if ($viejos.Count -gt 0) { Write-Host "[OK] Quitadas del servidor $($viejos.Count) versiones anteriores." -ForegroundColor Green }
+		}
 	}
 }
 
@@ -151,7 +162,15 @@ if (-not $SinGitHub) {
 			} else {
 				& gh release create $etiqueta $destino (Join-Path $Dist "version.json") --repo $Repo --title "Fonaria $nombre" --notes-file $fichNotas --target $commit --latest
 			}
-			if ($LASTEXITCODE -eq 0) { Write-Host "[OK] Publicada en GitHub: https://github.com/$Repo/releases/tag/$etiqueta" -ForegroundColor Green }
+			if ($LASTEXITCODE -eq 0) {
+				Write-Host "[OK] Publicada en GitHub: https://github.com/$Repo/releases/tag/$etiqueta" -ForegroundColor Green
+				if (-not $ConservarAnteriores) {
+					# Solo queda la ultima release. Las etiquetas de git se conservan: son el historial.
+					$otras = @(& gh release list --repo $Repo --limit 100 --json tagName --jq ".[].tagName" | Where-Object { $_ -and $_ -ne $etiqueta })
+					foreach ($o in $otras) { & gh release delete $o --repo $Repo --yes *> $null }
+					if ($otras.Count -gt 0) { Write-Host "[OK] Quitadas de GitHub $($otras.Count) releases anteriores (sus etiquetas siguen)." -ForegroundColor Green }
+				}
+			}
 			else { Write-Host "[ERROR] No se pudo publicar en GitHub." -ForegroundColor Red }
 		}
 	}

@@ -225,10 +225,13 @@ class ServicioVoz : TextToSpeechService() {
 		generador.empezar()
 		// Al empezar una frase el motor entrega la voz a menos de la mitad de su ritmo normal:
 		// Sonic arranca a una velocidad que el motor aguanta desde el primer trozo y luego sube
-		val arranque = minOf(velocidad, (generacion / ARRANQUE_LENTO).coerceAtLeast(1f))
+		// (pero nunca a menos del 70 % de la pedida: empezar mucho más lento y acelerar se nota)
+		val arranque = minOf(velocidad, maxOf(generacion / ARRANQUE_LENTO, velocidad * ARRANQUE_MINIMO, 1f))
 		// La pista de audio se pone en marcha ya, mientras el motor prepara la frase
 		salida.preparar(cebar = true, colchonMs = colchon(trozos, generacion, velocidad, arranque, porModelo))
 		var primera = true
+		val frenar = limitar
+		var ventajaMinima = Long.MAX_VALUE
 		try {
 			var todas = true
 			for (t in trozos) {
@@ -245,6 +248,15 @@ class ServicioVoz : TextToSpeechService() {
 						primera = false
 						val resultado = generador.recibir { muestras ->
 							if (primeraPieza == 0L) primeraPieza = System.nanoTime()
+							// Voz que queda por delante de lo que suena: la ya entregada y la que espera en
+							// la cola. Si es poca (al empezar cada frase o cada trozo de un texto largo el
+							// motor se retrasa), Sonic afloja hasta un 22 % para no quedarse sin audio: se
+							// nota mucho menos que un hueco, que suena a chisporroteo.
+							if (frenar) {
+								val ventaja = salida.ventajaMs() + (generador.pendienteMs / velocidad).toLong()
+								proc.frenar(Procesador.FRENO_MINIMO + (1f - Procesador.FRENO_MINIMO) * (ventaja / VENTAJA_COMODA_MS).coerceIn(0f, 1f))
+								if (ventaja < ventajaMinima) ventajaMinima = ventaja
+							}
 							!parar && salida.escribir(proc.procesar(muestras, muestras.size))
 						}
 						if (parar || resultado == Generador.Resultado.CORTADA) {
@@ -271,10 +283,10 @@ class ServicioVoz : TextToSpeechService() {
 		if (completa && clave != null) salida.grabado()?.let { Memoria.guardar(clave, it) }
 		Log.i(
 			ETIQUETA,
-			"Frase de ${texto.length} car. con $quien ($pedido): velocidad %.2f%s (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primera voz %d ms (preparar %d, motor %d, colchón %d), huecos %d (%d ms), total %d ms%s".format(
+			"Frase de ${texto.length} car. con $quien ($pedido): velocidad %.2f%s (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primera voz %d ms (preparar %d, motor %d, colchón %d), huecos %d (%d ms), ventaja mínima %d ms, total %d ms%s".format(
 				pedida, if (limitada) " limitada" else "", ritmo, velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada),
 				(preparado - llegada) / 1_000_000L, if (primeraPieza == 0L) -1 else (primeraPieza - preparado) / 1_000_000L,
-				salida.retenidoMs, salida.huecos, salida.huecosMs,
+				salida.retenidoMs, salida.huecos, salida.huecosMs, if (ventajaMinima == Long.MAX_VALUE) 0 else ventajaMinima,
 				(System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else "",
 			),
 		)
@@ -293,7 +305,7 @@ class ServicioVoz : TextToSpeechService() {
 		val holgura = generacion / velocidad.coerceAtLeast(0.1f)
 		val tarda = ARRANQUE_LENTO * 80f / generacion.coerceAtLeast(0.1f)
 		val dura = 80f / arranque.coerceAtLeast(0.1f)
-		val inicio = 40f + 5f * (tarda - dura).coerceAtLeast(0f)
+		val inicio = 50f + 5f * (tarda - dura).coerceAtLeast(0f)
 		// Unos 14 caracteres por segundo a la velocidad natural de las voces
 		val caracteres = trozos.sumOf { if (it is Trozo.Habla) it.texto.length else 0 }
 		val sonara = caracteres / 14f / porModelo / velocidad.coerceAtLeast(0.1f)
@@ -313,5 +325,9 @@ class ServicioVoz : TextToSpeechService() {
 		const val MARGEN_GENERACION = 1.15f
 		/** Cuántas veces más tarda el motor en cada trozo al empezar una frase (medido: 2 a 2,5). */
 		const val ARRANQUE_LENTO = 2.5f
+		/** Con esta voz por delante de lo que suena (ms), Sonic va a toda la velocidad pedida. */
+		const val VENTAJA_COMODA_MS = 800f
+		/** Parte de la velocidad pedida con la que, como poco, empieza una frase. */
+		const val ARRANQUE_MINIMO = 0.7f
 	}
 }

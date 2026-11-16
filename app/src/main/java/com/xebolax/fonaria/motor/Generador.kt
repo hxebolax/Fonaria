@@ -44,6 +44,9 @@ class Generador(
 
 	private fun seguir() = !cancelado && !parar()
 
+	/** Voz del modelo ya generada que espera en la cola, en milisegundos (unos 80 por pieza). */
+	val pendienteMs: Int get() = cola.size * 80
+
 	/** Espera sitio en la cola, sin quedarse colgado si mandan parar. */
 	private fun poner(pieza: Pieza): Boolean {
 		while (!cola.offer(pieza, 50, TimeUnit.MILLISECONDS)) {

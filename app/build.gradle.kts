@@ -28,8 +28,8 @@ android {
 		// Android 5.0: también móviles antiguos
 		minSdk = 21
 		targetSdk = 35
-		versionCode = 9
-		versionName = "1.0.8"
+		versionCode = 10
+		versionName = "1.0.9"
 
 		buildConfigField("String", "URL_ACTUALIZACIONES", "\"$urlActualizaciones\"")
 		buildConfigField("String", "REPO_GITHUB", "\"$repoGithub\"")

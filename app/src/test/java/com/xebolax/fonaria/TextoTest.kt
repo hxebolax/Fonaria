@@ -29,11 +29,14 @@ class TextoTest {
 
 	@Test
 	fun pausasEntreFrasesYParrafos() {
-		val t = Trozos.dividir("Uno. Dos.\nTres.", pausaFrase = 100, pausaParrafo = 300)
-		assertEquals(
-			listOf(Trozo.Habla("Uno."), Trozo.Pausa(100), Trozo.Habla("Dos."), Trozo.Pausa(300), Trozo.Habla("Tres.")),
-			t,
-		)
+		// Las frases cortas van juntas (cada trozo aparte le cuesta un arranque al motor); los párrafos, no
+		val t = Trozos.dividir("Uno. Dos." + '\n' + "Tres.", pausaFrase = 100, pausaParrafo = 300)
+		assertEquals(listOf(Trozo.Habla("Uno. Dos."), Trozo.Pausa(300), Trozo.Habla("Tres.")), t)
+		val a = "Esta primera frase tiene la longitud suficiente para generarse sola, sin esperar a ninguna otra más."
+		val b = "Y esta segunda también es lo bastante larga como para ir por separado de la primera, con su pausa."
+		assertEquals(listOf(Trozo.Habla(a), Trozo.Pausa(100), Trozo.Habla(b)), Trozos.dividir(a + " " + b, 100, 300))
+		// Un final corto se une al trozo anterior
+		assertEquals(listOf(Trozo.Habla(a + " Fin.")), Trozos.dividir(a + " Fin.", 100, 300))
 	}
 
 	@Test

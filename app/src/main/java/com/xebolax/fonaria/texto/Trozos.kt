@@ -40,7 +40,7 @@ object Trozos {
 		val parrafos = texto.split(Regex("\\s*\\n\\s*")).filter { it.isNotBlank() }
 		for ((ip, parrafo) in parrafos.withIndex()) {
 			if (ip > 0 && pausaParrafo > 0) salida += Trozo.Pausa(pausaParrafo)
-			val frases = frases(parrafo)
+			val frases = agrupar(frases(parrafo))
 			for ((i, f) in frases.withIndex()) {
 				if (i > 0 && pausaFrase > 0) salida += Trozo.Pausa(pausaFrase)
 				if (rapida && salida.none { it is Trozo.Habla } && f.length > 80) {
@@ -56,6 +56,34 @@ object Trozos {
 		}
 		return salida
 	}
+
+	/**
+	 * Junta las frases cortas seguidas hasta reunir al menos [MINIMO] caracteres. Cada trozo que se
+	 * genera por separado le cuesta al motor un arranque (un cuarto de segundo sin entregar voz):
+	 * con frases de dos palabras («Voces. Pestaña 2 de 5.») gastaba más en arrancar que en hablar
+	 * y la voz se quedaba sin audio entre una y otra, que es lo que suena a chisporroteo.
+	 */
+	fun agrupar(frases: List<String>): List<String> {
+		val grupos = mutableListOf<String>()
+		val actual = StringBuilder()
+		for (f in frases) {
+			if (actual.isNotEmpty()) actual.append(' ')
+			actual.append(f)
+			if (actual.length >= MINIMO) {
+				grupos += actual.toString()
+				actual.setLength(0)
+			}
+		}
+		if (actual.isNotEmpty()) {
+			// Lo que queda al final, si es poco, se une al grupo anterior
+			if (grupos.isNotEmpty() && actual.length < MINIMO / 2) grupos[grupos.size - 1] = grupos.last() + " " + actual
+			else grupos += actual.toString()
+		}
+		return grupos
+	}
+
+	/** Caracteres que debe reunir un trozo para generarse por separado. */
+	const val MINIMO = 90
 
 	/** Las frases de un párrafo, sin espacios sobrantes. */
 	fun frases(parrafo: String): List<String> {

@@ -3,6 +3,11 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.9
+- Menos chisporroteo: cuando al motor le queda poca voz generada por delante (al empezar cada frase de un texto largo se retrasa un instante), la voz afloja un poco, como mucho un 22 %, en lugar de quedarse sin audio, y recupera su velocidad en cuanto vuelve a tener margen. En un Snapdragon 845 a velocidad muy alta, un texto largo leído frase a frase pasa de 4 a 6 huecos a ninguno, y tarda lo mismo.
+- Con «Hablar frase a frase», las frases muy cortas seguidas («Voces. Pestaña 2 de 5.») se generan juntas: cada trozo por separado le cuesta al motor un arranque, y con frases de dos palabras se quedaba sin audio entre una y otra. Las frases largas siguen yendo de una en una.
+- La voz ya no empieza lenta y va acelerando: cada frase arranca como poco al 70 % de su velocidad (antes podía empezar a la mitad) y llega a la suya en medio segundo.
+
 == 1.0.8
 - Las frases cortas ya no salen mal unas veces sí y otras no: a velocidades altas el modelo aceleraba tanto por su cuenta que palabras como «Leer texto», «Voces» o «Sí» salían comidas o alargadas en una de cada ocho lecturas. Ahora el modelo acelera un poco menos y Sonic hace el resto: la velocidad final es la misma.
 - Cambiar de voz se nota al momento también con «Respetar la voz que pida cada app» activado. TalkBack repite en cada frase el nombre de la voz que había al conectar, y Fonaria lo tomaba como una petición suya: seguía sonando la voz anterior hasta reiniciar.

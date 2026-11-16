@@ -8,6 +8,7 @@ Motor de voz (TTS) para Android con las voces neuronales Phonon de Gradium, acce
 - Al terminar cada encargo se hace commit de lo cambiado, con el mensaje en español. Cada versión publicada lleva su etiqueta `v1.0.0`, `v1.0.1`...
 - Antes de empezar se mira `git status`: si hay cambios de antes sin guardar, van primero en su propio commit.
 - Nada de `reset --hard`, `push --force` ni borrar etiquetas o historial sin que se pida.
+- Mientras el usuario no diga que la versión es la definitiva, publicada solo queda **la última release**: `compilar.bat publicar` quita las releases anteriores de GitHub y los APK anteriores del servidor y de `dist` (las etiquetas de git se conservan). Para conservarlas, `herramientas\publicar_actualizacion.ps1 -ConservarAnteriores`.
 
 La firma no se puede recuperar desde aquí: `firma\fonaria.jks` y `firma\firma.properties` hay que guardarlos aparte.
 

@@ -74,6 +74,9 @@ class ReproduccionTest {
 
 	@Test
 	fun textoLargo() {
+		// Primero una frase cualquiera: el motor recién arrancado tarda medio segundo de más
+		decir("Preparando la lectura.")
+		Thread.sleep(400)
 		decir(LARGO)
 		Log.i("ReproduccionTest", "fin textoLargo")
 	}
