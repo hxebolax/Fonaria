@@ -163,8 +163,6 @@ class ListaVocesFragment : Fragment() {
 
 	private fun usar(v: Voz) {
 		Ajustes(requireContext()).ponerVoz(v.idioma, v.region.ifEmpty { null }, v.id)
-		// Si no hay voz elegida para el idioma en general, también lo es
-		if (Ajustes(requireContext()).texto("voz_${v.idioma}").isEmpty()) Ajustes(requireContext()).ponerVoz(v.idioma, null, v.id)
 		(activity as? AppCompatActivity)?.avisar(getString(R.string.voz_elegida, v.nombre, nombreIdioma(v)))
 		refrescar()
 	}

@@ -134,6 +134,9 @@ class ServicioVoz : TextToSpeechService() {
 		PrimerPlano.mantener(this)
 		Hilos.subir()
 
+		// Para el registro; con «%» doblado porque va dentro de cadenas de formato
+		val quien = voz.nombre.replace("%", "%%")
+		val pedido = "${request.language}-${request.country}".replace("%", "%%")
 		val p = ajustes.parametros(voz.id)
 		// Velocidad final pedida (la de Fonaria por la del sistema). Parte la hace el propio modelo
 		// hablando más ligero (menos audio que generar: responde antes y no se entrecorta) y el
@@ -167,7 +170,7 @@ class ServicioVoz : TextToSpeechService() {
 		if (recordada != null) {
 			salida.entera(recordada)
 			salida.terminar()
-			Log.i(ETIQUETA, "Frase de ${texto.length} car.: de memoria, %d ms%s".format((System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else ""))
+			Log.i(ETIQUETA, "Frase de ${texto.length} car. con $quien: de memoria, %d ms%s".format((System.nanoTime() - llegada) / 1_000_000L, if (parar) ", cortada" else ""))
 			return
 		}
 
@@ -254,7 +257,7 @@ class ServicioVoz : TextToSpeechService() {
 		if (completa && clave != null) salida.grabado()?.let { Memoria.guardar(clave, it) }
 		Log.i(
 			ETIQUETA,
-			"Frase de ${texto.length} car.: velocidad %.2f%s (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primera voz %d ms (preparar %d, motor %d, colchón %d), huecos %d (%d ms), total %d ms%s".format(
+			"Frase de ${texto.length} car. con $quien ($pedido): velocidad %.2f%s (sistema ${request.speechRate}, modelo %.2f, Sonic %.2f), motor %.2fx, primera voz %d ms (preparar %d, motor %d, colchón %d), huecos %d (%d ms), total %d ms%s".format(
 				pedida, if (limitada) " limitada" else "", ritmo, velocidad, Motor.velocidadGeneracion, salida.primerSonidoMs(llegada),
 				(preparado - llegada) / 1_000_000L, if (primeraPieza == 0L) -1 else (primeraPieza - preparado) / 1_000_000L,
 				salida.retenidoMs, salida.huecos, salida.huecosMs,

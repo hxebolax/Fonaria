@@ -46,6 +46,8 @@ class AjustesActivity : AppCompatActivity() {
 		b.pestanas.addView(p, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 		p.poner(lista, elegida) { clave -> mostrar(clave) }
 		pestanas = p
+		onBackPressedDispatcher.addCallback(this, volverAGeneral)
+		volverAGeneral.isEnabled = elegida != GENERAL
 		if (supportFragmentManager.findFragmentById(R.id.contenedor) == null) mostrar(p.actual)
 	}
 
@@ -54,7 +56,16 @@ class AjustesActivity : AppCompatActivity() {
 		estado.putString(EXTRA_PESTANA, pestanas?.actual ?: GENERAL)
 	}
 
+	/** Atrás (y la flecha de arriba) desde otra pestaña vuelve a General; desde General, sale. */
+	private val volverAGeneral = object : androidx.activity.OnBackPressedCallback(false) {
+		override fun handleOnBackPressed() {
+			pestanas?.elegir(GENERAL)
+			mostrar(GENERAL)
+		}
+	}
+
 	private fun mostrar(clave: String) {
+		volverAGeneral.isEnabled = clave != GENERAL
 		val f: Fragment = when (clave) {
 			VOCES -> AjustesVocesFragment()
 			SONIDO -> AjustesSonidoFragment()

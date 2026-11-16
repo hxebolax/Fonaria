@@ -28,9 +28,15 @@ class Ajustes(contexto: Context) {
 	fun vozPara(idioma: String, region: String): String? =
 		texto("voz_${idioma}_${region.uppercase()}").ifEmpty { texto("voz_$idioma") }.ifEmpty { null }
 
+	/**
+	 * Elige la voz de un idioma y región. También pasa a ser la del idioma en general: quien
+	 * habla (TalkBack, otras apps) no siempre dice la región o dice otra, y entonces debe sonar la
+	 * última voz que se eligió, no la primera que se eligió alguna vez.
+	 */
 	fun ponerVoz(idioma: String, region: String?, id: String) {
 		p.edit().apply {
-			if (region.isNullOrEmpty()) putString("voz_$idioma", id) else putString("voz_${idioma}_${region.uppercase()}", id)
+			putString("voz_$idioma", id)
+			if (!region.isNullOrEmpty()) putString("voz_${idioma}_${region.uppercase()}", id)
 		}.apply()
 	}
 

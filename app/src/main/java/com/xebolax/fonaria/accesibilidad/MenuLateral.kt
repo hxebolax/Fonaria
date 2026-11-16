@@ -76,7 +76,16 @@ fun AppCompatActivity.ponerMenuLateral(
 ): DrawerLayout {
 	val cajon = DrawerLayout(this).apply { id = R.id.menu_lateral_cajon }
 	cajon.addView(contenido, DrawerLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+	// Atrás con el menú abierto lo cierra: se registra al abrirlo para ir antes que los demás callbacks
+	var cerrar: OnBackPressedCallback? = null
+	fun soltarAtras() {
+		cerrar?.remove()
+		cerrar = null
+	}
 	val (navegacion, filaActual) = contenidoMenuLateral(menu, destinoActual) { id ->
+		// Antes de avisar: quien recibe la elección puede rehacer la pantalla (y este cajón) sin que
+		// llegue nunca el aviso de «cajón cerrado», y el manejador se quedaría tragándose el Atrás
+		soltarAtras()
 		cajon.closeDrawer(GravityCompat.START)
 		alElegir(id)
 	}
@@ -86,22 +95,22 @@ fun AppCompatActivity.ponerMenuLateral(
 	barra.setNavigationIcon(iconoMenu)
 	barra.navigationContentDescription = getString(R.string.abrir_menu)
 	barra.setNavigationOnClickListener { cajon.openDrawer(GravityCompat.START) }
-	// Atrás con el menú abierto lo cierra: se registra al abrirlo para ir antes que los demás callbacks
-	var cerrar: OnBackPressedCallback? = null
 	cajon.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
 		override fun onDrawerOpened(vista: View) {
 			// Con TalkBack, el foco entra directamente en el menú, en la sección en la que estás
 			if (lectorActivo()) filaActual?.post { filaActual.performAccessibilityAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS, null) }
-			cerrar?.remove()
+			soltarAtras()
 			cerrar = object : OnBackPressedCallback(true) {
 				override fun handleOnBackPressed() = cajon.closeDrawer(GravityCompat.START)
 			}.also { onBackPressedDispatcher.addCallback(this@ponerMenuLateral, it) }
 		}
 
-		override fun onDrawerClosed(vista: View) {
-			cerrar?.remove()
-			cerrar = null
-		}
+		override fun onDrawerClosed(vista: View) = soltarAtras()
+	})
+	// Si el cajón sale de la pantalla (se rehace al cambiar de sección), tampoco debe quedar
+	cajon.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
+		override fun onViewAttachedToWindow(v: View) = Unit
+		override fun onViewDetachedFromWindow(v: View) = soltarAtras()
 	})
 	// Título del panel: TalkBack lo anuncia al abrir el cajón
 	cajon.setDrawerTitle(GravityCompat.START, getString(R.string.menu_lateral))

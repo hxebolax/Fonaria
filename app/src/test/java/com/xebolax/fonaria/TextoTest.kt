@@ -163,4 +163,19 @@ class TextoTest {
 		assertEquals(0, Actualizador.compararVersiones("1.0", "1.0.0"))
 		assertEquals("hxebolax/Fonaria", Actualizador.repoDeGitHub("https://github.com/hxebolax/Fonaria.git"))
 	}
+
+	@Test
+	fun numerosConLetras() {
+		// Un lector de mentira: «<n>» o «<n>m» en masculino, para ver qué se convierte y qué no
+		val lector = com.xebolax.fonaria.texto.Numeros.Lector { n, _, masculino -> "<$n${if (masculino) "m" else ""}>" }
+		fun n(t: String) = com.xebolax.fonaria.texto.Numeros.aplicar(t, "es", lector)
+		assertEquals("Velocidad, <105m> por ciento", n("Velocidad, 105 %"))
+		assertEquals("<105m> por ciento", n("105%"))
+		assertEquals("<3m> mensajes y <21>", n("3 mensajes y 21"))
+		// Horas, fechas, decimales, versiones, teléfonos, códigos y ceros delante se dejan al motor
+		for (t in listOf("a las 10:30", "el 12/05/2026", "1.234,5 euros", "versión 1.0.6", "612345678", "A320", "007", "3º", "2-1")) {
+			assertEquals(t, n(t))
+		}
+		assertEquals("sin cifras", n("sin cifras"))
+	}
 }

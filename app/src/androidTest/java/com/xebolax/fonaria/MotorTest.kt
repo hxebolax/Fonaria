@@ -99,4 +99,14 @@ class MotorTest {
 	fun idiomaNoSoportado() {
 		assertEquals(TextToSpeech.LANG_NOT_SUPPORTED, tts.isLanguageAvailable(Locale("ja", "JP")))
 	}
+
+	/** Los números sueltos van con letras (reglas de Android), para que la voz no los trocee. */
+	@Test
+	fun numerosConLetrasDeAndroid() {
+		val n = com.xebolax.fonaria.texto.Numeros
+		assertEquals("Velocidad, ciento cinco por ciento", n.aplicar("Velocidad, 105 %", "es"))
+		assertEquals("veintiún mensajes", n.aplicar("21 mensajes", "es"))
+		assertEquals("año dos mil veintiséis", n.aplicar("año 2026", "es"))
+		assertEquals("one hundred five percent", n.aplicar("105%", "en"))
+	}
 }

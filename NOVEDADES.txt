@@ -3,6 +3,12 @@ El texto de la versión que se publica se muestra en la app al ofrecer la actual
 Para una versión nueva: sube versionCode y versionName en app\build.gradle.kts,
 añade aquí su sección y usa la opción 8 de compilar.bat.
 
+== 1.0.7
+- Atrás vuelve a funcionar después de usar el menú lateral: el menú dejaba enganchado su «cerrar» y se tragaba el gesto. Desde Voces, Diccionario o Leer texto, Atrás vuelve a Inicio; desde Inicio, sale.
+- En Ajustes, Atrás desde cualquier pestaña vuelve a General y, desde General, sale.
+- La voz que eliges se usa al momento en todo el idioma. Antes solo cambiaba la de su región (España o México), y si TalkBack no decía la región seguía sonando la primera voz que se eligió alguna vez.
+- Los números se dicen bien: «105 %» sonaba a veces «cien y cinco por ciento». Ahora Fonaria escribe con letras los números sueltos antes de dárselos a la voz («ciento cinco por ciento», «veintiún mensajes», «dos mil veintiséis»), en todos los idiomas. Horas, fechas, decimales y teléfonos los sigue leyendo el motor. Va con «Leer bien números, fechas y símbolos».
+
 == 1.0.6
 - Corregido: en la 1.0.5 el motor se cerraba y se reiniciaba al leer cualquier texto con el signo «%» (por ejemplo, en Ajustes, Sonido, «300 % suena unas 2 veces más rápido»). Era un fallo de la memoria de frases nueva.
 

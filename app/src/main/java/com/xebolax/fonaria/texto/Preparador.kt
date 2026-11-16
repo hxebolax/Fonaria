@@ -33,6 +33,7 @@ object Preparador {
 			return listOf(deletrear(solo[0], idioma, region, ajustes.tonoMayusculas))
 		}
 		if (ajustes.emojis) texto = Emojis.aplicar(contexto, texto, idioma)
+		if (ajustes.normalizar) texto = Numeros.aplicar(texto, idioma)
 		texto = puntuacion(texto, ajustes.puntuacion, idioma)
 		if (texto.isBlank()) return emptyList()
 		return if (ajustes.dividirFrases) {
