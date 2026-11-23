@@ -23,6 +23,7 @@ data class Voz(
 	val edad: String,
 	val descripcion: String,
 	val descripcionEs: String,
+	val descripcionPt: String = "",
 	val archivo: String,
 	val tamano: Long,
 	val sha256: String,
@@ -72,6 +73,7 @@ object Catalogo {
 				edad = o.optString("edad"),
 				descripcion = o.optString("descripcion"),
 				descripcionEs = o.optString("descripcion_es"),
+				descripcionPt = o.optString("descripcion_pt"),
 				archivo = o.getString("archivo"),
 				tamano = o.optLong("tamano"),
 				sha256 = o.optString("sha256"),
@@ -116,7 +118,11 @@ object Catalogo {
 	/** La descripción en el idioma de la interfaz si la hay; si no, la original en inglés. */
 	fun descripcion(contexto: Context, voz: Voz): String {
 		val ui = idiomaInterfaz(contexto).language
-		return if (ui == "es" && voz.descripcionEs.isNotEmpty()) voz.descripcionEs else voz.descripcion
+		return when {
+			ui == "es" && voz.descripcionEs.isNotEmpty() -> voz.descripcionEs
+			ui == "pt" && voz.descripcionPt.isNotEmpty() -> voz.descripcionPt
+			else -> voz.descripcion
+		}
 	}
 }
 
