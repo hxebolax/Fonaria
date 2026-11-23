@@ -25,6 +25,9 @@ APK = RAIZ / "modelo" / "apk" / "voces"
 # Idioma que va dentro del APK; el resto se descarga.
 INCLUIDO = "es"
 
+# Traducciones al portugués de Brasil de las descripciones (nombre de voz -> texto).
+DESCRIPCIONES_PT = json.loads((Path(__file__).resolve().parent / "descripciones_pt.json").read_text(encoding="utf-8"))
+
 DESCRIPCIONES_ES = {
 	"Noa": "Voz joven castellana, brillante y segura, con un encanto rápido y cercano: una asistente alegre que da chispa a cada conversación.",
 	"Lucía-Sol": "Voz joven castellana, saltarina y alegre, con una entonación ascendente simpática y energía juguetona.",
@@ -95,6 +98,7 @@ def main() -> int:
 			"edad": EDADES.get(v.get("age") or "", ""),
 			"descripcion": v.get("description") or "",
 			"descripcion_es": DESCRIPCIONES_ES.get(v["name"], ""),
+			"descripcion_pt": DESCRIPCIONES_PT.get(v["name"], ""),
 			"archivo": archivo,
 			"tamano": ruta.stat().st_size,
 			"sha256": sha256(ruta),

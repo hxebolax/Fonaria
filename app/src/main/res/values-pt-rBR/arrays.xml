@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Nomes das opções das Configurações em português do Brasil. Os valores ficam em values/arrays.xml e nunca são traduzidos. -->
+<resources>
+	<string-array name="puntuacion_nombres">
+		<item>Nenhuma (a voz faz as pausas)</item>
+		<item>Alguma: símbolos como # @ % &amp;</item>
+		<item>A maioria: também parênteses, aspas e travessões</item>
+		<item>Toda: também pontos e vírgulas</item>
+	</string-array>
+
+	<string-array name="escala_velocidad_nombres">
+		<item>Suavizada (recomendada): 200 % soa 1,5 vez mais rápido e 300 %, cerca de 2 vezes</item>
+		<item>Completa: tal como é, como um motor clássico (pode engasgar em celulares lentos)</item>
+		<item>Não usar: somente a velocidade do Fonaria</item>
+	</string-array>
+
+	<string-array name="modelo_nombres">
+		<item>Integrado (q8): equilíbrio entre qualidade e velocidade</item>
+		<item>Compacto (q4k): ocupa menos; em alguns processadores é mais rápido e em outros mais lento. É baixado, 77 MB</item>
+		<item>Qualidade máxima (f32): o mais fiel e o mais lento. É baixado, 116 MB</item>
+	</string-array>
+
+	<string-array name="fuente_nombres">
+		<item>O servidor do Fonaria</item>
+		<item>GitHub</item>
+		<item>Os dois (a versão mais nova)</item>
+		<item>Um endereço personalizado</item>
+	</string-array>
+
+	<string-array name="origen_nombres">
+		<item>O servidor do Fonaria</item>
+		<item>Hugging Face (catálogo da Gradium)</item>
+		<item>O servidor e, se falhar, o Hugging Face</item>
+	</string-array>
+
+	<string-array name="idioma_app_nombres">
+		<item>O do sistema</item>
+		<item>Español</item>
+		<item>English</item>
+		<item>Português (Brasil)</item>
+	</string-array>
+
+	<string-array name="tema_nombres">
+		<item>O do sistema</item>
+		<item>Claro</item>
+		<item>Escuro</item>
+	</string-array>
+</resources>

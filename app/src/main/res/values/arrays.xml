@@ -64,11 +64,13 @@
 		<item>El del sistema</item>
 		<item>Español</item>
 		<item>English</item>
+		<item>Português (Brasil)</item>
 	</string-array>
 	<string-array name="idioma_app_valores" translatable="false">
 		<item>sistema</item>
 		<item>es</item>
 		<item>en</item>
+		<item>pt-BR</item>
 	</string-array>
 
 	<string-array name="tema_nombres">
